@@ -9,51 +9,145 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PortalRouteImport } from './routes/_portal'
+import { Route as PortalIndexRouteImport } from './routes/_portal.index'
+import { Route as PortalBuscaRouteImport } from './routes/_portal.busca'
+import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
+import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
 
-const IndexRoute = IndexRouteImport.update({
+const PortalRoute = PortalRouteImport.update({
+  id: '/_portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalBuscaRoute = PortalBuscaRouteImport.update({
+  id: '/busca',
+  path: '/busca',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalNoticiaSlugRoute = PortalNoticiaSlugRouteImport.update({
+  id: '/noticia/$slug',
+  path: '/noticia/$slug',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalEditoriaSlugRoute = PortalEditoriaSlugRouteImport.update({
+  id: '/editoria/$slug',
+  path: '/editoria/$slug',
+  getParentRoute: () => PortalRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof PortalIndexRoute
+  '/busca': typeof PortalBuscaRoute
+  '/editoria/$slug': typeof PortalEditoriaSlugRoute
+  '/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/busca': typeof PortalBuscaRoute
+  '/': typeof PortalIndexRoute
+  '/editoria/$slug': typeof PortalEditoriaSlugRoute
+  '/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_portal': typeof PortalRouteWithChildren
+  '/_portal/busca': typeof PortalBuscaRoute
+  '/_portal/': typeof PortalIndexRoute
+  '/_portal/editoria/$slug': typeof PortalEditoriaSlugRoute
+  '/_portal/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/busca' | '/editoria/$slug' | '/noticia/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/busca' | '/' | '/editoria/$slug' | '/noticia/$slug'
+  id:
+    | '__root__'
+    | '/_portal'
+    | '/_portal/busca'
+    | '/_portal/'
+    | '/_portal/editoria/$slug'
+    | '/_portal/noticia/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  PortalRoute: typeof PortalRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_portal': {
+      id: '/_portal'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_portal/': {
+      id: '/_portal/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/busca': {
+      id: '/_portal/busca'
+      path: '/busca'
+      fullPath: '/busca'
+      preLoaderRoute: typeof PortalBuscaRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/noticia/$slug': {
+      id: '/_portal/noticia/$slug'
+      path: '/noticia/$slug'
+      fullPath: '/noticia/$slug'
+      preLoaderRoute: typeof PortalNoticiaSlugRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/editoria/$slug': {
+      id: '/_portal/editoria/$slug'
+      path: '/editoria/$slug'
+      fullPath: '/editoria/$slug'
+      preLoaderRoute: typeof PortalEditoriaSlugRouteImport
+      parentRoute: typeof PortalRoute
     }
   }
 }
 
+interface PortalRouteChildren {
+  PortalBuscaRoute: typeof PortalBuscaRoute
+  PortalIndexRoute: typeof PortalIndexRoute
+  PortalEditoriaSlugRoute: typeof PortalEditoriaSlugRoute
+  PortalNoticiaSlugRoute: typeof PortalNoticiaSlugRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalBuscaRoute: PortalBuscaRoute,
+  PortalIndexRoute: PortalIndexRoute,
+  PortalEditoriaSlugRoute: PortalEditoriaSlugRoute,
+  PortalNoticiaSlugRoute: PortalNoticiaSlugRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  PortalRoute: PortalRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
