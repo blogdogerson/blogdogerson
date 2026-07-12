@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PortalRouteImport } from './routes/_portal'
 import { Route as PortalIndexRouteImport } from './routes/_portal.index'
+import { Route as PortalQuemEscreveRouteImport } from './routes/_portal.quem-escreve'
 import { Route as PortalBuscaRouteImport } from './routes/_portal.busca'
+import { Route as PortalAnuncieRouteImport } from './routes/_portal.anuncie'
 import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
 import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
 
@@ -24,9 +26,19 @@ const PortalIndexRoute = PortalIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalQuemEscreveRoute = PortalQuemEscreveRouteImport.update({
+  id: '/quem-escreve',
+  path: '/quem-escreve',
+  getParentRoute: () => PortalRoute,
+} as any)
 const PortalBuscaRoute = PortalBuscaRouteImport.update({
   id: '/busca',
   path: '/busca',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAnuncieRoute = PortalAnuncieRouteImport.update({
+  id: '/anuncie',
+  path: '/anuncie',
   getParentRoute: () => PortalRoute,
 } as any)
 const PortalNoticiaSlugRoute = PortalNoticiaSlugRouteImport.update({
@@ -42,12 +54,16 @@ const PortalEditoriaSlugRoute = PortalEditoriaSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof PortalIndexRoute
+  '/anuncie': typeof PortalAnuncieRoute
   '/busca': typeof PortalBuscaRoute
+  '/quem-escreve': typeof PortalQuemEscreveRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRoutesByTo {
+  '/anuncie': typeof PortalAnuncieRoute
   '/busca': typeof PortalBuscaRoute
+  '/quem-escreve': typeof PortalQuemEscreveRoute
   '/': typeof PortalIndexRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
@@ -55,20 +71,36 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_portal': typeof PortalRouteWithChildren
+  '/_portal/anuncie': typeof PortalAnuncieRoute
   '/_portal/busca': typeof PortalBuscaRoute
+  '/_portal/quem-escreve': typeof PortalQuemEscreveRoute
   '/_portal/': typeof PortalIndexRoute
   '/_portal/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/_portal/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/busca' | '/editoria/$slug' | '/noticia/$slug'
+  fullPaths:
+    | '/'
+    | '/anuncie'
+    | '/busca'
+    | '/quem-escreve'
+    | '/editoria/$slug'
+    | '/noticia/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/busca' | '/' | '/editoria/$slug' | '/noticia/$slug'
+  to:
+    | '/anuncie'
+    | '/busca'
+    | '/quem-escreve'
+    | '/'
+    | '/editoria/$slug'
+    | '/noticia/$slug'
   id:
     | '__root__'
     | '/_portal'
+    | '/_portal/anuncie'
     | '/_portal/busca'
+    | '/_portal/quem-escreve'
     | '/_portal/'
     | '/_portal/editoria/$slug'
     | '/_portal/noticia/$slug'
@@ -94,11 +126,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalIndexRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/_portal/quem-escreve': {
+      id: '/_portal/quem-escreve'
+      path: '/quem-escreve'
+      fullPath: '/quem-escreve'
+      preLoaderRoute: typeof PortalQuemEscreveRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/_portal/busca': {
       id: '/_portal/busca'
       path: '/busca'
       fullPath: '/busca'
       preLoaderRoute: typeof PortalBuscaRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/anuncie': {
+      id: '/_portal/anuncie'
+      path: '/anuncie'
+      fullPath: '/anuncie'
+      preLoaderRoute: typeof PortalAnuncieRouteImport
       parentRoute: typeof PortalRoute
     }
     '/_portal/noticia/$slug': {
@@ -119,14 +165,18 @@ declare module '@tanstack/react-router' {
 }
 
 interface PortalRouteChildren {
+  PortalAnuncieRoute: typeof PortalAnuncieRoute
   PortalBuscaRoute: typeof PortalBuscaRoute
+  PortalQuemEscreveRoute: typeof PortalQuemEscreveRoute
   PortalIndexRoute: typeof PortalIndexRoute
   PortalEditoriaSlugRoute: typeof PortalEditoriaSlugRoute
   PortalNoticiaSlugRoute: typeof PortalNoticiaSlugRoute
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
+  PortalAnuncieRoute: PortalAnuncieRoute,
   PortalBuscaRoute: PortalBuscaRoute,
+  PortalQuemEscreveRoute: PortalQuemEscreveRoute,
   PortalIndexRoute: PortalIndexRoute,
   PortalEditoriaSlugRoute: PortalEditoriaSlugRoute,
   PortalNoticiaSlugRoute: PortalNoticiaSlugRoute,
@@ -141,13 +191,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

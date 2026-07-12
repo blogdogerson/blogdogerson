@@ -86,8 +86,9 @@ function CategoryPage() {
         <div className="mt-10 flex items-center justify-center gap-2">
           {safePage > 1 && (
             <Link
-              from={Route.fullPath}
-              search={(prev) => ({ ...prev, page: safePage - 1 })}
+              to="/editoria/$slug"
+              params={{ slug }}
+              search={{ page: safePage - 1 }}
               className="rounded-xl border px-4 py-2 text-sm font-semibold hover:bg-secondary"
             >
               ← Anterior
@@ -98,8 +99,9 @@ function CategoryPage() {
           </span>
           {safePage < totalPages && (
             <Link
-              from={Route.fullPath}
-              search={(prev) => ({ ...prev, page: safePage + 1 })}
+              to="/editoria/$slug"
+              params={{ slug }}
+              search={{ page: safePage + 1 }}
               className="rounded-xl border px-4 py-2 text-sm font-semibold hover:bg-secondary"
             >
               Próxima →
