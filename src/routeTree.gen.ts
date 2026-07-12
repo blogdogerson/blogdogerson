@@ -9,61 +9,273 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PortalRouteImport } from './routes/_portal'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as PortalIndexRouteImport } from './routes/_portal.index'
+import { Route as PortalQuemEscreveRouteImport } from './routes/_portal.quem-escreve'
+import { Route as PortalBuscaRouteImport } from './routes/_portal.busca'
+import { Route as PortalAnuncieRouteImport } from './routes/_portal.anuncie'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
+import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
 
-const IndexRoute = IndexRouteImport.update({
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/_portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalQuemEscreveRoute = PortalQuemEscreveRouteImport.update({
+  id: '/quem-escreve',
+  path: '/quem-escreve',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalBuscaRoute = PortalBuscaRouteImport.update({
+  id: '/busca',
+  path: '/busca',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAnuncieRoute = PortalAnuncieRouteImport.update({
+  id: '/anuncie',
+  path: '/anuncie',
+  getParentRoute: () => PortalRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const PortalNoticiaSlugRoute = PortalNoticiaSlugRouteImport.update({
+  id: '/noticia/$slug',
+  path: '/noticia/$slug',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalEditoriaSlugRoute = PortalEditoriaSlugRouteImport.update({
+  id: '/editoria/$slug',
+  path: '/editoria/$slug',
+  getParentRoute: () => PortalRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof PortalIndexRoute
+  '/auth': typeof AuthRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/anuncie': typeof PortalAnuncieRoute
+  '/busca': typeof PortalBuscaRoute
+  '/quem-escreve': typeof PortalQuemEscreveRoute
+  '/editoria/$slug': typeof PortalEditoriaSlugRoute
+  '/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof PortalIndexRoute
+  '/auth': typeof AuthRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/anuncie': typeof PortalAnuncieRoute
+  '/busca': typeof PortalBuscaRoute
+  '/quem-escreve': typeof PortalQuemEscreveRoute
+  '/editoria/$slug': typeof PortalEditoriaSlugRoute
+  '/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_portal': typeof PortalRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_portal/anuncie': typeof PortalAnuncieRoute
+  '/_portal/busca': typeof PortalBuscaRoute
+  '/_portal/quem-escreve': typeof PortalQuemEscreveRoute
+  '/_portal/': typeof PortalIndexRoute
+  '/_portal/editoria/$slug': typeof PortalEditoriaSlugRoute
+  '/_portal/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/sitemap.xml'
+    | '/admin'
+    | '/anuncie'
+    | '/busca'
+    | '/quem-escreve'
+    | '/editoria/$slug'
+    | '/noticia/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/sitemap.xml'
+    | '/admin'
+    | '/anuncie'
+    | '/busca'
+    | '/quem-escreve'
+    | '/editoria/$slug'
+    | '/noticia/$slug'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/_portal'
+    | '/auth'
+    | '/sitemap.xml'
+    | '/_authenticated/admin'
+    | '/_portal/anuncie'
+    | '/_portal/busca'
+    | '/_portal/quem-escreve'
+    | '/_portal/'
+    | '/_portal/editoria/$slug'
+    | '/_portal/noticia/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  PortalRoute: typeof PortalRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_portal': {
+      id: '/_portal'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_portal/': {
+      id: '/_portal/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/quem-escreve': {
+      id: '/_portal/quem-escreve'
+      path: '/quem-escreve'
+      fullPath: '/quem-escreve'
+      preLoaderRoute: typeof PortalQuemEscreveRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/busca': {
+      id: '/_portal/busca'
+      path: '/busca'
+      fullPath: '/busca'
+      preLoaderRoute: typeof PortalBuscaRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/anuncie': {
+      id: '/_portal/anuncie'
+      path: '/anuncie'
+      fullPath: '/anuncie'
+      preLoaderRoute: typeof PortalAnuncieRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_portal/noticia/$slug': {
+      id: '/_portal/noticia/$slug'
+      path: '/noticia/$slug'
+      fullPath: '/noticia/$slug'
+      preLoaderRoute: typeof PortalNoticiaSlugRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/editoria/$slug': {
+      id: '/_portal/editoria/$slug'
+      path: '/editoria/$slug'
+      fullPath: '/editoria/$slug'
+      preLoaderRoute: typeof PortalEditoriaSlugRouteImport
+      parentRoute: typeof PortalRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface PortalRouteChildren {
+  PortalAnuncieRoute: typeof PortalAnuncieRoute
+  PortalBuscaRoute: typeof PortalBuscaRoute
+  PortalQuemEscreveRoute: typeof PortalQuemEscreveRoute
+  PortalIndexRoute: typeof PortalIndexRoute
+  PortalEditoriaSlugRoute: typeof PortalEditoriaSlugRoute
+  PortalNoticiaSlugRoute: typeof PortalNoticiaSlugRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalAnuncieRoute: PortalAnuncieRoute,
+  PortalBuscaRoute: PortalBuscaRoute,
+  PortalQuemEscreveRoute: PortalQuemEscreveRoute,
+  PortalIndexRoute: PortalIndexRoute,
+  PortalEditoriaSlugRoute: PortalEditoriaSlugRoute,
+  PortalNoticiaSlugRoute: PortalNoticiaSlugRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  PortalRoute: PortalRouteWithChildren,
+  AuthRoute: AuthRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
