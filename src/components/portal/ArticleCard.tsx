@@ -6,18 +6,28 @@ export function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-export function CategoryTag({ category, light }: { category: string; light?: boolean }) {
-  return (
-    <Link
-      to="/editoria/$slug"
-      params={{ slug: categoryToSlug(category) }}
-      className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider transition-colors ${
-        light ? "bg-card/90 text-primary hover:bg-card" : "bg-accent text-accent-foreground hover:bg-primary hover:text-primary-foreground"
-      }`}
-    >
-      {category}
-    </Link>
-  );
+export function CategoryTag({
+  category,
+  light,
+  asLink,
+}: {
+  category: string;
+  light?: boolean;
+  asLink?: boolean;
+}) {
+  const cls = `inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider transition-colors ${
+    light
+      ? "bg-card/90 text-primary hover:bg-card"
+      : "bg-accent text-accent-foreground hover:bg-primary hover:text-primary-foreground"
+  }`;
+  if (asLink) {
+    return (
+      <Link to="/editoria/$slug" params={{ slug: categoryToSlug(category) }} className={cls}>
+        {category}
+      </Link>
+    );
+  }
+  return <span className={cls}>{category}</span>;
 }
 
 export function HeroCard({ article }: { article: Article }) {
