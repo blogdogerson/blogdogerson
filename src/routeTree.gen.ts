@@ -9,16 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PortalRouteImport } from './routes/_portal'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as PortalIndexRouteImport } from './routes/_portal.index'
 import { Route as PortalQuemEscreveRouteImport } from './routes/_portal.quem-escreve'
 import { Route as PortalBuscaRouteImport } from './routes/_portal.busca'
 import { Route as PortalAnuncieRouteImport } from './routes/_portal.anuncie'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
 import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortalRoute = PortalRouteImport.update({
   id: '/_portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalIndexRoute = PortalIndexRouteImport.update({
@@ -41,6 +53,11 @@ const PortalAnuncieRoute = PortalAnuncieRouteImport.update({
   path: '/anuncie',
   getParentRoute: () => PortalRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const PortalNoticiaSlugRoute = PortalNoticiaSlugRouteImport.update({
   id: '/noticia/$slug',
   path: '/noticia/$slug',
@@ -54,6 +71,8 @@ const PortalEditoriaSlugRoute = PortalEditoriaSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof PortalIndexRoute
+  '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/anuncie': typeof PortalAnuncieRoute
   '/busca': typeof PortalBuscaRoute
   '/quem-escreve': typeof PortalQuemEscreveRoute
@@ -61,16 +80,21 @@ export interface FileRoutesByFullPath {
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof PortalIndexRoute
+  '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/anuncie': typeof PortalAnuncieRoute
   '/busca': typeof PortalBuscaRoute
   '/quem-escreve': typeof PortalQuemEscreveRoute
-  '/': typeof PortalIndexRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_portal': typeof PortalRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_portal/anuncie': typeof PortalAnuncieRoute
   '/_portal/busca': typeof PortalBuscaRoute
   '/_portal/quem-escreve': typeof PortalQuemEscreveRoute
@@ -82,6 +106,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/admin'
     | '/anuncie'
     | '/busca'
     | '/quem-escreve'
@@ -89,15 +115,20 @@ export interface FileRouteTypes {
     | '/noticia/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
+    | '/auth'
+    | '/admin'
     | '/anuncie'
     | '/busca'
     | '/quem-escreve'
-    | '/'
     | '/editoria/$slug'
     | '/noticia/$slug'
   id:
     | '__root__'
+    | '/_authenticated'
     | '/_portal'
+    | '/auth'
+    | '/_authenticated/admin'
     | '/_portal/anuncie'
     | '/_portal/busca'
     | '/_portal/quem-escreve'
@@ -107,16 +138,32 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   PortalRoute: typeof PortalRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_portal': {
       id: '/_portal'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_portal/': {
@@ -147,6 +194,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalAnuncieRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_portal/noticia/$slug': {
       id: '/_portal/noticia/$slug'
       path: '/noticia/$slug'
@@ -163,6 +217,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface PortalRouteChildren {
   PortalAnuncieRoute: typeof PortalAnuncieRoute
@@ -186,7 +251,9 @@ const PortalRouteWithChildren =
   PortalRoute._addFileChildren(PortalRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   PortalRoute: PortalRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
