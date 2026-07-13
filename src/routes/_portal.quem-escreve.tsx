@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Mail, Mic, Newspaper, Radio } from "lucide-react";
 import { NewsletterForm } from "@/components/portal/NewsletterForm";
 import { RADIO_STREAM_URL } from "@/lib/categories";
+import gersonAsset from "@/assets/gerson-sorgetz.png.asset.json";
 
 export const Route = createFileRoute("/_portal/quem-escreve")({
   head: () => ({
