@@ -3,21 +3,28 @@ import { Menu, Search, X } from "lucide-react";
 import { useState } from "react";
 import { CATEGORIES, categoryToSlug } from "@/lib/categories";
 import { RadioButton } from "./RadioPlayer";
+import logoAsset from "@/assets/logo-blog-do-gerson.png.asset.json";
+import gersonAsset from "@/assets/gerson-sorgetz.png.asset.json";
 
 function Logo() {
   return (
-    <Link to="/" className="group flex items-center gap-3" aria-label="Blog do Gerson — início">
-      <div className="relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-brand shadow-card transition-transform duration-300 group-hover:rotate-[-4deg] group-hover:scale-105 sm:h-14 sm:w-14">
-        <span className="font-display text-2xl font-black text-primary-foreground sm:text-3xl">G</span>
-        <span className="absolute inset-0 bg-[linear-gradient(115deg,transparent_35%,oklch(1_0_0/0.35)_50%,transparent_65%)] bg-[length:250%_100%] animate-logo-shine" />
+    <Link to="/" className="group flex items-center gap-3 sm:gap-4" aria-label="Blog do Gerson — início">
+      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-2 ring-primary/20 shadow-card transition-transform duration-300 group-hover:scale-105 sm:h-16 sm:w-16">
+        <img
+          src={gersonAsset.url}
+          alt="Gerson Sorgetz"
+          className="h-full w-full object-cover"
+          loading="eager"
+        />
       </div>
-      <div className="min-w-0 leading-none">
-        <span className="block font-display text-[11px] font-bold uppercase tracking-[0.35em] text-primary">
-          Blog do
-        </span>
-        <span className="block font-display text-3xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-4xl">
-          GERSON
-        </span>
+      <div className="relative min-w-0 overflow-hidden">
+        <img
+          src={logoAsset.url}
+          alt="Blog do Gerson — Portal de Notícias"
+          className="h-10 w-auto object-contain sm:h-14 md:h-16"
+          loading="eager"
+        />
+        <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_35%,oklch(1_0_0/0.55)_50%,transparent_65%)] bg-[length:250%_100%] animate-logo-shine" />
       </div>
     </Link>
   );
