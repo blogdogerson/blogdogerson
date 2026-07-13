@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Mail, Mic, Newspaper, Radio } from "lucide-react";
 import { NewsletterForm } from "@/components/portal/NewsletterForm";
 import { RADIO_STREAM_URL } from "@/lib/categories";
+import gersonAsset from "@/assets/gerson-sorgetz.png.asset.json";
 
 export const Route = createFileRoute("/_portal/quem-escreve")({
   head: () => ({
@@ -27,8 +28,8 @@ function AboutPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
       <header className="grid items-center gap-8 md:grid-cols-[auto_1fr]">
-        <div className="mx-auto grid h-40 w-40 place-items-center rounded-full bg-gradient-brand shadow-float md:h-48 md:w-48">
-          <span className="font-display text-7xl font-black text-primary-foreground">GS</span>
+        <div className="mx-auto h-40 w-40 overflow-hidden rounded-full ring-4 ring-primary/20 shadow-float md:h-48 md:w-48">
+          <img src={gersonAsset.url} alt="Gerson Sorgetz" className="h-full w-full object-cover" />
         </div>
         <div>
           <p className="font-display text-xs font-black uppercase tracking-[0.3em] text-primary">
