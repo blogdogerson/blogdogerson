@@ -98,6 +98,57 @@ export type Database = {
         }
         Relationships: []
       }
+      columnists: {
+        Row: {
+          accent_color: string
+          active: boolean
+          avatar_url: string | null
+          bio: string
+          created_at: string
+          id: string
+          latest_excerpt: string
+          latest_title: string
+          link_url: string | null
+          name: string
+          slug: string
+          sort_order: number
+          specialty: string
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string
+          active?: boolean
+          avatar_url?: string | null
+          bio?: string
+          created_at?: string
+          id?: string
+          latest_excerpt?: string
+          latest_title?: string
+          link_url?: string | null
+          name: string
+          slug: string
+          sort_order?: number
+          specialty?: string
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string
+          active?: boolean
+          avatar_url?: string | null
+          bio?: string
+          created_at?: string
+          id?: string
+          latest_excerpt?: string
+          latest_title?: string
+          link_url?: string | null
+          name?: string
+          slug?: string
+          sort_order?: number
+          specialty?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           created_at: string

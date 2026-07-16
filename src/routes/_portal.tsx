@@ -1,6 +1,7 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/portal/Header";
 import { Footer } from "@/components/portal/Footer";
+import { WaveBackground } from "@/components/portal/WaveBackground";
 
 export const Route = createFileRoute("/_portal")({
   component: PortalLayout,
@@ -8,7 +9,8 @@ export const Route = createFileRoute("/_portal")({
 
 function PortalLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col">
+      <WaveBackground />
       <Header />
       <main className="flex-1">
         <Outlet />

@@ -15,6 +15,7 @@ import { Route as PortalRouteImport } from './routes/_portal'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as PortalIndexRouteImport } from './routes/_portal.index'
 import { Route as PortalQuemEscreveRouteImport } from './routes/_portal.quem-escreve'
+import { Route as PortalColunistasRouteImport } from './routes/_portal.colunistas'
 import { Route as PortalBuscaRouteImport } from './routes/_portal.busca'
 import { Route as PortalAnuncieRouteImport } from './routes/_portal.anuncie'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -47,6 +48,11 @@ const PortalIndexRoute = PortalIndexRouteImport.update({
 const PortalQuemEscreveRoute = PortalQuemEscreveRouteImport.update({
   id: '/quem-escreve',
   path: '/quem-escreve',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalColunistasRoute = PortalColunistasRouteImport.update({
+  id: '/colunistas',
+  path: '/colunistas',
   getParentRoute: () => PortalRoute,
 } as any)
 const PortalBuscaRoute = PortalBuscaRouteImport.update({
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/anuncie': typeof PortalAnuncieRoute
   '/busca': typeof PortalBuscaRoute
+  '/colunistas': typeof PortalColunistasRoute
   '/quem-escreve': typeof PortalQuemEscreveRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/anuncie': typeof PortalAnuncieRoute
   '/busca': typeof PortalBuscaRoute
+  '/colunistas': typeof PortalColunistasRoute
   '/quem-escreve': typeof PortalQuemEscreveRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_portal/anuncie': typeof PortalAnuncieRoute
   '/_portal/busca': typeof PortalBuscaRoute
+  '/_portal/colunistas': typeof PortalColunistasRoute
   '/_portal/quem-escreve': typeof PortalQuemEscreveRoute
   '/_portal/': typeof PortalIndexRoute
   '/_portal/editoria/$slug': typeof PortalEditoriaSlugRoute
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/anuncie'
     | '/busca'
+    | '/colunistas'
     | '/quem-escreve'
     | '/editoria/$slug'
     | '/noticia/$slug'
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/anuncie'
     | '/busca'
+    | '/colunistas'
     | '/quem-escreve'
     | '/editoria/$slug'
     | '/noticia/$slug'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_portal/anuncie'
     | '/_portal/busca'
+    | '/_portal/colunistas'
     | '/_portal/quem-escreve'
     | '/_portal/'
     | '/_portal/editoria/$slug'
@@ -200,6 +212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalQuemEscreveRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/_portal/colunistas': {
+      id: '/_portal/colunistas'
+      path: '/colunistas'
+      fullPath: '/colunistas'
+      preLoaderRoute: typeof PortalColunistasRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/_portal/busca': {
       id: '/_portal/busca'
       path: '/busca'
@@ -252,6 +271,7 @@ const AuthenticatedRouteRouteWithChildren =
 interface PortalRouteChildren {
   PortalAnuncieRoute: typeof PortalAnuncieRoute
   PortalBuscaRoute: typeof PortalBuscaRoute
+  PortalColunistasRoute: typeof PortalColunistasRoute
   PortalQuemEscreveRoute: typeof PortalQuemEscreveRoute
   PortalIndexRoute: typeof PortalIndexRoute
   PortalEditoriaSlugRoute: typeof PortalEditoriaSlugRoute
@@ -261,6 +281,7 @@ interface PortalRouteChildren {
 const PortalRouteChildren: PortalRouteChildren = {
   PortalAnuncieRoute: PortalAnuncieRoute,
   PortalBuscaRoute: PortalBuscaRoute,
+  PortalColunistasRoute: PortalColunistasRoute,
   PortalQuemEscreveRoute: PortalQuemEscreveRoute,
   PortalIndexRoute: PortalIndexRoute,
   PortalEditoriaSlugRoute: PortalEditoriaSlugRoute,

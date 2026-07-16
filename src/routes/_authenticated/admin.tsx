@@ -2,13 +2,14 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Image, LogOut, Mail, Newspaper, PlayCircle, ShieldCheck } from "lucide-react";
+import { Image, LogOut, Mail, Newspaper, PenLine, PlayCircle, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyAdminStatus, bootstrapAdmin } from "@/lib/admin.functions";
 import { ArticlesManager } from "@/components/admin/ArticlesManager";
 import { BannersManager } from "@/components/admin/BannersManager";
 import { VideosManager } from "@/components/admin/VideosManager";
 import { NewsletterManager } from "@/components/admin/NewsletterManager";
+import { ColumnistsManager } from "@/components/admin/ColumnistsManager";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 const TABS = [
   { key: "noticias", label: "Notícias", icon: Newspaper },
+  { key: "colunistas", label: "Colunistas", icon: PenLine },
   { key: "banners", label: "Banners", icon: Image },
   { key: "videos", label: "Vídeos", icon: PlayCircle },
   { key: "newsletter", label: "Newsletter", icon: Mail },
@@ -136,6 +138,7 @@ function AdminPage() {
 
       <main className="mx-auto max-w-7xl px-4 py-6">
         {tab === "noticias" && <ArticlesManager />}
+        {tab === "colunistas" && <ColumnistsManager />}
         {tab === "banners" && <BannersManager />}
         {tab === "videos" && <VideosManager />}
         {tab === "newsletter" && <NewsletterManager />}
