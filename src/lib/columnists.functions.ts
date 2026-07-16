@@ -77,9 +77,10 @@ export const adminSaveColumnist = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { id, ...fields } = data;
     const payload = { ...fields, updated_at: new Date().toISOString() };
+    const db = anyDb(context.supabase);
     const res = id
-      ? await context.supabase.from("columnists").update(payload).eq("id", id)
-      : await context.supabase.from("columnists").insert(payload);
+      ? await db.from("columnists").update(payload).eq("id", id)
+      : await db.from("columnists").insert(payload);
     if (res.error) return { ok: false, error: res.error.message };
     return { ok: true };
   });
@@ -89,6 +90,6 @@ export const adminDeleteColumnist = createServerFn({ method: "POST" })
   .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    const { error } = await context.supabase.from("columnists").delete().eq("id", data.id);
+    const { error } = await anyDb(context.supabase).from("columnists").delete().eq("id", data.id);
     return { ok: !error, error: error?.message };
   });
