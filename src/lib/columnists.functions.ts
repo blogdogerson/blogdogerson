@@ -59,11 +59,14 @@ async function assertAdmin(context: { supabase: any; userId: string }) {
   if (!data) throw new Error("Acesso negado");
 }
 
+// Cast to any to bypass generated types until they regenerate with columnists table
+const anyDb = (supabase: any) => supabase as any;
+
 export const adminListColumnists = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context);
-    const { data } = await context.supabase.from("columnists").select("*").order("sort_order");
+    const { data } = await anyDb(context.supabase).from("columnists").select("*").order("sort_order");
     return { columnists: (data ?? []) as Columnist[] };
   });
 
