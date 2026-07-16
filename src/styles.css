@@ -152,6 +152,60 @@
   animation: pulse-dot 1.6s ease-in-out infinite;
 }
 
+/* Wave & blob background animations */
+@keyframes wave-slide-slow {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-40px); }
+}
+@keyframes wave-slide-fast {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(30px); }
+}
+@utility animate-wave-slow {
+  transform-origin: center;
+  animation: wave-slide-slow 14s ease-in-out infinite alternate;
+}
+@utility animate-wave-fast {
+  transform-origin: center;
+  animation: wave-slide-fast 9s ease-in-out infinite alternate;
+}
+
+@keyframes blob-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.08); }
+}
+@keyframes blob-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-50px, 40px) scale(1.1); }
+}
+@keyframes blob-drift-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, 50px) scale(0.94); }
+}
+@utility animate-blob-a { animation: blob-drift-a 22s ease-in-out infinite; }
+@utility animate-blob-b { animation: blob-drift-b 26s ease-in-out infinite; }
+@utility animate-blob-c { animation: blob-drift-c 30s ease-in-out infinite; }
+
+@keyframes shimmer-line {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+@utility animate-shimmer-line {
+  animation: shimmer-line 3.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wave-slow,
+  .animate-wave-fast,
+  .animate-blob-a,
+  .animate-blob-b,
+  .animate-blob-c,
+  .animate-logo-shine,
+  .animate-shimmer-line {
+    animation: none !important;
+  }
+}
+
 /* Article body typography */
 .article-body {
   font-size: 1.125rem;

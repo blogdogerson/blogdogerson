@@ -2,10 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { getHomeData } from "@/lib/portal.functions";
+import { getColumnists } from "@/lib/columnists.functions";
 import { HeroCard, ArticleCard, ListRow } from "@/components/portal/ArticleCard";
 import { TopBannerCarousel, SidebarBanners, InlineBanner } from "@/components/portal/BannerSlot";
 import { NewsletterForm } from "@/components/portal/NewsletterForm";
 import { VideoSections } from "@/components/portal/VideoSections";
+import { ColumnistsSection } from "@/components/portal/ColumnistsSection";
 import { CATEGORIES, categoryToSlug } from "@/lib/categories";
 
 const homeQuery = queryOptions({
@@ -14,8 +16,18 @@ const homeQuery = queryOptions({
   staleTime: 60_000,
 });
 
+const columnistsQuery = queryOptions({
+  queryKey: ["columnists"],
+  queryFn: () => getColumnists(),
+  staleTime: 60_000,
+});
+
 export const Route = createFileRoute("/_portal/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(homeQuery),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(homeQuery),
+      context.queryClient.ensureQueryData(columnistsQuery),
+    ]),
   component: HomePage,
   errorComponent: ({ error }) => (
     <div role="alert" className="mx-auto max-w-xl px-4 py-20 text-center text-muted-foreground">
