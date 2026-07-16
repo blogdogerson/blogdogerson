@@ -39,7 +39,9 @@ export const Route = createFileRoute("/_portal/")({
 
 function HomePage() {
   const { data } = useSuspenseQuery(homeQuery);
+  const { data: colData } = useSuspenseQuery(columnistsQuery);
   const { articles, banners, videos } = data;
+  const columnists = colData.columnists;
 
   const hero = articles[0];
   const secondary = articles.slice(1, 5);
@@ -104,6 +106,9 @@ function HomePage() {
           </div>
         </aside>
       </section>
+
+      {/* Colunistas */}
+      <ColumnistsSection columnists={columnists} />
 
       {/* Videos */}
       <VideoSections videos={videos} />
