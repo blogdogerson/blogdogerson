@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Menu, Search, X } from "lucide-react";
-import { useState } from "react";
+import { Menu, PenLine, Search, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { CATEGORIES, categoryToSlug } from "@/lib/categories";
 import { RadioButton } from "./RadioPlayer";
 import logoAsset from "@/assets/logo-blog-do-gerson.png.asset.json";
@@ -9,13 +9,20 @@ import gersonAsset from "@/assets/gerson-sorgetz.png.asset.json";
 function Logo() {
   return (
     <Link to="/" className="group flex items-center gap-3 sm:gap-4" aria-label="Blog do Gerson — início">
-      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full ring-2 ring-primary/20 shadow-card transition-transform duration-300 group-hover:scale-105 sm:h-16 sm:w-16">
-        <img
-          src={gersonAsset.url}
-          alt="Gerson Sorgetz"
-          className="h-full w-full object-cover"
-          loading="eager"
+      <div className="relative shrink-0">
+        {/* Animated ring */}
+        <span
+          aria-hidden="true"
+          className="absolute -inset-1 rounded-full bg-[conic-gradient(from_0deg,oklch(0.72_0.14_245),oklch(0.6_0.18_255),oklch(0.85_0.09_230),oklch(0.72_0.14_245))] opacity-70 blur-[6px] transition-opacity duration-300 group-hover:opacity-100"
         />
+        <div className="relative h-14 w-14 overflow-hidden rounded-full ring-2 ring-card shadow-float transition-transform duration-500 group-hover:scale-105 sm:h-16 sm:w-16">
+          <img
+            src={gersonAsset.url}
+            alt="Gerson Sorgetz"
+            className="h-full w-full object-cover"
+            loading="eager"
+          />
+        </div>
       </div>
       <div className="relative min-w-0 overflow-hidden">
         <img
@@ -34,7 +41,15 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [q, setQ] = useState("");
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,18 +61,41 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-card/90 backdrop-blur-md">
+    <header
+      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
+        scrolled
+          ? "border-border/70 bg-card/85 shadow-card backdrop-blur-xl"
+          : "border-transparent bg-card/70 backdrop-blur-md"
+      }`}
+    >
+      {/* Decorative underlay wave */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.97_0.02_240/0.6),transparent)]" />
+        <svg
+          className="absolute inset-x-0 bottom-0 h-10 w-full"
+          viewBox="0 0 1440 40"
+          preserveAspectRatio="none"
+        >
+          <path
+            className="animate-wave-slow"
+            fill="oklch(0.72 0.14 245 / 0.12)"
+            d="M0,20 C240,40 480,0 720,20 C960,40 1200,0 1440,20 L1440,40 L0,40 Z"
+          />
+        </svg>
+      </div>
+
       {/* Top bar */}
-      <div className="border-b bg-sky-soft">
+      <div className="border-b border-border/60 bg-gradient-to-r from-sky-soft via-transparent to-sky-soft">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-3 px-4">
           <p className="hidden text-xs font-medium text-muted-foreground sm:block">
+            <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot align-middle" />
             Gramado, Canela e Região da Serra Gaúcha — desde 2005
           </p>
           <div className="flex items-center gap-2">
             <RadioButton />
             <Link
               to="/anuncie"
-              className="rounded-full border border-primary/30 px-3 py-1 text-xs font-semibold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+              className="rounded-full border border-primary/30 px-3 py-1 text-xs font-semibold text-primary transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground"
             >
               Anuncie no Blog
             </Link>
@@ -69,6 +107,12 @@ export function Header() {
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:py-4">
         <Logo />
         <div className="flex items-center gap-1.5">
+          <Link
+            to="/colunistas"
+            className="hidden items-center gap-1.5 rounded-full bg-primary/10 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-primary transition-all hover:bg-primary hover:text-primary-foreground md:inline-flex"
+          >
+            <PenLine className="h-3.5 w-3.5" /> Colunistas
+          </Link>
           <button
             onClick={() => setSearchOpen((v) => !v)}
             aria-label="Pesquisar"
@@ -105,7 +149,7 @@ export function Header() {
       )}
 
       {/* Nav */}
-      <nav className={`${open ? "block" : "hidden"} border-t lg:block`}>
+      <nav className={`${open ? "block" : "hidden"} border-t border-border/60 lg:block`}>
         <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-2 lg:flex-row lg:items-center lg:gap-0 lg:py-0">
           {CATEGORIES.map((cat) => (
             <Link
@@ -120,6 +164,14 @@ export function Header() {
             </Link>
           ))}
           <span className="hidden flex-1 lg:block" />
+          <Link
+            to="/colunistas"
+            onClick={() => setOpen(false)}
+            activeProps={{ className: "text-primary" }}
+            className="story-link px-0 py-2 text-sm font-semibold uppercase tracking-wide text-foreground/80 transition-colors hover:text-primary lg:hidden lg:px-3 lg:py-3"
+          >
+            Colunistas
+          </Link>
           <Link
             to="/quem-escreve"
             onClick={() => setOpen(false)}
