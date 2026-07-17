@@ -116,9 +116,10 @@ export function Header() {
       </div>
 
       {/* Main bar */}
-      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:py-4">
+      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:py-6">
+        <div className="hidden md:block" />
         <Logo />
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center justify-end gap-1.5">
           <Link
             to="/colunistas"
             className="hidden items-center gap-1.5 rounded-full bg-primary/10 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-primary transition-all hover:bg-primary hover:text-primary-foreground md:inline-flex"
