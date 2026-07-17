@@ -23,13 +23,6 @@ export function ColumnistsSection({ columnists }: { columnists: Columnist[] }) {
           Todos os colunistas <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
-        <Link
-          to="/colunistas"
-          className="hidden shrink-0 items-center gap-1.5 text-sm font-semibold text-primary hover:underline sm:inline-flex"
-        >
-          Todos os colunistas <ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {columnists.slice(0, 6).map((c, i) => (
