@@ -3,7 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { getHomeData } from "@/lib/portal.functions";
 import { getColumnists } from "@/lib/columnists.functions";
-import { HeroCard, ArticleCard, ListRow } from "@/components/portal/ArticleCard";
+import { ArticleCard, ListRow } from "@/components/portal/ArticleCard";
 import { HeroRotator } from "@/components/portal/HeroRotator";
 import { TopBannerCarousel, SidebarBanners, InlineBanner } from "@/components/portal/BannerSlot";
 import { VideoSections } from "@/components/portal/VideoSections";
