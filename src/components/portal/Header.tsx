@@ -191,7 +191,7 @@ export function Header() {
             activeProps={{ className: "text-primary" }}
             className="story-link px-0 py-2 text-sm font-semibold uppercase tracking-wide text-foreground/80 transition-colors hover:text-primary lg:px-3 lg:py-3"
           >
-            Quem escreve
+            Perfil do Colunista
           </Link>
         </div>
       </nav>
