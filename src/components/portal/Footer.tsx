@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Radio } from "lucide-react";
+import { Instagram, Mail, Radio } from "lucide-react";
 import { CATEGORIES, categoryToSlug, RADIO_STREAM_URL } from "@/lib/categories";
 import { NewsletterForm } from "./NewsletterForm";
 
@@ -13,8 +13,8 @@ export function Footer() {
           </p>
           <p className="font-display text-4xl font-black">GERSON</p>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-navy-foreground/70">
-            Jornalismo sério e comprometido com Gramado, Canela e Região desde 2005. Editado pelo
-            jornalista Gerson Sorgetz.
+            Jornalismo sério e comprometido com Gramado, Canela, Nova Petrópolis e Região desde
+            2005. Editado pelo jornalista Gerson Sorgetz.
           </p>
           <div className="mt-5 flex flex-col gap-2 text-sm">
             <a
@@ -22,6 +22,14 @@ export function Footer() {
               className="inline-flex items-center gap-2 text-navy-foreground/80 transition-colors hover:text-navy-foreground"
             >
               <Mail className="h-4 w-4" /> gerson@blogdogerson.com.br
+            </a>
+            <a
+              href="https://instagram.com/blogdogerson"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-navy-foreground/80 transition-colors hover:text-navy-foreground"
+            >
+              <Instagram className="h-4 w-4" /> @blogdogerson
             </a>
             <a
               href={RADIO_STREAM_URL}
@@ -52,7 +60,7 @@ export function Footer() {
             ))}
             <li>
               <Link to="/quem-escreve" className="text-navy-foreground/80 hover:text-navy-foreground">
-                Quem escreve
+                Perfil do Colunista
               </Link>
             </li>
             <li>

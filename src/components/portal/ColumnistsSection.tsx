@@ -9,14 +9,11 @@ export function ColumnistsSection({ columnists }: { columnists: Columnist[] }) {
     <section className="mt-14 sm:mt-20">
       <div className="mb-8 flex items-end justify-between gap-4">
         <div>
-          <p className="font-display text-xs font-black uppercase tracking-[0.3em] text-primary">
-            Colunistas
-          </p>
-          <h2 className="mt-1 font-display text-3xl font-black sm:text-4xl">
-            Vozes que assinam a Serra
+          <h2 className="font-display text-3xl font-black tracking-tight sm:text-4xl">
+            COLUNISTAS
           </h2>
-          <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-            Opinião, bastidores e histórias contadas por quem vive a região.
+          <p className="mt-2 text-sm text-muted-foreground">
+            Opinião, Social, Política, Economia.
           </p>
         </div>
         <Link
