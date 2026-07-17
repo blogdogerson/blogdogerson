@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Radio } from "lucide-react";
+import { Instagram, Mail, Radio } from "lucide-react";
 import { CATEGORIES, categoryToSlug, RADIO_STREAM_URL } from "@/lib/categories";
 import { NewsletterForm } from "./NewsletterForm";
 
