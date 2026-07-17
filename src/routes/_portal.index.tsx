@@ -43,10 +43,10 @@ function HomePage() {
   const { articles, banners, videos } = data;
   const columnists = colData.columnists;
 
-  const hero = articles[0];
-  const secondary = articles.slice(1, 5);
-  const rest = articles.slice(5, 17);
-  const more = articles.slice(17, 29);
+  const heroPool = articles.slice(0, 5);
+  const secondary = articles.slice(5, 9);
+  const rest = articles.slice(9, 21);
+  const more = articles.slice(21, 33);
 
   return (
     <div className="mx-auto max-w-7xl px-4">
@@ -55,12 +55,10 @@ function HomePage() {
         <TopBannerCarousel banners={banners} />
       </div>
 
-      {/* Hero — broken grid */}
-      {hero && (
+      {/* Hero — rotating + list */}
+      {heroPool.length > 0 && (
         <section className="grid gap-5 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
-          <div className="animate-fade-up">
-            <HeroCard article={hero} />
-          </div>
+          <HeroRotator articles={heroPool} />
           <div className="grid content-start gap-2 rounded-3xl bg-card p-3 shadow-card">
             <p className="px-2 pt-1 font-display text-xs font-black uppercase tracking-[0.25em] text-primary">
               Últimas notícias
@@ -72,11 +70,16 @@ function HomePage() {
         </section>
       )}
 
+      {/* Wide banner below hero */}
+      <div className="my-8">
+        <InlineBanner banners={banners} />
+      </div>
+
       {/* Main grid + sidebar */}
-      <section className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+      <section className="mt-4 grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <div>
           <div className="mb-5 flex items-baseline justify-between">
-            <h2 className="font-display text-2xl font-black">Destaques da Região</h2>
+            <h2 className="font-display text-2xl font-black tracking-tight">NOTÍCIAS</h2>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {rest.slice(0, 6).map((a, i) => (
@@ -85,7 +88,7 @@ function HomePage() {
           </div>
 
           <div className="my-8">
-            <InlineBanner banners={banners} />
+            <InlineBanner banners={banners} index={1} />
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -95,17 +98,11 @@ function HomePage() {
           </div>
         </div>
 
-        <aside className="space-y-6">
-          <SidebarBanners banners={banners} />
-          <div className="rounded-2xl bg-sky-soft p-5">
-            <h3 className="font-display text-lg font-black">Newsletter</h3>
-            <p className="mb-3 mt-1 text-sm text-muted-foreground">
-              As principais notícias no seu e-mail.
-            </p>
-            <NewsletterForm />
-          </div>
+        <aside className="space-y-4">
+          <SidebarBanners banners={banners} max={6} />
         </aside>
       </section>
+
 
       {/* Colunistas */}
       <ColumnistsSection columnists={columnists} />
