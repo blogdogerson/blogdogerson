@@ -8,14 +8,17 @@ import gersonAsset from "@/assets/gerson-sorgetz.png.asset.json";
 
 function Logo() {
   return (
-    <Link to="/" className="group flex items-center gap-3 sm:gap-4" aria-label="Blog do Gerson — início">
+    <Link
+      to="/"
+      className="group mx-auto flex flex-col items-center gap-3 sm:flex-row sm:gap-5"
+      aria-label="Blog do Gerson — início"
+    >
       <div className="relative shrink-0">
-        {/* Animated ring */}
         <span
           aria-hidden="true"
           className="absolute -inset-1 rounded-full bg-[conic-gradient(from_0deg,oklch(0.72_0.14_245),oklch(0.6_0.18_255),oklch(0.85_0.09_230),oklch(0.72_0.14_245))] opacity-70 blur-[6px] transition-opacity duration-300 group-hover:opacity-100"
         />
-        <div className="relative h-14 w-14 overflow-hidden rounded-full ring-2 ring-card shadow-float transition-transform duration-500 group-hover:scale-105 sm:h-16 sm:w-16">
+        <div className="relative h-16 w-16 overflow-hidden rounded-full ring-2 ring-card shadow-float transition-transform duration-500 group-hover:scale-105 sm:h-20 sm:w-20 md:h-24 md:w-24">
           <img
             src={gersonAsset.url}
             alt="Gerson Sorgetz"
@@ -28,7 +31,7 @@ function Logo() {
         <img
           src={logoAsset.url}
           alt="Blog do Gerson — Portal de Notícias"
-          className="h-10 w-auto object-contain sm:h-14 md:h-16"
+          className="h-14 w-auto object-contain sm:h-20 md:h-24 lg:h-28"
           loading="eager"
         />
         <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_35%,oklch(1_0_0/0.55)_50%,transparent_65%)] bg-[length:250%_100%] animate-logo-shine" />
