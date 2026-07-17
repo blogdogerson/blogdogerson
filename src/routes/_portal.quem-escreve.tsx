@@ -33,7 +33,7 @@ function AboutPage() {
         </div>
         <div>
           <p className="font-display text-xs font-black uppercase tracking-[0.3em] text-primary">
-            Quem escreve
+            Perfil do Colunista
           </p>
           <h1 className="mt-1 font-display text-4xl font-black sm:text-5xl">Gerson Sorgetz</h1>
           <p className="mt-3 text-lg text-muted-foreground">
@@ -45,6 +45,14 @@ function AboutPage() {
               className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
               <Mail className="h-4 w-4" /> gerson@blogdogerson.com.br
+            </a>
+            <a
+              href="https://instagram.com/blogdogerson"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold hover:bg-secondary"
+            >
+              <Instagram className="h-4 w-4" /> Instagram
             </a>
             <a
               href={RADIO_STREAM_URL}
