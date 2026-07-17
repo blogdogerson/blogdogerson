@@ -96,6 +96,15 @@ export function Header() {
           </p>
           <div className="flex items-center gap-2">
             <RadioButton />
+            <a
+              href="https://instagram.com/blogdogerson"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram do Blog do Gerson"
+              className="grid h-7 w-7 place-items-center rounded-full border border-primary/30 text-primary transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground"
+            >
+              <Instagram className="h-3.5 w-3.5" />
+            </a>
             <Link
               to="/anuncie"
               className="rounded-full border border-primary/30 px-3 py-1 text-xs font-semibold text-primary transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground"
