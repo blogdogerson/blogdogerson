@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Menu, PenLine, Search, X } from "lucide-react";
+import { Instagram, Menu, PenLine, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CATEGORIES, categoryToSlug } from "@/lib/categories";
 import { RadioButton } from "./RadioPlayer";
