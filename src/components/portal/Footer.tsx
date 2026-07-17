@@ -60,7 +60,7 @@ export function Footer() {
             ))}
             <li>
               <Link to="/quem-escreve" className="text-navy-foreground/80 hover:text-navy-foreground">
-                Quem escreve
+                Perfil do Colunista
               </Link>
             </li>
             <li>
