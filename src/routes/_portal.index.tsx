@@ -91,14 +91,7 @@ function HomePage() {
       {heroPool.length > 0 && (
         <section className="grid gap-5 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
           <HeroRotator articles={heroPool} />
-          <div className="grid content-start gap-2 rounded-3xl bg-card p-3 shadow-card">
-            <p className="px-2 pt-1 font-display text-xs font-black uppercase tracking-[0.25em] text-primary">
-              Últimas notícias
-            </p>
-            {secondary.map((a) => (
-              <ListRow key={a.id} article={a} />
-            ))}
-          </div>
+          <LatestRotator pool={articles.slice(5)} />
         </section>
       )}
 
