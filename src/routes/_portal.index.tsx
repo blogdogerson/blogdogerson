@@ -78,7 +78,6 @@ function HomePage() {
   const columnists = colData.columnists;
 
   const heroPool = articles.slice(0, 5);
-  const secondary = articles.slice(5, 9);
 
   return (
     <div className="mx-auto max-w-7xl px-4">
