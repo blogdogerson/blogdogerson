@@ -1,7 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { ChevronRight, Clock } from "lucide-react";
 import { getArticleBySlug } from "@/lib/portal.functions";
-import { CategoryTag, formatDate, ArticleCard } from "@/components/portal/ArticleCard";
+import { categoryToSlug } from "@/lib/categories";
+import { CategoryTag, formatExactDate, ArticleCard } from "@/components/portal/ArticleCard";
 import { SidebarBanners, InlineBanner } from "@/components/portal/BannerSlot";
 import { NewsletterForm } from "@/components/portal/NewsletterForm";
 import { ShareButtons } from "@/components/portal/ShareButtons";
@@ -70,6 +72,12 @@ export const Route = createFileRoute("/_portal/noticia/$slug")({
   ),
 });
 
+/** Estimated reading time in minutes (~200 words/min). */
+function readingTime(html: string) {
+  const words = html.replace(/<[^>]+>/g, " ").trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
 function ArticlePage() {
   const { slug } = Route.useParams();
   const { data } = useSuspenseQuery(articleQuery(slug));
@@ -81,7 +89,20 @@ function ArticlePage() {
       <div className="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
         <article className="min-w-0">
           <div className="max-w-3xl">
-            <CategoryTag category={article.category} />
+            <nav aria-label="Trilha de navegação" className="mb-4 flex items-center gap-1 text-xs font-medium text-muted-foreground">
+              <Link to="/" className="transition-colors hover:text-primary">
+                Início
+              </Link>
+              <ChevronRight className="h-3 w-3" />
+              <Link
+                to="/editoria/$slug"
+                params={{ slug: categoryToSlug(article.category) }}
+                className="transition-colors hover:text-primary"
+              >
+                {article.category}
+              </Link>
+            </nav>
+            <CategoryTag category={article.category} asLink />
             <h1 className="mt-4 font-display text-3xl font-black leading-tight sm:text-5xl">
               {article.title}
             </h1>
@@ -89,9 +110,14 @@ function ArticlePage() {
               <p className="mt-4 text-lg leading-relaxed text-muted-foreground">{article.excerpt}</p>
             )}
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-y py-3">
-              <p className="text-sm text-muted-foreground">
-                Por <span className="font-semibold text-foreground">Gerson Sorgetz</span> ·{" "}
-                {formatDate(article.published_at)}
+              <p className="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
+                <span>
+                  Por <span className="font-semibold text-foreground">Gerson Sorgetz</span> ·{" "}
+                  {formatExactDate(article.published_at)}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Clock className="h-3.5 w-3.5" /> {readingTime(article.content)} min de leitura
+                </span>
               </p>
               <ShareButtons title={article.title} slug={article.slug} />
             </div>

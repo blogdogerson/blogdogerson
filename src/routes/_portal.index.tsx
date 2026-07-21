@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { getHomeData } from "@/lib/portal.functions";
 import { getColumnists } from "@/lib/columnists.functions";
 import { ListRow } from "@/components/portal/ArticleCard";
@@ -12,20 +11,15 @@ import { VideoSections } from "@/components/portal/VideoSections";
 import { ColumnistsSection } from "@/components/portal/ColumnistsSection";
 import type { Article } from "@/lib/categories";
 
-function LatestRotator({ pool }: { pool: Article[] }) {
-  const [offset, setOffset] = useState(0);
-  useEffect(() => {
-    if (pool.length <= 4) return;
-    const t = setInterval(() => setOffset((o) => (o + 1) % pool.length), 7000);
-    return () => clearInterval(t);
-  }, [pool.length]);
-  const items = Array.from({ length: Math.min(4, pool.length) }, (_, i) => pool[(offset + i) % pool.length]);
+function LatestList({ pool }: { pool: Article[] }) {
+  const items = pool.slice(0, 4);
   return (
     <div className="grid content-start gap-2 rounded-3xl bg-card p-3 shadow-card">
-      <p className="px-2 pt-1 font-display text-xs font-black uppercase tracking-[0.25em] text-primary">
+      <p className="flex items-center gap-2 px-2 pt-1 font-display text-xs font-black uppercase tracking-[0.25em] text-highlight-foreground">
+        <span className="inline-block h-2 w-2 rounded-full bg-highlight animate-pulse-dot" />
         Últimas notícias
       </p>
-      <div key={offset} className="grid animate-fade-up gap-2">
+      <div className="grid gap-2">
         {items.map((a) => (
           <ListRow key={a.id} article={a} />
         ))}
@@ -90,9 +84,14 @@ function HomePage() {
       {heroPool.length > 0 && (
         <section className="grid gap-5 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
           <HeroRotator articles={heroPool} />
-          <LatestRotator pool={articles.slice(5)} />
+          <LatestList pool={articles.slice(5)} />
         </section>
       )}
+
+      {/* First segments — news first */}
+      {HOME_SEGMENTS.slice(0, 2).map((cat) => (
+        <CategoryStrip key={cat} category={cat} articles={articles} />
+      ))}
 
       {/* Sponsors — highlighted */}
       <SponsorsBand banners={banners} />
@@ -102,8 +101,8 @@ function HomePage() {
         <InlineBanner banners={banners} />
       </div>
 
-      {/* Segments — 3 news per category, clean */}
-      {HOME_SEGMENTS.map((cat) => (
+      {/* Remaining segments */}
+      {HOME_SEGMENTS.slice(2).map((cat) => (
         <CategoryStrip key={cat} category={cat} articles={articles} />
       ))}
 

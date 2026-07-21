@@ -5,18 +5,23 @@ import type { Article } from "@/lib/categories";
 export function HeroRotator({ articles }: { articles: Article[] }) {
   const items = articles.slice(0, 5);
   const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (items.length < 2) return;
+    if (items.length < 2 || paused) return;
     const t = setInterval(() => setI((v) => (v + 1) % items.length), 6500);
     return () => clearInterval(t);
-  }, [items.length]);
+  }, [items.length, paused]);
 
   if (items.length === 0) return null;
   const current = items[i % items.length];
 
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       <div key={current.id} className="animate-fade-up">
         <HeroCard article={current} />
       </div>

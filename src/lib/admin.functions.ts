@@ -20,7 +20,7 @@ const bannerSchema = z.object({
   title: z.string().trim().max(200).default(""),
   image_url: z.string().trim().min(1).max(1000),
   link_url: z.string().trim().max(1000).optional().nullable(),
-  position: z.enum(["top", "sidebar", "inline"]),
+  position: z.enum(["top", "sidebar", "inline", "sponsor"]),
   active: z.boolean().default(true),
   sort_order: z.number().int().default(0),
 });

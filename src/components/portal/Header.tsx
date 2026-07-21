@@ -15,9 +15,13 @@ const LOGO_BANDS: Array<{ clip: string; delay: string }> = [
   { clip: "inset(74% 0 0 0)", delay: "0.85s" },      // bottom rule + tagline
 ];
 
-function AnimatedLogo() {
+function AnimatedLogo({ compact }: { compact?: boolean }) {
   return (
-    <span className="relative block h-14 w-auto sm:h-20 md:h-24 lg:h-28">
+    <span
+      className={`relative block w-auto transition-all duration-300 ${
+        compact ? "h-10 sm:h-12" : "h-12 sm:h-16 md:h-20"
+      }`}
+    >
       <img
         src={logoAsset.url}
         alt="Blog do Gerson — Portal de Notícias · Opinião e informação com credibilidade"
@@ -43,11 +47,13 @@ function AnimatedLogo() {
   );
 }
 
-function Logo() {
+function Logo({ compact }: { compact?: boolean }) {
   return (
     <Link
       to="/"
-      className="group mx-auto flex flex-col items-center gap-3 sm:flex-row sm:gap-5"
+      className={`group mx-auto flex items-center transition-all duration-300 ${
+        compact ? "flex-row gap-3" : "flex-col gap-2 sm:flex-row sm:gap-5"
+      }`}
       aria-label="Blog do Gerson — início"
     >
       <div className="relative shrink-0">
@@ -55,7 +61,11 @@ function Logo() {
           aria-hidden="true"
           className="absolute -inset-1 rounded-full bg-[conic-gradient(from_0deg,oklch(0.72_0.14_245),oklch(0.6_0.18_255),oklch(0.85_0.09_230),oklch(0.72_0.14_245))] opacity-70 blur-[6px] transition-opacity duration-300 group-hover:opacity-100"
         />
-        <div className="relative h-16 w-16 overflow-hidden rounded-full ring-2 ring-card shadow-float transition-transform duration-500 group-hover:scale-105 sm:h-20 sm:w-20 md:h-24 md:w-24">
+        <div
+          className={`relative overflow-hidden rounded-full ring-2 ring-card shadow-float transition-all duration-300 group-hover:scale-105 ${
+            compact ? "h-10 w-10 sm:h-12 sm:w-12" : "h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20"
+          }`}
+        >
           <img
             src={gersonAsset.url}
             alt="Gerson Sorgetz"
@@ -65,7 +75,7 @@ function Logo() {
         </div>
       </div>
       <div className="relative min-w-0 overflow-hidden">
-        <AnimatedLogo />
+        <AnimatedLogo compact={compact} />
       </div>
     </Link>
   );
@@ -117,7 +127,11 @@ export function Header() {
         </svg>
       </div>
 
-      <div className="border-b border-border/60 bg-gradient-to-r from-sky-soft via-transparent to-sky-soft">
+      <div
+        className={`overflow-hidden border-b border-border/60 bg-gradient-to-r from-sky-soft via-transparent to-sky-soft transition-all duration-300 ${
+          scrolled ? "max-h-0 border-transparent opacity-0" : "max-h-9 opacity-100"
+        }`}
+      >
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-3 px-4">
           <p className="hidden text-xs font-medium text-muted-foreground sm:block">
             <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot align-middle" />
@@ -144,9 +158,13 @@ export function Header() {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:py-6">
+      <div
+        className={`mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 transition-all duration-300 ${
+          scrolled ? "py-2" : "py-3 sm:py-4"
+        }`}
+      >
         <div className="hidden md:block" />
-        <Logo />
+        <Logo compact={scrolled} />
         <div className="flex items-center justify-end gap-1.5">
           <Link
             to="/colunistas"

@@ -55,7 +55,7 @@ export function TopBannerCarousel({ banners }: { banners: Banner[] }) {
 
   return (
     <div className="relative mx-auto w-full max-w-5xl">
-      <BannerFrame banner={items[index % items.length]} className="aspect-[8/1] min-h-16 w-full" />
+      <BannerFrame banner={items[index % items.length]} className="aspect-[4/1] w-full sm:aspect-[8/1]" />
       {items.length > 1 && (
         <div className="absolute -bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
           {items.map((_, i) => (
@@ -95,5 +95,5 @@ export function InlineBanner({ banners, index = 0 }: { banners: Banner[]; index?
   const items = banners.filter((b) => b.position === "inline");
   if (items.length === 0) return <Placeholder />;
   const banner = items[index % items.length];
-  return <BannerFrame banner={banner} className="aspect-[8/1] min-h-16" />;
+  return <BannerFrame banner={banner} className="aspect-[4/1] sm:aspect-[8/1]" />;
 }

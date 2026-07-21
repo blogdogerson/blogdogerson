@@ -5,7 +5,9 @@ import { Sparkles } from "lucide-react";
 const TOTAL_SLOTS = 8;
 
 export function SponsorsBand({ banners }: { banners: Banner[] }) {
-  const items = banners.filter((b) => b.active).slice(0, TOTAL_SLOTS);
+  const items = banners
+    .filter((b) => b.active && b.position === "sponsor")
+    .slice(0, TOTAL_SLOTS);
   const placeholders = Math.max(0, TOTAL_SLOTS - items.length);
 
   return (
@@ -43,7 +45,7 @@ export function SponsorsBand({ banners }: { banners: Banner[] }) {
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/80 to-transparent p-3">
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/70">
+                <p className="text-[11px] font-black uppercase tracking-[0.22em] text-white/80">
                   Patrocinador
                 </p>
                 {b.title && (

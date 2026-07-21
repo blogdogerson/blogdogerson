@@ -2,8 +2,18 @@ import { Link } from "@tanstack/react-router";
 import type { Article } from "@/lib/categories";
 import { categoryToSlug } from "@/lib/categories";
 
-export function formatDate(iso: string) {
+export function formatExactDate(iso: string) {
   return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+}
+
+/** Relative time for recent news ("há 2 horas"), exact date otherwise. */
+export function formatDate(iso: string) {
+  const d = new Date(iso);
+  const diffMin = Math.floor((Date.now() - d.getTime()) / 60_000);
+  if (diffMin >= 0 && diffMin < 60) return diffMin <= 1 ? "agora mesmo" : `há ${diffMin} min`;
+  const diffH = Math.floor(diffMin / 60);
+  if (diffH >= 1 && diffH < 24) return `há ${diffH} hora${diffH > 1 ? "s" : ""}`;
+  return formatExactDate(iso);
 }
 
 export function CategoryTag({
@@ -55,7 +65,7 @@ export function HeroCard({ article }: { article: Article }) {
         <p className="mt-2 hidden max-w-2xl text-sm text-navy-foreground/80 sm:block">
           {article.excerpt}
         </p>
-        <p className="mt-3 text-xs font-medium uppercase tracking-wider text-navy-foreground/60">
+        <p className="mt-3 text-xs font-medium uppercase tracking-wider text-navy-foreground/75">
           {formatDate(article.published_at)}
         </p>
       </div>
@@ -115,7 +125,7 @@ export function ListRow({ article }: { article: Article }) {
         )}
       </div>
       <div className="min-w-0">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
+        <span className="text-[11px] font-bold uppercase tracking-widest text-primary">
           {article.category}
         </span>
         <h4 className="mt-0.5 line-clamp-2 font-display text-sm font-bold leading-snug text-foreground group-hover:text-primary">

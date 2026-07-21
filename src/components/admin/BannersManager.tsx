@@ -9,6 +9,7 @@ const POSITIONS = [
   { value: "top", label: "Topo (rotativo)" },
   { value: "sidebar", label: "Lateral" },
   { value: "inline", label: "Entre notícias" },
+  { value: "sponsor", label: "Patrocinador (grade da home)" },
 ] as const;
 
 interface Editing {
@@ -16,7 +17,7 @@ interface Editing {
   title: string;
   image_url: string;
   link_url: string;
-  position: "top" | "sidebar" | "inline";
+  position: "top" | "sidebar" | "inline" | "sponsor";
   active: boolean;
   sort_order: number;
 }

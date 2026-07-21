@@ -30,7 +30,7 @@ export function VideoSections({ videos }: { videos: Video[] }) {
         <PlayCircle className="h-8 w-8 text-primary" />
         <div>
           <h2 className="font-display text-3xl font-black">Vídeos</h2>
-          <p className="text-sm text-navy-foreground/60">
+          <p className="text-sm text-navy-foreground/75">
             Podcast Cafezinho, TV Gramado News, entrevistas e muito mais.
           </p>
         </div>

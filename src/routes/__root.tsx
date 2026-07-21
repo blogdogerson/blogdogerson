@@ -92,8 +92,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Blog do Gerson — Notícias de Gramado, Canela e Região" },
       { name: "twitter:description", content: "Portal de notícias de Gramado, Canela, Nova Petrópolis e Região da Serra Gaúcha. Jornalismo sério desde 2005, por Gerson Sorgetz." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/159115e7-599f-4889-88ef-ef073983b4a8/id-preview-16d276c2--03ec78c6-9047-4751-940b-6b524da80bc7.lovable.app-1784206895664.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/159115e7-599f-4889-88ef-ef073983b4a8/id-preview-16d276c2--03ec78c6-9047-4751-940b-6b524da80bc7.lovable.app-1784206895664.png" },
+      // TODO: substituir por uma arte própria 1200×630 quando disponível
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a/v1/03ec78c6-9047-4751-940b-6b524da80bc7/de2424f7-26da-4f33-bb62-bfe75288dfb7/logo-blog-do-gerson-v2.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a/v1/03ec78c6-9047-4751-940b-6b524da80bc7/de2424f7-26da-4f33-bb62-bfe75288dfb7/logo-blog-do-gerson-v2.png" },
+      { name: "theme-color", content: "#101a33" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

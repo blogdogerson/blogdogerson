@@ -48,7 +48,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-navy-foreground/60">
+          <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-navy-foreground/75">
             Editorias
           </h3>
           <ul className="grid grid-cols-2 gap-2 text-sm">
@@ -82,7 +82,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-navy-foreground/60">
+          <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-navy-foreground/75">
             Newsletter
           </h3>
           <p className="mb-4 text-sm text-navy-foreground/70">
@@ -92,7 +92,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-navy-foreground/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-center text-xs text-navy-foreground/60 sm:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-center text-xs text-navy-foreground/70 sm:flex-row">
           <p>© {new Date().getFullYear()} Blog do Gerson — blogdogerson.com.br</p>
           <p>Todos os direitos reservados: Abimael Rodrigues @euabimael</p>
         </div>

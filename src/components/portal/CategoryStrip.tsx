@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import type { Article } from "@/lib/categories";
@@ -13,17 +12,10 @@ export function CategoryStrip({
   articles: Article[];
 }) {
   const pool = articles.filter((a) => a.category === category);
-  const [offset, setOffset] = useState(0);
-
-  useEffect(() => {
-    if (pool.length <= 3) return;
-    const t = setInterval(() => setOffset((o) => (o + 3) % pool.length), 9000);
-    return () => clearInterval(t);
-  }, [pool.length]);
 
   if (pool.length === 0) return null;
 
-  const items = Array.from({ length: Math.min(3, pool.length) }, (_, i) => pool[(offset + i) % pool.length]);
+  const items = pool.slice(0, 3);
 
   return (
     <section className="mt-12">
@@ -40,7 +32,7 @@ export function CategoryStrip({
           Ver tudo <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
-      <div key={offset} className="grid animate-fade-up gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((a, i) => (
           <ArticleCard key={a.id} article={a} compact={i > 0} />
         ))}
