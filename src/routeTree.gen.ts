@@ -21,6 +21,7 @@ import { Route as PortalAnuncieRouteImport } from './routes/_portal.anuncie'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
 import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
+import { Route as PortalColunaSlugRouteImport } from './routes/_portal.coluna.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -80,6 +81,11 @@ const PortalEditoriaSlugRoute = PortalEditoriaSlugRouteImport.update({
   path: '/editoria/$slug',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalColunaSlugRoute = PortalColunaSlugRouteImport.update({
+  id: '/coluna/$slug',
+  path: '/coluna/$slug',
+  getParentRoute: () => PortalRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PortalIndexRoute
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/busca': typeof PortalBuscaRoute
   '/colunistas': typeof PortalColunistasRoute
   '/quem-escreve': typeof PortalQuemEscreveRoute
+  '/coluna/$slug': typeof PortalColunaSlugRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/busca': typeof PortalBuscaRoute
   '/colunistas': typeof PortalColunistasRoute
   '/quem-escreve': typeof PortalQuemEscreveRoute
+  '/coluna/$slug': typeof PortalColunaSlugRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/_portal/colunistas': typeof PortalColunistasRoute
   '/_portal/quem-escreve': typeof PortalQuemEscreveRoute
   '/_portal/': typeof PortalIndexRoute
+  '/_portal/coluna/$slug': typeof PortalColunaSlugRoute
   '/_portal/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/_portal/noticia/$slug': typeof PortalNoticiaSlugRoute
 }
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/busca'
     | '/colunistas'
     | '/quem-escreve'
+    | '/coluna/$slug'
     | '/editoria/$slug'
     | '/noticia/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/busca'
     | '/colunistas'
     | '/quem-escreve'
+    | '/coluna/$slug'
     | '/editoria/$slug'
     | '/noticia/$slug'
   id:
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/_portal/colunistas'
     | '/_portal/quem-escreve'
     | '/_portal/'
+    | '/_portal/coluna/$slug'
     | '/_portal/editoria/$slug'
     | '/_portal/noticia/$slug'
   fileRoutesById: FileRoutesById
@@ -254,6 +266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalEditoriaSlugRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/_portal/coluna/$slug': {
+      id: '/_portal/coluna/$slug'
+      path: '/coluna/$slug'
+      fullPath: '/coluna/$slug'
+      preLoaderRoute: typeof PortalColunaSlugRouteImport
+      parentRoute: typeof PortalRoute
+    }
   }
 }
 
@@ -274,6 +293,7 @@ interface PortalRouteChildren {
   PortalColunistasRoute: typeof PortalColunistasRoute
   PortalQuemEscreveRoute: typeof PortalQuemEscreveRoute
   PortalIndexRoute: typeof PortalIndexRoute
+  PortalColunaSlugRoute: typeof PortalColunaSlugRoute
   PortalEditoriaSlugRoute: typeof PortalEditoriaSlugRoute
   PortalNoticiaSlugRoute: typeof PortalNoticiaSlugRoute
 }
@@ -284,6 +304,7 @@ const PortalRouteChildren: PortalRouteChildren = {
   PortalColunistasRoute: PortalColunistasRoute,
   PortalQuemEscreveRoute: PortalQuemEscreveRoute,
   PortalIndexRoute: PortalIndexRoute,
+  PortalColunaSlugRoute: PortalColunaSlugRoute,
   PortalEditoriaSlugRoute: PortalEditoriaSlugRoute,
   PortalNoticiaSlugRoute: PortalNoticiaSlugRoute,
 }
