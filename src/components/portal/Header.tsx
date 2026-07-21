@@ -3,8 +3,45 @@ import { Instagram, Menu, PenLine, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CATEGORIES, categoryToSlug } from "@/lib/categories";
 import { RadioButton } from "./RadioPlayer";
-import logoAsset from "@/assets/logo-blog-do-gerson.png.asset.json";
+import logoAsset from "@/assets/logo-blog-do-gerson-v2.png.asset.json";
 import gersonAsset from "@/assets/gerson-sorgetz.png.asset.json";
+
+// Reveal the wordmark in 4 horizontal bands (top rule, subtitle,
+// main "Blog do Gerson", bottom rule + tagline), each fading in with stagger.
+const LOGO_BANDS: Array<{ clip: string; delay: string }> = [
+  { clip: "inset(0 0 88% 0)", delay: "0.05s" },      // top rule
+  { clip: "inset(6% 0 66% 0)", delay: "0.3s" },      // "PORTAL DE NOTÍCIAS"
+  { clip: "inset(28% 0 22% 0)", delay: "0.55s" },    // "Blog do Gerson"
+  { clip: "inset(74% 0 0 0)", delay: "0.85s" },      // bottom rule + tagline
+];
+
+function AnimatedLogo() {
+  return (
+    <span className="relative block h-14 w-auto sm:h-20 md:h-24 lg:h-28">
+      <img
+        src={logoAsset.url}
+        alt="Blog do Gerson — Portal de Notícias · Opinião e informação com credibilidade"
+        className="block h-full w-auto object-contain opacity-0"
+        loading="eager"
+        aria-hidden={false}
+      />
+      {LOGO_BANDS.map((b, i) => (
+        <img
+          key={i}
+          src={logoAsset.url}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-auto object-contain animate-logo-band"
+          style={{ clipPath: b.clip, animationDelay: b.delay }}
+        />
+      ))}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 animate-logo-shine bg-[linear-gradient(115deg,transparent_35%,oklch(1_0_0/0.55)_50%,transparent_65%)] bg-[length:250%_100%]"
+        style={{ animationDelay: "1.6s" }}
+      />
+    </span>
+  );
+}
 
 function Logo() {
   return (
@@ -28,13 +65,7 @@ function Logo() {
         </div>
       </div>
       <div className="relative min-w-0 overflow-hidden">
-        <img
-          src={logoAsset.url}
-          alt="Blog do Gerson — Portal de Notícias"
-          className="h-14 w-auto object-contain sm:h-20 md:h-24 lg:h-28"
-          loading="eager"
-        />
-        <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_35%,oklch(1_0_0/0.55)_50%,transparent_65%)] bg-[length:250%_100%] animate-logo-shine" />
+        <AnimatedLogo />
       </div>
     </Link>
   );
@@ -71,7 +102,6 @@ export function Header() {
           : "border-transparent bg-card/70 backdrop-blur-md"
       }`}
     >
-      {/* Decorative underlay wave */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.97_0.02_240/0.6),transparent)]" />
         <svg
@@ -87,7 +117,6 @@ export function Header() {
         </svg>
       </div>
 
-      {/* Top bar */}
       <div className="border-b border-border/60 bg-gradient-to-r from-sky-soft via-transparent to-sky-soft">
         <div className="mx-auto flex h-9 max-w-7xl items-center justify-between gap-3 px-4">
           <p className="hidden text-xs font-medium text-muted-foreground sm:block">
@@ -115,7 +144,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* Main bar */}
       <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:py-6">
         <div className="hidden md:block" />
         <Logo />
@@ -161,7 +189,6 @@ export function Header() {
         </div>
       )}
 
-      {/* Nav */}
       <nav className={`${open ? "block" : "hidden"} border-t border-border/60 lg:block`}>
         <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-2 lg:flex-row lg:items-center lg:gap-0 lg:py-0">
           {CATEGORIES.map((cat) => (

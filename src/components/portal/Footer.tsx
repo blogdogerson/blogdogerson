@@ -2,16 +2,21 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, Mail, Radio } from "lucide-react";
 import { CATEGORIES, categoryToSlug, RADIO_STREAM_URL } from "@/lib/categories";
 import { NewsletterForm } from "./NewsletterForm";
+import logoBrancoAsset from "@/assets/logo-blog-do-gerson-branco.png.asset.json";
 
 export function Footer() {
   return (
     <footer className="mt-16 bg-navy text-navy-foreground">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-3">
         <div>
-          <p className="font-display text-[11px] font-bold uppercase tracking-[0.35em] text-navy-foreground/60">
-            Blog do
-          </p>
-          <p className="font-display text-4xl font-black">GERSON</p>
+          <Link to="/" aria-label="Blog do Gerson" className="inline-block">
+            <img
+              src={logoBrancoAsset.url}
+              alt="Blog do Gerson"
+              className="h-20 w-auto object-contain sm:h-24"
+              loading="lazy"
+            />
+          </Link>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-navy-foreground/70">
             Jornalismo sério e comprometido com Gramado, Canela, Nova Petrópolis e Região desde
             2005. Editado pelo jornalista Gerson Sorgetz.
