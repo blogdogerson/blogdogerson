@@ -13,7 +13,7 @@ export function Footer() {
             <img
               src={logoBrancoAsset.url}
               alt="Blog do Gerson"
-              className="h-20 w-auto object-contain sm:h-24"
+              className="h-20 w-auto object-contain mix-blend-screen sm:h-24"
               loading="lazy"
             />
           </Link>

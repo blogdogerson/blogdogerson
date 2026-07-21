@@ -20,9 +20,11 @@ function AnimatedLogo({ compact }: { compact?: boolean }) {
   return (
     <span
       className={`relative block w-auto transition-all duration-300 ${
-        compact ? "h-10 sm:h-12" : "h-12 sm:h-16 md:h-20"
+        compact ? "h-9 sm:h-11" : "h-10 sm:h-16 md:h-20"
       }`}
     >
+      {/* mix-blend-screen: o fundo preto do PNG desaparece sobre o tema escuro,
+          sem retângulo demarcando a imagem */}
       <img
         src={logoAsset.url}
         alt="Blog do Gerson — Portal de Notícias · Opinião e informação com credibilidade"
@@ -35,15 +37,10 @@ function AnimatedLogo({ compact }: { compact?: boolean }) {
           key={i}
           src={logoAsset.url}
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 h-full w-auto object-contain animate-logo-band"
+          className="pointer-events-none absolute inset-0 h-full w-auto object-contain mix-blend-screen animate-logo-band"
           style={{ clipPath: b.clip, animationDelay: b.delay }}
         />
       ))}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 animate-logo-shine bg-[linear-gradient(115deg,transparent_35%,oklch(1_0_0/0.55)_50%,transparent_65%)] bg-[length:250%_100%]"
-        style={{ animationDelay: "1.6s" }}
-      />
     </span>
   );
 }
@@ -52,8 +49,8 @@ function Logo({ compact }: { compact?: boolean }) {
   return (
     <Link
       to="/"
-      className={`group mx-auto flex items-center transition-all duration-300 ${
-        compact ? "flex-row gap-3" : "flex-col gap-2 sm:flex-row sm:gap-5"
+      className={`group mx-auto flex flex-row items-center transition-all duration-300 ${
+        compact ? "gap-3" : "gap-3 sm:gap-5"
       }`}
       aria-label="Blog do Gerson — início"
     >
@@ -64,7 +61,7 @@ function Logo({ compact }: { compact?: boolean }) {
         />
         <div
           className={`relative overflow-hidden rounded-full ring-2 ring-card shadow-float transition-all duration-300 group-hover:scale-105 ${
-            compact ? "h-10 w-10 sm:h-12 sm:w-12" : "h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20"
+            compact ? "h-10 w-10 sm:h-12 sm:w-12" : "h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20"
           }`}
         >
           <img
@@ -208,7 +205,11 @@ export function Header() {
         </div>
       )}
 
-      <nav className={`${open ? "block" : "hidden"} border-t border-border/60 lg:block`}>
+      <nav
+        className={`${
+          open ? "block" : "hidden"
+        } border-t border-border/60 bg-background shadow-card lg:block lg:bg-transparent lg:shadow-none`}
+      >
         <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-2 lg:flex-row lg:items-center lg:gap-0 lg:py-0">
           {CATEGORIES.map((cat) => (
             <Link

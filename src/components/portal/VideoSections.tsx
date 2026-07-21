@@ -2,6 +2,32 @@ import type { Video } from "@/lib/categories";
 import { VIDEO_SECTIONS } from "@/lib/categories";
 import { PlayCircle } from "lucide-react";
 
+/**
+ * Converte links comuns (Instagram, YouTube) para o formato aceito em iframes.
+ * Colar o link normal do post/vídeo no admin passa a funcionar.
+ */
+function toEmbedUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, "");
+    if (host === "instagram.com" || host.endsWith(".instagram.com")) {
+      const path = u.pathname.replace(/\/+$/, "");
+      return path.endsWith("/embed") ? url : `https://www.instagram.com${path}/embed`;
+    }
+    if (host === "youtube.com" || host === "m.youtube.com") {
+      const v = u.searchParams.get("v");
+      if (v) return `https://www.youtube.com/embed/${v}`;
+      if (u.pathname.startsWith("/shorts/"))
+        return `https://www.youtube.com/embed/${u.pathname.split("/")[2]}`;
+      return url;
+    }
+    if (host === "youtu.be") return `https://www.youtube.com/embed${u.pathname}`;
+    return url;
+  } catch {
+    return url;
+  }
+}
+
 function VideoEmbed({ video }: { video: Video }) {
   return (
     <div
@@ -10,7 +36,7 @@ function VideoEmbed({ video }: { video: Video }) {
       }`}
     >
       <iframe
-        src={video.embed_url}
+        src={toEmbedUrl(video.embed_url)}
         title={video.title}
         loading="lazy"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
