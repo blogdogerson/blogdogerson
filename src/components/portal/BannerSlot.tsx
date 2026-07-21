@@ -74,6 +74,45 @@ export function TopBannerCarousel({ banners }: { banners: Banner[] }) {
   );
 }
 
+/** Rotating 300×300 square banner — left rail next to the category segments. */
+export function SquareBannerRotator({ banners }: { banners: Banner[] }) {
+  const items = banners.filter((b) => b.active && b.position === "sidebar");
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (items.length < 2) return;
+    const t = setInterval(() => setIndex((i) => (i + 1) % items.length), 6000);
+    return () => clearInterval(t);
+  }, [items.length]);
+
+  if (items.length === 0)
+    return (
+      <div className="mx-auto w-full max-w-[300px] lg:mx-0">
+        <Placeholder tall className="aspect-square" />
+      </div>
+    );
+
+  return (
+    <div className="mx-auto w-full max-w-[300px] lg:mx-0">
+      <BannerFrame banner={items[index % items.length]} className="aspect-square w-full" />
+      {items.length > 1 && (
+        <div className="mt-2 flex justify-center gap-1.5">
+          {items.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              aria-label={`Anúncio ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all ${
+                i === index % items.length ? "w-5 bg-primary" : "w-1.5 bg-border"
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SidebarBanners({ banners, max = 4 }: { banners: Banner[]; max?: number }) {
   const items = banners.filter((b) => b.position === "sidebar").slice(0, max);
   if (items.length === 0)

@@ -3,7 +3,8 @@ import { Instagram, Menu, PenLine, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CATEGORIES, categoryToSlug } from "@/lib/categories";
 import { RadioButton } from "./RadioPlayer";
-import logoAsset from "@/assets/logo-blog-do-gerson-v2.png.asset.json";
+// Dark theme: use the white version of the wordmark
+import logoAsset from "@/assets/logo-blog-do-gerson-branco.png.asset.json";
 import gersonAsset from "@/assets/gerson-sorgetz.png.asset.json";
 
 // Reveal the wordmark in 4 horizontal bands (top rule, subtitle,

@@ -9,12 +9,12 @@ export function WaveBackground() {
       className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
     >
       {/* Gradient wash */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.97_0.03_240)_0%,oklch(0.99_0.005_250)_55%,var(--background)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.27_0.06_255)_0%,oklch(0.23_0.05_260)_55%,var(--background)_100%)]" />
 
       {/* Slow drifting blobs — hidden on mobile (GPU cost of large blurs) */}
-      <div className="absolute -left-32 top-40 hidden h-[520px] w-[520px] rounded-full bg-[oklch(0.85_0.09_240/0.35)] blur-3xl animate-blob-a md:block" />
-      <div className="absolute -right-24 top-[520px] hidden h-[420px] w-[420px] rounded-full bg-[oklch(0.8_0.11_225/0.28)] blur-3xl animate-blob-b md:block" />
-      <div className="absolute left-1/3 top-[1100px] hidden h-[380px] w-[380px] rounded-full bg-[oklch(0.88_0.07_255/0.3)] blur-3xl animate-blob-c md:block" />
+      <div className="absolute -left-32 top-40 hidden h-[520px] w-[520px] rounded-full bg-[oklch(0.45_0.12_250/0.18)] blur-3xl animate-blob-a md:block" />
+      <div className="absolute -right-24 top-[520px] hidden h-[420px] w-[420px] rounded-full bg-[oklch(0.5_0.13_235/0.14)] blur-3xl animate-blob-b md:block" />
+      <div className="absolute left-1/3 top-[1100px] hidden h-[380px] w-[380px] rounded-full bg-[oklch(0.42_0.1_260/0.16)] blur-3xl animate-blob-c md:block" />
 
       {/* Layered SVG waves — bottom */}
       <svg

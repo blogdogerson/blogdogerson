@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import type { Banner } from "@/lib/categories";
 import { Sparkles } from "lucide-react";
 
-const TOTAL_SLOTS = 8;
+const TOTAL_SLOTS = 4;
 
 export function SponsorsBand({ banners }: { banners: Banner[] }) {
   const items = banners
@@ -37,7 +37,7 @@ export function SponsorsBand({ banners }: { banners: Banner[] }) {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((b) => {
           const inner = (
-            <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-card shadow-card ring-1 ring-border transition-all duration-300 hover:-translate-y-1 hover:shadow-float hover:ring-primary/40">
+            <div className="group relative aspect-square overflow-hidden rounded-2xl bg-card shadow-card ring-1 ring-border transition-all duration-300 hover:-translate-y-1 hover:shadow-float hover:ring-primary/40">
               <img
                 src={b.image_url}
                 alt={b.title || "Patrocinador"}
@@ -75,7 +75,7 @@ export function SponsorsBand({ banners }: { banners: Banner[] }) {
           <Link
             key={`ph-${i}`}
             to="/anuncie"
-            className="group flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-primary/25 bg-sky-soft text-center transition-colors hover:border-primary/60 hover:bg-sky-soft/80"
+            className="group flex aspect-square flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-primary/25 bg-sky-soft text-center transition-colors hover:border-primary/60 hover:bg-sky-soft/80"
           >
             <span className="font-display text-sm font-black uppercase tracking-widest text-primary/70 group-hover:text-primary">
               Anuncie aqui

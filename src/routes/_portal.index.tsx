@@ -4,7 +4,7 @@ import { getHomeData } from "@/lib/portal.functions";
 import { getColumnists } from "@/lib/columnists.functions";
 import { ListRow } from "@/components/portal/ArticleCard";
 import { HeroRotator } from "@/components/portal/HeroRotator";
-import { TopBannerCarousel, InlineBanner } from "@/components/portal/BannerSlot";
+import { TopBannerCarousel, InlineBanner, SquareBannerRotator } from "@/components/portal/BannerSlot";
 import { SponsorsBand } from "@/components/portal/SponsorsBand";
 import { CategoryStrip } from "@/components/portal/CategoryStrip";
 import { VideoSections } from "@/components/portal/VideoSections";
@@ -88,27 +88,26 @@ function HomePage() {
         </section>
       )}
 
-      {/* First segments — news first */}
-      {HOME_SEGMENTS.slice(0, 2).map((cat) => (
-        <CategoryStrip key={cat} category={cat} articles={articles} />
-      ))}
-
-      {/* Sponsors — highlighted */}
+      {/* Sponsors — 4 squares (300×300) */}
       <SponsorsBand banners={banners} />
 
-      {/* Wide banner */}
-      <div className="my-10">
-        <InlineBanner banners={banners} />
+      {/* Segments with rotating square ad on the left */}
+      <div className="mt-2 grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
+        <aside className="pt-12">
+          <div className="lg:sticky lg:top-40">
+            <SquareBannerRotator banners={banners} />
+          </div>
+        </aside>
+        <div className="min-w-0">
+          {HOME_SEGMENTS.map((cat) => (
+            <CategoryStrip key={cat} category={cat} articles={articles} />
+          ))}
+        </div>
       </div>
 
-      {/* Remaining segments */}
-      {HOME_SEGMENTS.slice(2).map((cat) => (
-        <CategoryStrip key={cat} category={cat} articles={articles} />
-      ))}
-
-      {/* Inline banner between segments and columnists */}
+      {/* Wide banner between segments and columnists */}
       <div className="my-10">
-        <InlineBanner banners={banners} index={1} />
+        <InlineBanner banners={banners} />
       </div>
 
       {/* Colunistas */}
