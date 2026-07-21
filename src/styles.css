@@ -211,8 +211,10 @@
   .animate-blob-b,
   .animate-blob-c,
   .animate-logo-shine,
+  .animate-logo-band,
   .animate-shimmer-line {
     animation: none !important;
+    opacity: 1 !important;
   }
 }
 
