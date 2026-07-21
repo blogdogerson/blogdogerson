@@ -10,6 +10,7 @@ import {
 } from "@/lib/columns.functions";
 import { adminListColumnists } from "@/lib/columnists.functions";
 import { ImageUpload } from "./ImageUpload";
+import { RichTextArea } from "./RichTextArea";
 
 function slugify(v: string) {
   return v
@@ -187,13 +188,13 @@ export function ColumnsManager() {
           className="w-full rounded-xl border bg-card p-4 text-sm outline-none ring-ring focus:ring-2"
         />
 
-        <textarea
+        <RichTextArea
           required
           value={editing.content}
-          onChange={(e) => setEditing({ ...editing, content: e.target.value })}
-          placeholder="Texto da coluna (aceita HTML: <p>, <strong>, <img>...)"
+          onChange={(content) => setEditing({ ...editing, content })}
+          placeholder="Escreva o texto da coluna. Deixe uma linha em branco entre os parágrafos."
           rows={16}
-          className="w-full rounded-xl border bg-card p-4 font-mono text-sm outline-none ring-ring focus:ring-2"
+          folder="colunas"
         />
 
         {message && <p className="text-sm text-destructive">{message}</p>}

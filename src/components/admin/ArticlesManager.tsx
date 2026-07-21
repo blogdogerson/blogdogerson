@@ -10,6 +10,7 @@ import {
 } from "@/lib/admin.functions";
 import { CATEGORIES } from "@/lib/categories";
 import { ImageUpload } from "./ImageUpload";
+import { RichTextArea } from "./RichTextArea";
 
 function slugify(text: string) {
   return text
@@ -171,13 +172,13 @@ export function ArticlesManager() {
           rows={2}
           className="w-full rounded-xl border bg-card p-4 text-sm outline-none ring-ring focus:ring-2"
         />
-        <textarea
+        <RichTextArea
           required
           value={editing.content}
-          onChange={(e) => setEditing({ ...editing, content: e.target.value })}
-          placeholder="Conteúdo da notícia (aceita HTML: <p>, <img>, <strong>...)"
+          onChange={(content) => setEditing({ ...editing, content })}
+          placeholder="Escreva o conteúdo da notícia. Deixe uma linha em branco entre os parágrafos."
           rows={16}
-          className="w-full rounded-xl border bg-card p-4 font-mono text-sm outline-none ring-ring focus:ring-2"
+          folder="noticias"
         />
         <div className="flex flex-wrap items-center gap-5">
           <label className="flex items-center gap-2 text-sm font-semibold">

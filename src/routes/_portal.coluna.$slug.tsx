@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getColumnBySlug } from "@/lib/columns.functions";
+import { toDisplayHtml } from "@/lib/richtext";
 import { ShareButtons } from "@/components/portal/ShareButtons";
 
 const columnQuery = (slug: string) =>
@@ -118,7 +119,7 @@ function ColumnPage() {
 
       <div
         className="article-body mt-6"
-        dangerouslySetInnerHTML={{ __html: column.content }}
+        dangerouslySetInnerHTML={{ __html: toDisplayHtml(column.content) }}
       />
 
       {related.length > 0 && (

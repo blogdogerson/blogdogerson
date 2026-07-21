@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { ChevronRight, Clock } from "lucide-react";
 import { getArticleBySlug } from "@/lib/portal.functions";
+import { toDisplayHtml } from "@/lib/richtext";
 import { categoryToSlug } from "@/lib/categories";
 import { CategoryTag, formatExactDate, ArticleCard } from "@/components/portal/ArticleCard";
 import { SidebarBanners, InlineBanner } from "@/components/portal/BannerSlot";
@@ -133,7 +134,7 @@ function ArticlePage() {
 
           <div
             className="article-body mt-6 max-w-3xl"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: toDisplayHtml(article.content) }}
           />
 
           <div className="mt-10 max-w-3xl">
