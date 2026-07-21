@@ -9,6 +9,7 @@ import {
   adminDeleteArticle,
 } from "@/lib/admin.functions";
 import { CATEGORIES } from "@/lib/categories";
+import { ImageUpload } from "./ImageUpload";
 
 function slugify(text: string) {
   return text
