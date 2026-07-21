@@ -8,6 +8,7 @@ import {
   adminDeleteColumnist,
   type Columnist,
 } from "@/lib/columnists.functions";
+import { ImageUpload } from "./ImageUpload";
 
 interface Editing {
   id?: string;
@@ -150,19 +151,13 @@ export function ColumnistsManager() {
           className="w-full rounded-xl border bg-card px-4 py-3 text-sm outline-none ring-ring focus:ring-2"
         />
 
-        <input
+        <ImageUpload
           value={editing.avatar_url}
-          onChange={(e) => setEditing({ ...editing, avatar_url: e.target.value })}
-          placeholder="URL da foto de perfil"
-          className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
+          onChange={(url) => setEditing({ ...editing, avatar_url: url })}
+          label="Foto de perfil"
+          folder="colunistas"
+          aspect="aspect-square"
         />
-        {editing.avatar_url && (
-          <img
-            src={editing.avatar_url}
-            alt="Prévia"
-            className="h-24 w-24 rounded-2xl object-cover"
-          />
-        )}
 
         <div className="rounded-2xl border bg-sky-soft/40 p-4">
           <p className="mb-2 font-display text-xs font-black uppercase tracking-widest text-muted-foreground">
