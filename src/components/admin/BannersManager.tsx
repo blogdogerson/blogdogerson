@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { ExternalLink, Plus, Trash2 } from "lucide-react";
 import { adminListBanners, adminSaveBanner, adminDeleteBanner } from "@/lib/admin.functions";
+import { ImageUpload } from "./ImageUpload";
 
 const POSITIONS = [
   { value: "top", label: "Topo (rotativo)" },
@@ -75,16 +76,13 @@ export function BannersManager() {
           placeholder="Nome do anunciante (interno)"
           className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
         />
-        <input
-          required
+        <ImageUpload
           value={editing.image_url}
-          onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-          placeholder="URL da imagem do banner"
-          className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
+          onChange={(url) => setEditing({ ...editing, image_url: url })}
+          label="Imagem do banner"
+          folder="banners"
+          aspect="aspect-[3/1]"
         />
-        {editing.image_url && (
-          <img src={editing.image_url} alt="Prévia" className="max-h-40 rounded-xl object-contain" />
-        )}
         <input
           value={editing.link_url}
           onChange={(e) => setEditing({ ...editing, link_url: e.target.value })}

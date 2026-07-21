@@ -9,6 +9,7 @@ import {
   adminDeleteArticle,
 } from "@/lib/admin.functions";
 import { CATEGORIES } from "@/lib/categories";
+import { ImageUpload } from "./ImageUpload";
 
 function slugify(text: string) {
   return text
@@ -150,15 +151,18 @@ export function ArticlesManager() {
             ))}
           </select>
           <input
-            value={editing.image_url}
-            onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-            placeholder="URL da imagem de capa"
+            value={editing.slug}
+            onChange={(e) => setEditing({ ...editing, slug: slugify(e.target.value) })}
+            placeholder="slug-da-url"
             className="h-11 rounded-xl border bg-card px-3 text-sm outline-none ring-ring focus:ring-2"
           />
         </div>
-        {editing.image_url && (
-          <img src={editing.image_url} alt="Prévia" className="h-40 rounded-xl object-cover" />
-        )}
+        <ImageUpload
+          value={editing.image_url}
+          onChange={(url) => setEditing({ ...editing, image_url: url })}
+          label="Imagem de capa"
+          folder="noticias"
+        />
         <textarea
           value={editing.excerpt}
           onChange={(e) => setEditing({ ...editing, excerpt: e.target.value })}

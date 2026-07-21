@@ -10,6 +10,7 @@ import { BannersManager } from "@/components/admin/BannersManager";
 import { VideosManager } from "@/components/admin/VideosManager";
 import { NewsletterManager } from "@/components/admin/NewsletterManager";
 import { ColumnistsManager } from "@/components/admin/ColumnistsManager";
+import { ColumnsManager } from "@/components/admin/ColumnsManager";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 const TABS = [
   { key: "noticias", label: "Notícias", icon: Newspaper },
+  { key: "colunas", label: "Colunas", icon: PenLine },
   { key: "colunistas", label: "Colunistas", icon: PenLine },
   { key: "banners", label: "Banners", icon: Image },
   { key: "videos", label: "Vídeos", icon: PlayCircle },
@@ -138,6 +140,7 @@ function AdminPage() {
 
       <main className="mx-auto max-w-7xl px-4 py-6">
         {tab === "noticias" && <ArticlesManager />}
+        {tab === "colunas" && <ColumnsManager />}
         {tab === "colunistas" && <ColumnistsManager />}
         {tab === "banners" && <BannersManager />}
         {tab === "videos" && <VideosManager />}
