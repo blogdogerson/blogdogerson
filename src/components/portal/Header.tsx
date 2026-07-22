@@ -20,7 +20,7 @@ function AnimatedLogo({ compact }: { compact?: boolean }) {
   return (
     <span
       className={`relative block w-auto transition-all duration-300 ${
-        compact ? "h-9 sm:h-11" : "h-10 sm:h-16 md:h-20"
+        compact ? "h-9 sm:h-11" : "h-12 sm:h-20 md:h-24"
       }`}
     >
       {/* mix-blend-screen: o fundo preto do PNG desaparece sobre o tema escuro,
@@ -61,7 +61,7 @@ function Logo({ compact }: { compact?: boolean }) {
         />
         <div
           className={`relative overflow-hidden rounded-full ring-2 ring-card shadow-float transition-all duration-300 group-hover:scale-105 ${
-            compact ? "h-10 w-10 sm:h-12 sm:w-12" : "h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20"
+            compact ? "h-10 w-10 sm:h-12 sm:w-12" : "h-14 w-14 sm:h-20 sm:w-20 md:h-24 md:w-24"
           }`}
         >
           <img
@@ -87,7 +87,10 @@ export function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    // Dois limites diferentes (histerese) para o header não ficar "piscando":
+    // só encolhe depois de rolar bastante e só volta perto do topo.
+    const onScroll = () =>
+      setScrolled((prev) => (prev ? window.scrollY > 40 : window.scrollY > 160));
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -228,9 +231,17 @@ export function Header() {
             to="/colunistas"
             onClick={() => setOpen(false)}
             activeProps={{ className: "text-primary" }}
-            className="story-link px-0 py-2 text-sm font-semibold uppercase tracking-wide text-foreground/80 transition-colors hover:text-primary lg:hidden lg:px-3 lg:py-3"
+            className="story-link px-0 py-2 text-sm font-semibold uppercase tracking-wide text-foreground/80 transition-colors hover:text-primary lg:px-3 lg:py-3"
           >
             Colunistas
+          </Link>
+          <Link
+            to="/"
+            hash="videos"
+            onClick={() => setOpen(false)}
+            className="story-link px-0 py-2 text-sm font-semibold uppercase tracking-wide text-foreground/80 transition-colors hover:text-primary lg:px-3 lg:py-3"
+          >
+            Vídeos
           </Link>
           <Link
             to="/quem-escreve"

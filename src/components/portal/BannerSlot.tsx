@@ -51,11 +51,12 @@ export function TopBannerCarousel({ banners }: { banners: Banner[] }) {
     return () => clearInterval(t);
   }, [items.length]);
 
-  if (items.length === 0) return <Placeholder className="mx-auto w-full max-w-5xl" />;
+  if (items.length === 0) return <Placeholder tall className="mx-auto w-full max-w-6xl" />;
 
   return (
-    <div className="relative mx-auto w-full max-w-5xl">
-      <BannerFrame banner={items[index % items.length]} className="aspect-[4/1] w-full sm:aspect-[8/1]" />
+    <div className="relative mx-auto w-full max-w-6xl">
+      {/* Leaderboard grande (base 970×250) */}
+      <BannerFrame banner={items[index % items.length]} className="aspect-[3/1] w-full sm:aspect-[970/250]" />
       {items.length > 1 && (
         <div className="absolute -bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
           {items.map((_, i) => (
@@ -74,16 +75,9 @@ export function TopBannerCarousel({ banners }: { banners: Banner[] }) {
   );
 }
 
-/** Rotating 300×300 square banner — left rail next to the category segments. */
-export function SquareBannerRotator({ banners }: { banners: Banner[] }) {
-  const items = banners.filter((b) => b.active && b.position === "sidebar");
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    if (items.length < 2) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % items.length), 6000);
-    return () => clearInterval(t);
-  }, [items.length]);
+/** Fixed 300×300 square banners stacked — left rail next to the category segments. */
+export function SquareBannerStack({ banners, max = 6 }: { banners: Banner[]; max?: number }) {
+  const items = banners.filter((b) => b.active && b.position === "sidebar").slice(0, max);
 
   if (items.length === 0)
     return (
@@ -93,22 +87,10 @@ export function SquareBannerRotator({ banners }: { banners: Banner[] }) {
     );
 
   return (
-    <div className="mx-auto w-full max-w-[300px] lg:mx-0">
-      <BannerFrame banner={items[index % items.length]} className="aspect-square w-full" />
-      {items.length > 1 && (
-        <div className="mt-2 flex justify-center gap-1.5">
-          {items.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              aria-label={`Anúncio ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all ${
-                i === index % items.length ? "w-5 bg-primary" : "w-1.5 bg-border"
-              }`}
-            />
-          ))}
-        </div>
-      )}
+    <div className="mx-auto flex w-full max-w-[300px] flex-col gap-4 lg:mx-0">
+      {items.map((b) => (
+        <BannerFrame key={b.id} banner={b} className="aspect-square w-full" />
+      ))}
     </div>
   );
 }

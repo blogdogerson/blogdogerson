@@ -51,7 +51,7 @@ export function VideoSections({ videos }: { videos: Video[] }) {
   const active = videos.filter((v) => v.active);
 
   return (
-    <section className="mt-14 rounded-3xl bg-navy p-6 text-navy-foreground sm:p-10">
+    <section id="videos" className="mt-14 scroll-mt-40 rounded-3xl bg-navy p-6 text-navy-foreground sm:p-10">
       <div className="mb-8 flex items-center gap-3">
         <PlayCircle className="h-8 w-8 text-primary" />
         <div>
@@ -78,8 +78,8 @@ export function VideoSections({ videos }: { videos: Video[] }) {
                 <div
                   className={`grid gap-4 ${
                     section.orientation === "horizontal"
-                      ? "sm:grid-cols-2"
-                      : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
+                      ? "sm:grid-cols-2 lg:grid-cols-3"
+                      : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
                   }`}
                 >
                   {items.map((v) => (

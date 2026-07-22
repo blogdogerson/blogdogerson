@@ -4,7 +4,7 @@ import { getHomeData } from "@/lib/portal.functions";
 import { getColumnists } from "@/lib/columnists.functions";
 import { ListRow } from "@/components/portal/ArticleCard";
 import { HeroRotator } from "@/components/portal/HeroRotator";
-import { TopBannerCarousel, InlineBanner, SquareBannerRotator } from "@/components/portal/BannerSlot";
+import { TopBannerCarousel, InlineBanner, SquareBannerStack } from "@/components/portal/BannerSlot";
 import { SponsorsBand } from "@/components/portal/SponsorsBand";
 import { CategoryStrip } from "@/components/portal/CategoryStrip";
 import { VideoSections } from "@/components/portal/VideoSections";
@@ -55,14 +55,16 @@ export const Route = createFileRoute("/_portal/")({
   notFoundComponent: () => <div className="px-4 py-20 text-center">Nada por aqui.</div>,
 });
 
-// Categories displayed as clean segments on the home page
+// Categories displayed as clean segments on the home page (ordem definida pelo editor)
 const HOME_SEGMENTS = [
   "Gramado",
   "Canela",
   "Nova Petrópolis",
-  "Região",
-  "Política",
+  "Geral",
   "Câmara de Vereadores",
+  "Polícia",
+  "Política",
+  "Região",
 ] as const;
 
 function HomePage() {
@@ -91,12 +93,10 @@ function HomePage() {
       {/* Sponsors — 4 squares (300×300) */}
       <SponsorsBand banners={banners} />
 
-      {/* Segments with rotating square ad on the left */}
+      {/* Segments with fixed square ads stacked on the left */}
       <div className="mt-2 grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
         <aside className="pt-12">
-          <div className="lg:sticky lg:top-40">
-            <SquareBannerRotator banners={banners} />
-          </div>
+          <SquareBannerStack banners={banners} />
         </aside>
         <div className="min-w-0">
           {HOME_SEGMENTS.map((cat) => (
