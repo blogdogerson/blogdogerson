@@ -41,6 +41,19 @@ function AnimatedLogo({ compact }: { compact?: boolean }) {
           style={{ clipPath: b.clip, animationDelay: b.delay }}
         />
       ))}
+      {/* Brilho que percorre apenas as letras (máscara de luminância do próprio logo) */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden animate-logo-shine bg-[linear-gradient(115deg,transparent_40%,rgba(255,255,255,0.75)_50%,transparent_60%)] bg-[length:250%_100%] supports-[mask-mode:luminance]:block"
+        style={{
+          maskImage: `url(${logoAsset.url})`,
+          maskMode: "luminance",
+          maskSize: "contain",
+          maskRepeat: "no-repeat",
+          maskPosition: "left center",
+          animationDelay: "1.4s",
+        }}
+      />
     </span>
   );
 }
