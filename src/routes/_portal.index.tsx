@@ -5,10 +5,10 @@ import { getColumnists } from "@/lib/columnists.functions";
 import { ListRow } from "@/components/portal/ArticleCard";
 import { HeroRotator } from "@/components/portal/HeroRotator";
 import { TopBannerCarousel, InlineBanner, SquareBannerStack } from "@/components/portal/BannerSlot";
-import { SponsorsBand } from "@/components/portal/SponsorsBand";
 import { CategoryStrip } from "@/components/portal/CategoryStrip";
 import { VideoSections } from "@/components/portal/VideoSections";
 import { ColumnistsSection } from "@/components/portal/ColumnistsSection";
+import { IntroSplash } from "@/components/portal/IntroSplash";
 import type { Article } from "@/lib/categories";
 
 function LatestList({ pool }: { pool: Article[] }) {
@@ -77,6 +77,9 @@ function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4">
+      {/* Vinheta de abertura (uma vez por visita) */}
+      <IntroSplash />
+
       {/* Top rotating banner */}
       <div className="py-5">
         <TopBannerCarousel banners={banners} />
@@ -89,9 +92,6 @@ function HomePage() {
           <LatestList pool={articles.slice(5)} />
         </section>
       )}
-
-      {/* Sponsors — 4 squares (300×300) */}
-      <SponsorsBand banners={banners} />
 
       {/* Segments with fixed square ads stacked on the left */}
       <div className="mt-2 grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
