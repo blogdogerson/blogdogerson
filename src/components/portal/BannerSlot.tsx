@@ -76,8 +76,11 @@ export function TopBannerCarousel({ banners }: { banners: Banner[] }) {
 }
 
 /** Fixed 300×300 square banners stacked — left rail next to the category segments. */
-export function SquareBannerStack({ banners, max = 6 }: { banners: Banner[]; max?: number }) {
-  const items = banners.filter((b) => b.active && b.position === "sidebar").slice(0, max);
+export function SquareBannerStack({ banners, max = 20 }: { banners: Banner[]; max?: number }) {
+  const items = banners
+    .filter((b) => b.active && b.position === "sidebar")
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .slice(0, max);
 
   if (items.length === 0)
     return (

@@ -28,11 +28,11 @@ function toEmbedUrl(url: string): string {
   }
 }
 
-function VideoEmbed({ video }: { video: Video }) {
+function VideoEmbed({ video, orientation }: { video: Video; orientation: string }) {
   return (
     <div
       className={`overflow-hidden rounded-2xl bg-navy shadow-card ${
-        video.orientation === "vertical" ? "aspect-[9/16]" : "aspect-video"
+        orientation === "vertical" ? "aspect-[9/16]" : "aspect-video"
       }`}
     >
       <iframe
@@ -78,13 +78,15 @@ export function VideoSections({ videos }: { videos: Video[] }) {
                 <div
                   className={`grid gap-4 ${
                     section.orientation === "horizontal"
-                      ? "sm:grid-cols-2 lg:grid-cols-3"
-                      : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+                      ? "sm:grid-cols-2"
+                      : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
                   }`}
                 >
                   {items.map((v) => (
                     <div key={v.id}>
-                      <VideoEmbed video={v} />
+                      {/* Orientação vem da seção: Cafezinho sempre horizontal (YouTube),
+                          demais seções sempre verticais — evita formatos misturados */}
+                      <VideoEmbed video={v} orientation={section.orientation} />
                       {v.title && (
                         <p className="mt-2 line-clamp-2 text-sm font-semibold text-navy-foreground/90">
                           {v.title}
