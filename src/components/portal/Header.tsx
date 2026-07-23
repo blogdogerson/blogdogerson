@@ -227,6 +227,15 @@ export function Header() {
         } border-t border-border/60 bg-background shadow-card lg:block lg:bg-transparent lg:shadow-none`}
       >
         <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-2 lg:flex-row lg:items-center lg:gap-0 lg:py-0">
+          <Link
+            to="/"
+            activeOptions={{ exact: true }}
+            onClick={() => setOpen(false)}
+            activeProps={{ className: "text-primary" }}
+            className="story-link px-0 py-2 text-sm font-semibold uppercase tracking-wide text-foreground/80 transition-colors hover:text-primary lg:px-3 lg:py-3"
+          >
+            Início
+          </Link>
           {CATEGORIES.map((cat) => (
             <Link
               key={cat}
