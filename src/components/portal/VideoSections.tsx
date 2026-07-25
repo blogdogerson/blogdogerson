@@ -82,18 +82,27 @@ export function VideoSections({ videos }: { videos: Video[] }) {
                       : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
                   }`}
                 >
-                  {items.map((v) => (
-                    <div key={v.id}>
-                      {/* Orientação vem da seção: Cafezinho sempre horizontal (YouTube),
-                          demais seções sempre verticais — evita formatos misturados */}
-                      <VideoEmbed video={v} orientation={section.orientation} />
-                      {v.title && (
-                        <p className="mt-2 line-clamp-2 text-sm font-semibold text-navy-foreground/90">
-                          {v.title}
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                  {items.map((v, idx) => {
+                    const showEpisode = section.key === "gramado-visao-de-futuro";
+                    const epNumber = String(items.length - idx).padStart(2, "0");
+                    return (
+                      <div key={v.id}>
+                        {/* Orientação vem da seção: Cafezinho sempre horizontal (YouTube),
+                            demais seções sempre verticais — evita formatos misturados */}
+                        <VideoEmbed video={v} orientation={section.orientation} />
+                        {showEpisode && (
+                          <p className="mt-2 font-display text-xs font-black uppercase tracking-[0.2em] text-primary">
+                            Episódio {epNumber}
+                          </p>
+                        )}
+                        {v.title && (
+                          <p className={`${showEpisode ? "mt-1" : "mt-2"} line-clamp-2 text-sm font-semibold text-navy-foreground/90`}>
+                            {v.title}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
