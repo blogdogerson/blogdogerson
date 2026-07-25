@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Instagram, Menu, PenLine, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { CATEGORIES, categoryToSlug } from "@/lib/categories";
+import { topicsQuery } from "@/lib/topics.functions";
 import { RadioButton } from "./RadioPlayer";
 // Dark theme: use the white version of the wordmark
 import logoAsset from "@/assets/logo-blog-do-gerson-branco.png.asset.json";
