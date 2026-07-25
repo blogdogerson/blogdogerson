@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       articles: {
         Row: {
+          categories: string[]
           category: string
           content: string
           created_at: string
@@ -31,6 +32,7 @@ export type Database = {
           wp_id: number | null
         }
         Insert: {
+          categories?: string[]
           category?: string
           content?: string
           created_at?: string
@@ -46,6 +48,7 @@ export type Database = {
           wp_id?: number | null
         }
         Update: {
+          categories?: string[]
           category?: string
           content?: string
           created_at?: string

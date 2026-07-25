@@ -12,7 +12,7 @@ function publicClient() {
   );
 }
 
-const LIST_FIELDS = "id, slug, title, excerpt, category, image_url, published_at, featured, published";
+const LIST_FIELDS = "id, slug, title, excerpt, category, categories, image_url, published_at, featured, published";
 
 export const getHomeData = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = publicClient();
@@ -44,12 +44,13 @@ export const getArticleBySlug = createServerFn({ method: "GET" })
       .eq("published", true)
       .maybeSingle();
     if (!article) return { article: null, related: [] as Article[], banners: [] as Banner[] };
+    const cats = (article as any).categories?.length ? (article as any).categories : [article.category];
     const [relatedRes, bannersRes] = await Promise.all([
       supabase
         .from("articles")
         .select(LIST_FIELDS)
         .eq("published", true)
-        .eq("category", article.category)
+        .overlaps("categories", cats)
         .neq("id", article.id)
         .order("published_at", { ascending: false })
         .limit(4),
@@ -75,7 +76,7 @@ export const getCategoryArticles = createServerFn({ method: "GET" })
       .from("articles")
       .select(LIST_FIELDS, { count: "exact" })
       .eq("published", true)
-      .eq("category", data.category)
+      .contains("categories", [data.category])
       .order("published_at", { ascending: false })
       .range(from, from + per - 1);
     return { articles: (rows ?? []) as unknown as Article[], total: count ?? 0, page, per };

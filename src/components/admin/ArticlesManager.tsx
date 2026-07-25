@@ -29,6 +29,7 @@ interface Editing {
   excerpt: string;
   content: string;
   category: string;
+  categories: string[];
   image_url: string;
   featured: boolean;
   published: boolean;
@@ -40,6 +41,7 @@ const EMPTY: Editing = {
   excerpt: "",
   content: "",
   category: "Geral",
+  categories: [],
   image_url: "",
   featured: false,
   published: true,
@@ -85,6 +87,7 @@ export function ArticlesManager() {
         excerpt: a.excerpt ?? "",
         content: a.content,
         category: a.category,
+        categories: a.categories ?? (a.category ? [a.category] : []),
         image_url: a.image_url ?? "",
         featured: a.featured,
         published: a.published,
@@ -147,16 +150,39 @@ export function ArticlesManager() {
           placeholder="Título da notícia"
           className="h-12 w-full rounded-xl border bg-card px-4 font-display text-lg font-bold outline-none ring-ring focus:ring-2"
         />
-        <div className="grid gap-3 sm:grid-cols-2">
-          <select
-            value={editing.category}
-            onChange={(e) => setEditing({ ...editing, category: e.target.value })}
-            className="h-11 rounded-xl border bg-card px-3 text-sm outline-none ring-ring focus:ring-2"
-          >
-            {options.map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Editorias (marque uma ou mais — a primeira é a principal)
+          </p>
+          <div className="flex flex-wrap gap-2 rounded-xl border bg-card p-3">
+            {options.map((c) => {
+              const selected = editing.categories.includes(c) || editing.category === c;
+              return (
+                <button
+                  type="button"
+                  key={c}
+                  onClick={() => {
+                    const set = new Set(editing.categories);
+                    if (selected) set.delete(c);
+                    else set.add(c);
+                    const arr = Array.from(set);
+                    // Primary = first selected, fallback to current category
+                    const primary = arr[0] ?? editing.category;
+                    setEditing({ ...editing, categories: arr, category: primary });
+                  }}
+                  className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                    selected
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-background hover:bg-secondary"
+                  }`}
+                >
+                  {c}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-1">
           <input
             value={editing.slug}
             onChange={(e) => setEditing({ ...editing, slug: slugify(e.target.value) })}
