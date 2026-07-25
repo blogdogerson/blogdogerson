@@ -333,7 +333,7 @@ export function ColumnistsManager() {
                   </p>
                   <p className="truncate font-display font-black">{c.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {c.active ? "Ativo" : "Inativo"} · ordem {c.sort_order}
+                    {c.active ? "Ativo" : "Inativo"} · ordem {idx + 1}
                   </p>
                   {(c as any).user_id ? (
                     <p className="mt-1 inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700">
@@ -345,6 +345,24 @@ export function ColumnistsManager() {
                     </p>
                   )}
                   <div className="mt-2 flex flex-wrap gap-2">
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => move(idx, -1)}
+                        disabled={idx === 0}
+                        className="grid h-8 w-8 place-items-center rounded-lg border hover:bg-secondary disabled:opacity-40"
+                        title="Mover para cima"
+                      >
+                        <ArrowUp className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        onClick={() => move(idx, 1)}
+                        disabled={idx === total - 1}
+                        className="grid h-8 w-8 place-items-center rounded-lg border hover:bg-secondary disabled:opacity-40"
+                        title="Mover para baixo"
+                      >
+                        <ArrowDown className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                     <button
                       onClick={() =>
                         setEditing({
@@ -387,7 +405,8 @@ export function ColumnistsManager() {
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
