@@ -28,6 +28,7 @@ const TABS = [
   { key: "colunistas", label: "Colunistas", icon: PenLine },
   { key: "editorias", label: "Editorias", icon: Tag },
   { key: "banners", label: "Banners", icon: Image },
+  { key: "popups", label: "Pop-ups", icon: MessageSquare },
   { key: "videos", label: "Vídeos", icon: PlayCircle },
   { key: "newsletter", label: "Newsletter", icon: Mail },
 ] as const;
@@ -161,6 +162,7 @@ function AdminPage() {
         {tab === "colunistas" && <ColumnistsManager />}
         {tab === "editorias" && <TopicsManager />}
         {tab === "banners" && <BannersManager />}
+        {tab === "popups" && <PopupsManager />}
         {tab === "videos" && <VideosManager />}
         {tab === "newsletter" && <NewsletterManager />}
       </main>
