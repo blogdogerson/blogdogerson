@@ -55,6 +55,7 @@ export function ColumnistsManager() {
   const list = useServerFn(adminListColumnists);
   const save = useServerFn(adminSaveColumnist);
   const remove = useServerFn(adminDeleteColumnist);
+  const reorder = useServerFn(adminReorderColumnists);
   const createLogin = useServerFn(adminCreateColumnistLogin);
   const unlinkLogin = useServerFn(adminUnlinkColumnistUser);
   const [editing, setEditing] = useState<Editing | null>(null);
