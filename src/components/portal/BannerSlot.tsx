@@ -2,19 +2,29 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import type { Banner } from "@/lib/categories";
 
-function BannerFrame({ banner, className }: { banner: Banner; className?: string }) {
+function BannerFrame({
+  banner,
+  className,
+  fit = "cover",
+}: {
+  banner: Banner;
+  className?: string;
+  fit?: "cover" | "contain";
+}) {
   const img = (
     <img
       src={banner.image_url}
       alt={banner.title || "Anúncio"}
       loading="lazy"
-      className="h-full w-full object-cover"
+      className={`h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
     />
   );
   return (
-    <div className={`overflow-hidden rounded-2xl shadow-card hover-lift ${className ?? ""}`}>
+    <div
+      className={`overflow-hidden rounded-2xl bg-navy shadow-card hover-lift ${className ?? ""}`}
+    >
       {banner.link_url ? (
-        <a href={banner.link_url} target="_blank" rel="noreferrer sponsored" aria-label={banner.title || "Anúncio"}>
+        <a href={banner.link_url} target="_blank" rel="noreferrer sponsored" aria-label={banner.title || "Anúncio"} className="block h-full w-full">
           {img}
         </a>
       ) : (
@@ -55,8 +65,13 @@ export function TopBannerCarousel({ banners }: { banners: Banner[] }) {
 
   return (
     <div className="relative mx-auto w-full max-w-6xl">
-      {/* Leaderboard grande (base 970×250) */}
-      <BannerFrame banner={items[index % items.length]} className="aspect-[3/1] w-full sm:aspect-[970/250]" />
+      {/* Leaderboard grande (base 970×250) — mantém a proporção do banner em qualquer tela
+          para não cortar no mobile. `object-contain` evita corte lateral. */}
+      <BannerFrame
+        banner={items[index % items.length]}
+        fit="contain"
+        className="aspect-[970/250] w-full"
+      />
       {items.length > 1 && (
         <div className="absolute -bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
           {items.map((_, i) => (
