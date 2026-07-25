@@ -56,7 +56,7 @@ export function VideosManager() {
     setSaving(true);
     setMessage("");
     try {
-      const res = await save({ data: { ...editing, embed_url: toEmbed(editing.embed_url) } });
+      const res = await save({ data: { ...editing, embed_url: toEmbed(editing.embed_url), episode_number: editing.episode_number.trim() || null } });
       if (res.ok) {
         setEditing(null);
         refresh();
