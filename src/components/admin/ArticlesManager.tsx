@@ -8,7 +8,7 @@ import {
   adminSaveArticle,
   adminDeleteArticle,
 } from "@/lib/admin.functions";
-import { CATEGORIES } from "@/lib/categories";
+import { topicsQuery } from "@/lib/topics.functions";
 import { ImageUpload } from "./ImageUpload";
 import { RichTextArea } from "./RichTextArea";
 
@@ -62,6 +62,12 @@ export function ArticlesManager() {
     queryKey: ["admin-articles", q, page],
     queryFn: () => list({ data: { q: q || undefined, page } }),
   });
+  const { data: topicsData } = useQuery(topicsQuery);
+  const topicNames = (topicsData?.topics ?? []).map((t) => t.name);
+  // Garante que categorias antigas (ex.: "Geral") ainda apareçam ao editar
+  const options = editing?.category && !topicNames.includes(editing.category)
+    ? [editing.category, ...topicNames]
+    : topicNames;
 
   const refresh = () => {
     queryClient.invalidateQueries({ queryKey: ["admin-articles"] });
@@ -147,7 +153,7 @@ export function ArticlesManager() {
             onChange={(e) => setEditing({ ...editing, category: e.target.value })}
             className="h-11 rounded-xl border bg-card px-3 text-sm outline-none ring-ring focus:ring-2"
           >
-            {CATEGORIES.map((c) => (
+            {options.map((c) => (
               <option key={c}>{c}</option>
             ))}
           </select>

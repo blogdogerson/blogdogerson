@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getHomeData } from "@/lib/portal.functions";
 import { getColumnists } from "@/lib/columnists.functions";
+import { topicsQuery } from "@/lib/topics.functions";
 import { ListRow } from "@/components/portal/ArticleCard";
 import { HeroRotator } from "@/components/portal/HeroRotator";
 import { TopBannerCarousel, InlineBanner, SquareBannerStack } from "@/components/portal/BannerSlot";
@@ -44,6 +45,7 @@ export const Route = createFileRoute("/_portal/")({
     Promise.all([
       context.queryClient.ensureQueryData(homeQuery),
       context.queryClient.ensureQueryData(columnistsQuery),
+      context.queryClient.ensureQueryData(topicsQuery),
     ]),
   component: HomePage,
   errorComponent: ({ error }) => (
@@ -54,23 +56,13 @@ export const Route = createFileRoute("/_portal/")({
   notFoundComponent: () => <div className="px-4 py-20 text-center">Nada por aqui.</div>,
 });
 
-// Categories displayed as clean segments on the home page (ordem definida pelo editor)
-const HOME_SEGMENTS = [
-  "Gramado",
-  "Canela",
-  "Nova Petrópolis",
-  "Geral",
-  "Câmara de Vereadores",
-  "Polícia",
-  "Política",
-  "Região",
-] as const;
-
 function HomePage() {
   const { data } = useSuspenseQuery(homeQuery);
   const { data: colData } = useSuspenseQuery(columnistsQuery);
+  const { data: topicsData } = useSuspenseQuery(topicsQuery);
   const { articles, banners, videos } = data;
   const columnists = colData.columnists;
+  const topics = topicsData.topics;
 
   const heroPool = articles.slice(0, 5);
 
@@ -95,8 +87,8 @@ function HomePage() {
           <SquareBannerStack banners={banners} />
         </aside>
         <div className="min-w-0">
-          {HOME_SEGMENTS.map((cat) => (
-            <CategoryStrip key={cat} category={cat} articles={articles} />
+          {topics.map((t) => (
+            <CategoryStrip key={t.id} category={t.name} articles={articles} />
           ))}
         </div>
       </div>
