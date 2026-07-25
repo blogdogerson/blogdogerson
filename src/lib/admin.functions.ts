@@ -106,7 +106,8 @@ export const adminSaveArticle = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const { id, ...fields } = data;
-    const payload = { ...fields, updated_at: new Date().toISOString() };
+    const cats = Array.from(new Set([...(fields.categories ?? []), fields.category].filter(Boolean)));
+    const payload = { ...fields, categories: cats, updated_at: new Date().toISOString() };
     const res = id
       ? await context.supabase.from("articles").update(payload).eq("id", id)
       : await context.supabase.from("articles").insert(payload);
