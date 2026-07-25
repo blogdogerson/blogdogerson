@@ -41,6 +41,7 @@ export interface Article {
   excerpt: string | null;
   content: string;
   category: string;
+  categories?: string[] | null;
   image_url: string | null;
   published_at: string;
   featured: boolean;
