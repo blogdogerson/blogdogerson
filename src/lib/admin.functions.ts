@@ -238,6 +238,51 @@ export const adminUnlinkColumnistUser = createServerFn({ method: "POST" })
     return { ok: !error, error: error?.message };
   });
 
+// Cria uma conta de login (e-mail + senha) para um colunista e já vincula ao cadastro.
+// Se o e-mail já existir como usuário, atualiza a senha e vincula.
+export const adminCreateColumnistLogin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { columnistId: string; email: string; password: string }) =>
+    z
+      .object({
+        columnistId: z.string().uuid(),
+        email: z.string().trim().email().max(255),
+        password: z.string().min(8).max(72),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const email = data.email.toLowerCase();
+
+    let userId: string | null = null;
+    const created = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password: data.password,
+      email_confirm: true,
+    });
+    if (created.data.user) {
+      userId = created.data.user.id;
+    } else {
+      for (let page = 1; page <= 20 && !userId; page += 1) {
+        const { data: usersPage, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 200 });
+        if (error) return { ok: false, error: error.message };
+        const match = usersPage.users.find((u) => (u.email ?? "").toLowerCase() === email);
+        if (match) userId = match.id;
+        if (usersPage.users.length < 200) break;
+      }
+      if (!userId) return { ok: false, error: created.error?.message ?? "Não foi possível criar o login." };
+      await supabaseAdmin.auth.admin.updateUserById(userId, { password: data.password, email_confirm: true });
+    }
+
+    const { error: linkErr } = await (supabaseAdmin.from("columnists") as any)
+      .update({ user_id: userId })
+      .eq("id", data.columnistId);
+    if (linkErr) return { ok: false, error: linkErr.message };
+    return { ok: true as const, email };
+  });
+
 // ---------------------------------------------------------------------------
 // Importação de notícias do site original (WordPress) — blogdogerson.com.br
 // ---------------------------------------------------------------------------
