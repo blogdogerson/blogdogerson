@@ -76,7 +76,7 @@ export const getCategoryArticles = createServerFn({ method: "GET" })
       .from("articles")
       .select(LIST_FIELDS, { count: "exact" })
       .eq("published", true)
-      .eq("category", data.category)
+      .contains("categories", [data.category])
       .order("published_at", { ascending: false })
       .range(from, from + per - 1);
     return { articles: (rows ?? []) as unknown as Article[], total: count ?? 0, page, per };
