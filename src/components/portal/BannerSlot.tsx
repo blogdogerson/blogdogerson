@@ -65,8 +65,13 @@ export function TopBannerCarousel({ banners }: { banners: Banner[] }) {
 
   return (
     <div className="relative mx-auto w-full max-w-6xl">
-      {/* Leaderboard grande (base 970×250) */}
-      <BannerFrame banner={items[index % items.length]} className="aspect-[3/1] w-full sm:aspect-[970/250]" />
+      {/* Leaderboard grande (base 970×250) — mantém a proporção do banner em qualquer tela
+          para não cortar no mobile. `object-contain` evita corte lateral. */}
+      <BannerFrame
+        banner={items[index % items.length]}
+        fit="contain"
+        className="aspect-[970/250] w-full"
+      />
       {items.length > 1 && (
         <div className="absolute -bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
           {items.map((_, i) => (
