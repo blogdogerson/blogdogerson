@@ -25,6 +25,12 @@ const bannerSchema = z.object({
   sort_order: z.number().int().default(0),
 });
 
+const categorySchema = z.object({
+  id: z.string().uuid().optional(),
+  name: z.string().trim().min(1).max(60),
+  sort_order: z.number().int().default(0),
+});
+
 const videoSchema = z.object({
   id: z.string().uuid().optional(),
   section: z.string().min(1).max(60),
@@ -179,6 +185,259 @@ export const adminDeleteVideo = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { error } = await context.supabase.from("videos").delete().eq("id", data.id);
     return { ok: !error, error: error?.message };
+  });
+
+// ---------------------------------------------------------------------------
+// Tópicos/categorias (gerenciados dinamicamente pelo painel administrativo)
+// ---------------------------------------------------------------------------
+
+export const adminListCategories = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { data: rows } = await context.supabase
+      .from("categories")
+      .select("*")
+      .order("sort_order");
+    return { categories: rows ?? [] };
+  });
+
+export const adminSaveCategory = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => categorySchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { id, ...fields } = data;
+
+    if (id) {
+      // Ao editar, se o nome mudou, atualiza também as notícias já publicadas
+      // com a categoria antiga para que continuem "pertencendo" ao tópico.
+      const { data: current } = await context.supabase
+        .from("categories")
+        .select("name")
+        .eq("id", id)
+        .maybeSingle();
+      const res = await context.supabase
+        .from("categories")
+        .update({ ...fields, updated_at: new Date().toISOString() })
+        .eq("id", id);
+      if (res.error) return { ok: false, error: res.error.message };
+      if (current && current.name !== fields.name) {
+        await context.supabase
+          .from("articles")
+          .update({ category: fields.name })
+          .eq("category", current.name);
+      }
+      return { ok: true };
+    }
+
+    const res = await context.supabase.from("categories").insert(fields);
+    if (res.error) return { ok: false, error: res.error.message };
+    return { ok: true };
+  });
+
+export const adminDeleteCategory = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    // Remove o tópico da lista de navegação, mas NÃO apaga nem altera as
+    // notícias que estavam com essa categoria — elas continuam existindo,
+    // só deixam de aparecer no menu/home como um tópico próprio.
+    const { error } = await context.supabase.from("categories").delete().eq("id", data.id);
+    return { ok: !error, error: error?.message };
+  });
+
+// ---------------------------------------------------------------------------
+// Vincular login de colunista (conta criada em /auth) a um colunista
+// ---------------------------------------------------------------------------
+
+export const adminLinkColumnistUser = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { columnistId: string; email: string }) =>
+    z
+      .object({
+        columnistId: z.string().uuid(),
+        email: z.string().trim().email().max(255),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const email = data.email.toLowerCase();
+
+    let userId: string | null = null;
+    for (let page = 1; page <= 20 && !userId; page += 1) {
+      const { data: usersPage, error } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 200 });
+      if (error) return { ok: false, error: error.message };
+      const match = usersPage.users.find((u) => (u.email ?? "").toLowerCase() === email);
+      if (match) userId = match.id;
+      if (usersPage.users.length < 200) break;
+    }
+
+    if (!userId) {
+      return {
+        ok: false,
+        error:
+          'Não encontrei nenhuma conta com esse e-mail. Peça para o colunista entrar em /auth e clicar em "Primeira vez? Criar conta" — depois tente vincular de novo.',
+      };
+    }
+
+    const { error } = await supabaseAdmin.from("columnists").update({ user_id: userId }).eq("id", data.columnistId);
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  });
+
+export const adminUnlinkColumnistUser = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { columnistId: string }) => z.object({ columnistId: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("columnists").update({ user_id: null }).eq("id", data.columnistId);
+    return { ok: !error, error: error?.message };
+  });
+
+// ---------------------------------------------------------------------------
+// Importação de notícias do site original (WordPress) — blogdogerson.com.br
+// ---------------------------------------------------------------------------
+
+const WP_API = "https://blogdogerson.com.br/wp-json/wp/v2";
+
+// Categorias do WordPress → editorias do portal novo.
+// "Geral" não existe mais como editoria própria — tudo que caía nela agora
+// vai para "Região" (mesma regra usada para as notícias antigas já publicadas).
+const WP_CATEGORY_MAP: Record<string, string> = {
+  Geral: "Região",
+  "Política": "Política",
+  Cidade: "Gramado",
+  Economia: "Região",
+  "Região": "Região",
+  "Polícia": "Polícia",
+  "Prefeitura de Gramado": "Gramado",
+  "Prefeitura de Canela": "Canela",
+  "Câmara de Vereadores": "Câmara de Vereadores",
+  "Nova Petrópolis": "Nova Petrópolis",
+};
+
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&hellip;/g, "…")
+    .replace(/&ndash;/g, "–")
+    .replace(/&mdash;/g, "—");
+}
+
+function cleanExcerpt(html: string): string {
+  return decodeEntities(html.replace(/<[^>]+>/g, " "))
+    .replace(/\[…\]|\[&hellip;\]|…\s*$/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 480);
+}
+
+export const adminImportWordPress = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { page?: number; months?: number }) =>
+    z
+      .object({
+        page: z.number().int().min(1).default(1),
+        months: z.number().int().min(1).max(24).default(6),
+      })
+      .parse(d ?? {}),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const after = new Date();
+    after.setMonth(after.getMonth() - data.months);
+    const per = 10;
+
+    // Mapa id→nome das categorias do WordPress
+    const catRes = await fetch(`${WP_API}/categories?per_page=100&_fields=id,name`);
+    if (!catRes.ok) return { ok: false as const, error: "Não consegui acessar o site original." };
+    const cats = (await catRes.json()) as Array<{ id: number; name: string }>;
+    const catName = new Map(cats.map((c) => [c.id, decodeEntities(c.name)]));
+
+    const url =
+      `${WP_API}/posts?per_page=${per}&page=${data.page}` +
+      `&after=${after.toISOString()}&_embed=wp:featuredmedia&orderby=date&order=desc`;
+    const res = await fetch(url);
+    if (res.status === 400) {
+      // Página além do total — importação concluída
+      return { ok: true as const, imported: 0, skipped: 0, done: true, totalPages: data.page - 1, total: 0 };
+    }
+    if (!res.ok) return { ok: false as const, error: `Erro ${res.status} ao buscar as notícias.` };
+
+    const totalPages = Number(res.headers.get("x-wp-totalpages") ?? "1");
+    const total = Number(res.headers.get("x-wp-total") ?? "0");
+    const posts = (await res.json()) as any[];
+
+    const rows = posts.map((p) => {
+      const wpCats: string[] = (p.categories ?? [])
+        .map((id: number) => catName.get(id))
+        .filter(Boolean);
+      // Prioriza a categoria mais específica (cidade/editoria) sobre "Região":
+      // muitos posts do WordPress trazem "Geral"/"Economia" como primeira
+      // categoria mesmo sendo, na prática, de Gramado/Canela/etc. — só cai em
+      // Região se nenhuma categoria mais específica for encontrada.
+      const mapped = wpCats.map((n) => WP_CATEGORY_MAP[n as string]).filter(Boolean) as string[];
+      const category = mapped.find((c) => c !== "Região") ?? mapped[0] ?? "Região";
+      const image =
+        p._embedded?.["wp:featuredmedia"]?.[0]?.source_url ??
+        p.yoast_head_json?.og_image?.[0]?.url ??
+        null;
+      return {
+        slug: String(p.slug).slice(0, 250),
+        title: decodeEntities(String(p.title?.rendered ?? "")).trim().slice(0, 300),
+        excerpt: cleanExcerpt(String(p.excerpt?.rendered ?? "")),
+        content: String(p.content?.rendered ?? "").slice(0, 200000),
+        category,
+        image_url: image,
+        featured: false,
+        published: true,
+        published_at: `${p.date_gmt}Z`,
+      };
+    });
+
+    // Não duplicar: para slugs que já existem, apenas corrige a categoria/imagem
+    // (útil para reprocessar importações antigas classificadas errado); para os
+    // novos, insere.
+    const slugs = rows.map((r) => r.slug);
+    const { data: existing } = await context.supabase
+      .from("articles")
+      .select("slug")
+      .in("slug", slugs);
+    const existingSet = new Set((existing ?? []).map((r: { slug: string }) => r.slug));
+    const fresh = rows.filter((r) => r.title && !existingSet.has(r.slug));
+    const toFix = rows.filter((r) => r.title && existingSet.has(r.slug));
+
+    if (fresh.length > 0) {
+      const { error } = await context.supabase.from("articles").insert(fresh);
+      if (error) return { ok: false as const, error: error.message };
+    }
+    for (const r of toFix) {
+      await context.supabase
+        .from("articles")
+        .update({ category: r.category, image_url: r.image_url })
+        .eq("slug", r.slug);
+    }
+
+    return {
+      ok: true as const,
+      imported: fresh.length,
+      skipped: rows.length - fresh.length,
+      done: data.page >= totalPages,
+      totalPages,
+      total,
+    };
   });
 
 export const adminListSubscribers = createServerFn({ method: "GET" })
