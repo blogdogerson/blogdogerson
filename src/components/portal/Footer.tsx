@@ -1,10 +1,16 @@
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Instagram, Mail, Radio } from "lucide-react";
-import { CATEGORIES, categoryToSlug, RADIO_STREAM_URL } from "@/lib/categories";
+import { RADIO_STREAM_URL } from "@/lib/categories";
+import { topicsQuery } from "@/lib/topics.functions";
 import { NewsletterForm } from "./NewsletterForm";
 import logoBrancoAsset from "@/assets/logo-blog-do-gerson-branco.png.asset.json";
 
+
+
 export function Footer() {
+  const { data: topicsData } = useQuery(topicsQuery);
+  const topics = topicsData?.topics ?? [];
   return (
     <footer className="mt-16 bg-navy text-navy-foreground">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-3">

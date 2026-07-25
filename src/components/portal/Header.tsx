@@ -99,6 +99,8 @@ export function Header() {
   const [q, setQ] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const { data: topicsData } = useQuery(topicsQuery);
+  const topics = topicsData?.topics ?? [];
 
   useEffect(() => {
     // Dois limites diferentes (histerese) para o header não ficar "piscando":
@@ -237,16 +239,16 @@ export function Header() {
           >
             Início
           </Link>
-          {CATEGORIES.map((cat) => (
+          {topics.map((t) => (
             <Link
-              key={cat}
+              key={t.id}
               to="/editoria/$slug"
-              params={{ slug: categoryToSlug(cat) }}
+              params={{ slug: t.slug }}
               onClick={() => setOpen(false)}
               activeProps={{ className: "text-primary after:scale-x-100" }}
               className="story-link px-0 py-2 text-sm font-semibold uppercase tracking-wide text-foreground/80 transition-colors hover:text-primary lg:px-3 lg:py-3"
             >
-              {cat}
+              {t.name}
             </Link>
           ))}
           <span className="hidden flex-1 lg:block" />
