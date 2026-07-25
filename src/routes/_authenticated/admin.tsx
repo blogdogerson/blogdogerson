@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
-import { Image, LogOut, Mail, Newspaper, PenLine, PlayCircle, ShieldCheck, Tag } from "lucide-react";
+import { Image, LogOut, Mail, MessageSquare, Newspaper, PenLine, PlayCircle, ShieldCheck, Tag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyAdminStatus, bootstrapAdmin } from "@/lib/admin.functions";
 import { getMyColumnistProfile } from "@/lib/columns.functions";
@@ -13,6 +13,7 @@ import { NewsletterManager } from "@/components/admin/NewsletterManager";
 import { ColumnistsManager } from "@/components/admin/ColumnistsManager";
 import { ColumnsManager } from "@/components/admin/ColumnsManager";
 import { TopicsManager } from "@/components/admin/TopicsManager";
+import { PopupsManager } from "@/components/admin/PopupsManager";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
