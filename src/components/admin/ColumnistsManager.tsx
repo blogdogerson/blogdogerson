@@ -1,13 +1,14 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { KeyRound, Plus, Trash2, UserX } from "lucide-react";
 import {
   adminListColumnists,
   adminSaveColumnist,
   adminDeleteColumnist,
   type Columnist,
 } from "@/lib/columnists.functions";
+import { adminCreateColumnistLogin, adminUnlinkColumnistUser } from "@/lib/admin.functions";
 import { ImageUpload } from "./ImageUpload";
 
 interface Editing {
@@ -53,9 +54,12 @@ export function ColumnistsManager() {
   const list = useServerFn(adminListColumnists);
   const save = useServerFn(adminSaveColumnist);
   const remove = useServerFn(adminDeleteColumnist);
+  const createLogin = useServerFn(adminCreateColumnistLogin);
+  const unlinkLogin = useServerFn(adminUnlinkColumnistUser);
   const [editing, setEditing] = useState<Editing | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [loginBusy, setLoginBusy] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({ queryKey: ["admin-columnists"], queryFn: () => list() });
 
@@ -63,6 +67,45 @@ export function ColumnistsManager() {
     queryClient.invalidateQueries({ queryKey: ["admin-columnists"] });
     queryClient.invalidateQueries({ queryKey: ["columnists"] });
     queryClient.invalidateQueries({ queryKey: ["home"] });
+  };
+
+  const handleCreateLogin = async (c: Columnist) => {
+    const email = window.prompt(
+      `E-mail de acesso para ${c.name}\n(o colunista usará este e-mail para logar em /auth)`,
+    );
+    if (!email) return;
+    const password = window.prompt(
+      "Senha inicial (mínimo 8 caracteres).\nAnote e envie ao colunista — ele pode trocar depois.",
+    );
+    if (!password || password.length < 8) {
+      alert("Senha muito curta. Use ao menos 8 caracteres.");
+      return;
+    }
+    setLoginBusy(c.id);
+    try {
+      const res = await createLogin({ data: { columnistId: c.id, email, password } });
+      if (res.ok) {
+        alert(
+          `Login pronto!\n\nE-mail: ${res.email}\nSenha: ${password}\n\nO colunista deve entrar em /auth com esses dados e será levado ao painel dele.`,
+        );
+        refresh();
+      } else {
+        alert(res.error ?? "Não foi possível criar o login.");
+      }
+    } finally {
+      setLoginBusy(null);
+    }
+  };
+
+  const handleUnlinkLogin = async (c: Columnist) => {
+    if (!confirm(`Remover o login vinculado a ${c.name}? A conta continua existindo, mas perde o acesso ao painel do colunista.`)) return;
+    setLoginBusy(c.id);
+    try {
+      await unlinkLogin({ data: { columnistId: c.id } });
+      refresh();
+    } finally {
+      setLoginBusy(null);
+    }
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -273,7 +316,16 @@ export function ColumnistsManager() {
                   <p className="text-xs text-muted-foreground">
                     {c.active ? "Ativo" : "Inativo"} · ordem {c.sort_order}
                   </p>
-                  <div className="mt-2 flex gap-2">
+                  {(c as any).user_id ? (
+                    <p className="mt-1 inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+                      <KeyRound className="h-3 w-3" /> Login ativo
+                    </p>
+                  ) : (
+                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      Sem login
+                    </p>
+                  )}
+                  <div className="mt-2 flex flex-wrap gap-2">
                     <button
                       onClick={() =>
                         setEditing({
@@ -287,6 +339,25 @@ export function ColumnistsManager() {
                     >
                       Editar
                     </button>
+                    <button
+                      onClick={() => handleCreateLogin(c)}
+                      disabled={loginBusy === c.id}
+                      className="inline-flex items-center gap-1 rounded-lg border border-primary/30 bg-primary/5 px-2 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10 disabled:opacity-60"
+                      title={(c as any).user_id ? "Redefinir senha do login" : "Criar login para o colunista"}
+                    >
+                      <KeyRound className="h-3.5 w-3.5" />
+                      {(c as any).user_id ? "Trocar senha" : "Criar login"}
+                    </button>
+                    {(c as any).user_id && (
+                      <button
+                        onClick={() => handleUnlinkLogin(c)}
+                        disabled={loginBusy === c.id}
+                        className="grid h-8 w-8 place-items-center rounded-lg border text-muted-foreground hover:bg-secondary"
+                        title="Desvincular login"
+                      >
+                        <UserX className="h-3.5 w-3.5" />
+                      </button>
+                    )}
                     <button
                       onClick={() => del(c.id)}
                       className="grid h-8 w-8 place-items-center rounded-lg border text-destructive hover:bg-destructive/10"

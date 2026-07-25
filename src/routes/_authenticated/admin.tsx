@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, LogOut, Mail, Newspaper, PenLine, PlayCircle, ShieldCheck, Tag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyAdminStatus, bootstrapAdmin } from "@/lib/admin.functions";
+import { getMyColumnistProfile } from "@/lib/columns.functions";
 import { ArticlesManager } from "@/components/admin/ArticlesManager";
 import { BannersManager } from "@/components/admin/BannersManager";
 import { VideosManager } from "@/components/admin/VideosManager";
@@ -45,6 +46,19 @@ function AdminPage() {
     queryKey: ["admin-status"],
     queryFn: () => fetchStatus(),
   });
+
+  const fetchColumnist = useServerFn(getMyColumnistProfile);
+  const { data: columnistProfile } = useQuery({
+    queryKey: ["my-columnist-profile"],
+    queryFn: () => fetchColumnist(),
+    enabled: !status?.isAdmin && !isLoading,
+  });
+
+  useEffect(() => {
+    if (!isLoading && status && !status.isAdmin && columnistProfile?.columnist) {
+      navigate({ to: "/minhas-colunas", replace: true });
+    }
+  }, [isLoading, status, columnistProfile, navigate]);
 
   const logout = async () => {
     await supabase.auth.signOut();

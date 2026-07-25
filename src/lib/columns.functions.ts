@@ -152,3 +152,94 @@ export const adminDeleteColumn = createServerFn({ method: "POST" })
     const { error } = await anyDb(context.supabase).from("columns").delete().eq("id", data.id);
     return { ok: !error, error: error?.message };
   });
+
+// ---- Painel do Colunista (auto-gestão) ----
+
+async function getMyColumnist(context: { supabase: any; userId: string }) {
+  const { data } = await anyDb(context.supabase)
+    .from("columnists")
+    .select("id, name, slug, specialty, avatar_url, accent_color, active")
+    .eq("user_id", context.userId)
+    .maybeSingle();
+  return data as
+    | { id: string; name: string; slug: string; specialty: string; avatar_url: string | null; accent_color: string; active: boolean }
+    | null;
+}
+
+/** Perfil do colunista logado (usado para gate no painel /minhas-colunas). */
+export const getMyColumnistProfile = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const columnist = await getMyColumnist(context);
+    return { columnist };
+  });
+
+/** Lista as colunas do colunista logado. */
+export const myListColumns = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const me = await getMyColumnist(context);
+    if (!me) throw new Error("Você não está vinculado a nenhum colunista.");
+    const { data } = await anyDb(context.supabase)
+      .from("columns")
+      .select("id, title, slug, published, published_at, image_url")
+      .eq("columnist_id", me.id)
+      .order("published_at", { ascending: false })
+      .limit(200);
+    return { columns: (data ?? []) as any[], columnist: me };
+  });
+
+export const myGetColumn = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const me = await getMyColumnist(context);
+    if (!me) throw new Error("Você não está vinculado a nenhum colunista.");
+    const { data: row } = await anyDb(context.supabase)
+      .from("columns")
+      .select("*")
+      .eq("id", data.id)
+      .eq("columnist_id", me.id)
+      .maybeSingle();
+    return { column: row as ColumnPost | null };
+  });
+
+const myColumnSchema = z.object({
+  id: z.string().uuid().optional(),
+  title: z.string().trim().min(1).max(250),
+  slug: z.string().trim().min(1).max(250).regex(/^[a-z0-9-]+$/),
+  excerpt: z.string().trim().max(500).default(""),
+  content: z.string().max(200000),
+  image_url: z.string().trim().max(1000).optional().nullable(),
+  published: z.boolean().default(true),
+});
+
+export const mySaveColumn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => myColumnSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    const me = await getMyColumnist(context);
+    if (!me) return { ok: false as const, error: "Você não está vinculado a nenhum colunista." };
+    const { id, ...fields } = data;
+    const payload = { ...fields, columnist_id: me.id, updated_at: new Date().toISOString() };
+    const db = anyDb(context.supabase);
+    const res = id
+      ? await db.from("columns").update(payload).eq("id", id).eq("columnist_id", me.id)
+      : await db.from("columns").insert(payload);
+    if (res.error) return { ok: false as const, error: res.error.message };
+    return { ok: true as const };
+  });
+
+export const myDeleteColumn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const me = await getMyColumnist(context);
+    if (!me) return { ok: false as const, error: "Você não está vinculado a nenhum colunista." };
+    const { error } = await anyDb(context.supabase)
+      .from("columns")
+      .delete()
+      .eq("id", data.id)
+      .eq("columnist_id", me.id);
+    return { ok: !error, error: error?.message };
+  });
