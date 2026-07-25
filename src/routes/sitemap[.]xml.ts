@@ -29,6 +29,16 @@ export const Route = createFileRoute("/sitemap.xml")({
             process.env.SUPABASE_PUBLISHABLE_KEY!,
             { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
           );
+          const { data: topics } = await (supabase.from("topics") as any)
+            .select("slug")
+            .eq("active", true);
+          for (const t of (topics ?? []) as Array<{ slug: string }>) {
+            entries.push({
+              path: `/editoria/${t.slug}`,
+              changefreq: "daily",
+              priority: "0.8",
+            });
+          }
           const { data } = await supabase
             .from("articles")
             .select("slug, published_at")
