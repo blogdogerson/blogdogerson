@@ -29,6 +29,7 @@ interface Editing {
   excerpt: string;
   content: string;
   category: string;
+  categories: string[];
   image_url: string;
   featured: boolean;
   published: boolean;
@@ -40,6 +41,7 @@ const EMPTY: Editing = {
   excerpt: "",
   content: "",
   category: "Geral",
+  categories: [],
   image_url: "",
   featured: false,
   published: true,
