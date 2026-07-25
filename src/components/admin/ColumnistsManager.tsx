@@ -316,7 +316,16 @@ export function ColumnistsManager() {
                   <p className="text-xs text-muted-foreground">
                     {c.active ? "Ativo" : "Inativo"} · ordem {c.sort_order}
                   </p>
-                  <div className="mt-2 flex gap-2">
+                  {(c as any).user_id ? (
+                    <p className="mt-1 inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+                      <KeyRound className="h-3 w-3" /> Login ativo
+                    </p>
+                  ) : (
+                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      Sem login
+                    </p>
+                  )}
+                  <div className="mt-2 flex flex-wrap gap-2">
                     <button
                       onClick={() =>
                         setEditing({
@@ -330,6 +339,25 @@ export function ColumnistsManager() {
                     >
                       Editar
                     </button>
+                    <button
+                      onClick={() => handleCreateLogin(c)}
+                      disabled={loginBusy === c.id}
+                      className="inline-flex items-center gap-1 rounded-lg border border-primary/30 bg-primary/5 px-2 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10 disabled:opacity-60"
+                      title={(c as any).user_id ? "Redefinir senha do login" : "Criar login para o colunista"}
+                    >
+                      <KeyRound className="h-3.5 w-3.5" />
+                      {(c as any).user_id ? "Trocar senha" : "Criar login"}
+                    </button>
+                    {(c as any).user_id && (
+                      <button
+                        onClick={() => handleUnlinkLogin(c)}
+                        disabled={loginBusy === c.id}
+                        className="grid h-8 w-8 place-items-center rounded-lg border text-muted-foreground hover:bg-secondary"
+                        title="Desvincular login"
+                      >
+                        <UserX className="h-3.5 w-3.5" />
+                      </button>
+                    )}
                     <button
                       onClick={() => del(c.id)}
                       className="grid h-8 w-8 place-items-center rounded-lg border text-destructive hover:bg-destructive/10"
