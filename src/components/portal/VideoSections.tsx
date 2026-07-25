@@ -84,7 +84,8 @@ export function VideoSections({ videos }: { videos: Video[] }) {
                 >
                   {items.map((v, idx) => {
                     const showEpisode = section.key === "gramado-visao-de-futuro";
-                    const epNumber = String(items.length - idx).padStart(2, "0");
+                    const epNumber = v.episode_number?.trim() || String(items.length - idx).padStart(2, "0");
+
                     return (
                       <div key={v.id}>
                         {/* Orientação vem da seção: Cafezinho sempre horizontal (YouTube),
