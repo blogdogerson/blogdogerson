@@ -87,8 +87,8 @@ function HomePage() {
           <SquareBannerStack banners={banners} />
         </aside>
         <div className="min-w-0">
-          {HOME_SEGMENTS.map((cat) => (
-            <CategoryStrip key={cat} category={cat} articles={articles} />
+          {topics.map((t) => (
+            <CategoryStrip key={t.id} category={t.name} articles={articles} />
           ))}
         </div>
       </div>

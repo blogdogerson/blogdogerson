@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import { CATEGORIES, categoryToSlug } from "@/lib/categories";
+
 
 const BASE_URL = "";
 
@@ -21,11 +21,6 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/", changefreq: "hourly", priority: "1.0" },
           { path: "/quem-escreve", changefreq: "monthly", priority: "0.5" },
           { path: "/anuncie", changefreq: "monthly", priority: "0.5" },
-          ...CATEGORIES.map((c) => ({
-            path: `/editoria/${categoryToSlug(c)}`,
-            changefreq: "daily" as const,
-            priority: "0.8",
-          })),
         ];
 
         try {
