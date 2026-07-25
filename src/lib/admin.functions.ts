@@ -9,6 +9,7 @@ const articleSchema = z.object({
   excerpt: z.string().trim().max(500).optional().default(""),
   content: z.string().max(200000),
   category: z.string().min(1).max(60),
+  categories: z.array(z.string().min(1).max(60)).max(20).optional().default([]),
   image_url: z.string().trim().max(1000).optional().nullable(),
   featured: z.boolean().optional().default(false),
   published: z.boolean().optional().default(true),
