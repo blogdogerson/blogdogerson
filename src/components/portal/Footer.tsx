@@ -58,14 +58,14 @@ export function Footer() {
             Editorias
           </h3>
           <ul className="grid grid-cols-2 gap-2 text-sm">
-            {CATEGORIES.map((cat) => (
-              <li key={cat}>
+            {topics.map((t) => (
+              <li key={t.id}>
                 <Link
                   to="/editoria/$slug"
-                  params={{ slug: categoryToSlug(cat) }}
+                  params={{ slug: t.slug }}
                   className="text-navy-foreground/80 transition-colors hover:text-navy-foreground"
                 >
-                  {cat}
+                  {t.name}
                 </Link>
               </li>
             ))}
