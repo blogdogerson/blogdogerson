@@ -226,6 +226,51 @@ export type Database = {
         }
         Relationships: []
       }
+      popups: {
+        Row: {
+          active: boolean
+          content: string
+          created_at: string
+          duration_seconds: number
+          height_px: number
+          id: string
+          image_url: string | null
+          link_url: string | null
+          sort_order: number
+          title: string
+          updated_at: string
+          width_px: number
+        }
+        Insert: {
+          active?: boolean
+          content?: string
+          created_at?: string
+          duration_seconds?: number
+          height_px?: number
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          sort_order?: number
+          title?: string
+          updated_at?: string
+          width_px?: number
+        }
+        Update: {
+          active?: boolean
+          content?: string
+          created_at?: string
+          duration_seconds?: number
+          height_px?: number
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          sort_order?: number
+          title?: string
+          updated_at?: string
+          width_px?: number
+        }
+        Relationships: []
+      }
       topics: {
         Row: {
           active: boolean
