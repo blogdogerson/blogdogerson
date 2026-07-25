@@ -87,6 +87,7 @@ export function ArticlesManager() {
         excerpt: a.excerpt ?? "",
         content: a.content,
         category: a.category,
+        categories: a.categories ?? (a.category ? [a.category] : []),
         image_url: a.image_url ?? "",
         featured: a.featured,
         published: a.published,
