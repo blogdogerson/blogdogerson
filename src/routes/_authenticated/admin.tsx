@@ -47,6 +47,19 @@ function AdminPage() {
     queryFn: () => fetchStatus(),
   });
 
+  const fetchColumnist = useServerFn(getMyColumnistProfile);
+  const { data: columnistProfile } = useQuery({
+    queryKey: ["my-columnist-profile"],
+    queryFn: () => fetchColumnist(),
+    enabled: !status?.isAdmin && !isLoading,
+  });
+
+  useEffect(() => {
+    if (!isLoading && status && !status.isAdmin && columnistProfile?.columnist) {
+      navigate({ to: "/minhas-colunas", replace: true });
+    }
+  }, [isLoading, status, columnistProfile, navigate]);
+
   const logout = async () => {
     await supabase.auth.signOut();
     navigate({ to: "/" });
