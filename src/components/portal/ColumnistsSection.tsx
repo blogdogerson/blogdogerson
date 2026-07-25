@@ -15,6 +15,9 @@ export function ColumnistsSection({ columnists }: { columnists: Columnist[] }) {
           <p className="mt-2 text-sm text-muted-foreground">
             Opinião, Social, Política, Economia.
           </p>
+          <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground/70">
+            O conteúdo das colunas são de inteira e única responsabilidade de seus autores e não representam qualquer vínculo com o Blog.
+          </p>
         </div>
         <Link
           to="/colunistas"
