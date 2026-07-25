@@ -35,7 +35,9 @@ const videoSchema = z.object({
   orientation: z.enum(["horizontal", "vertical"]),
   active: z.boolean().default(true),
   sort_order: z.number().int().default(0),
+  episode_number: z.string().trim().max(20).optional().nullable(),
 });
+
 
 export const getMyAdminStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
