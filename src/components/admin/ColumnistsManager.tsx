@@ -54,9 +54,12 @@ export function ColumnistsManager() {
   const list = useServerFn(adminListColumnists);
   const save = useServerFn(adminSaveColumnist);
   const remove = useServerFn(adminDeleteColumnist);
+  const createLogin = useServerFn(adminCreateColumnistLogin);
+  const unlinkLogin = useServerFn(adminUnlinkColumnistUser);
   const [editing, setEditing] = useState<Editing | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [loginBusy, setLoginBusy] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({ queryKey: ["admin-columnists"], queryFn: () => list() });
 
@@ -64,6 +67,45 @@ export function ColumnistsManager() {
     queryClient.invalidateQueries({ queryKey: ["admin-columnists"] });
     queryClient.invalidateQueries({ queryKey: ["columnists"] });
     queryClient.invalidateQueries({ queryKey: ["home"] });
+  };
+
+  const handleCreateLogin = async (c: Columnist) => {
+    const email = window.prompt(
+      `E-mail de acesso para ${c.name}\n(o colunista usará este e-mail para logar em /auth)`,
+    );
+    if (!email) return;
+    const password = window.prompt(
+      "Senha inicial (mínimo 8 caracteres).\nAnote e envie ao colunista — ele pode trocar depois.",
+    );
+    if (!password || password.length < 8) {
+      alert("Senha muito curta. Use ao menos 8 caracteres.");
+      return;
+    }
+    setLoginBusy(c.id);
+    try {
+      const res = await createLogin({ data: { columnistId: c.id, email, password } });
+      if (res.ok) {
+        alert(
+          `Login pronto!\n\nE-mail: ${res.email}\nSenha: ${password}\n\nO colunista deve entrar em /auth com esses dados e será levado ao painel dele.`,
+        );
+        refresh();
+      } else {
+        alert(res.error ?? "Não foi possível criar o login.");
+      }
+    } finally {
+      setLoginBusy(null);
+    }
+  };
+
+  const handleUnlinkLogin = async (c: Columnist) => {
+    if (!confirm(`Remover o login vinculado a ${c.name}? A conta continua existindo, mas perde o acesso ao painel do colunista.`)) return;
+    setLoginBusy(c.id);
+    try {
+      await unlinkLogin({ data: { columnistId: c.id } });
+      refresh();
+    } finally {
+      setLoginBusy(null);
+    }
   };
 
   const submit = async (e: React.FormEvent) => {
