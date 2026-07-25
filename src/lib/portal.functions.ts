@@ -22,7 +22,7 @@ export const getHomeData = createServerFn({ method: "GET" }).handler(async () =>
       .select(LIST_FIELDS)
       .eq("published", true)
       .order("published_at", { ascending: false })
-      .limit(36),
+      .limit(300),
     supabase.from("banners").select("*").eq("active", true).order("sort_order"),
     supabase.from("videos").select("*").eq("active", true).order("sort_order"),
   ]);
