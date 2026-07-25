@@ -66,4 +66,6 @@ export interface Video {
   orientation: string;
   active: boolean;
   sort_order: number;
+  episode_number?: string | null;
 }
+
