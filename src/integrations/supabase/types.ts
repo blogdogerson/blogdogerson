@@ -279,6 +279,7 @@ export type Database = {
           active: boolean
           created_at: string
           embed_url: string
+          episode_number: string | null
           id: string
           orientation: string
           section: string
@@ -289,6 +290,7 @@ export type Database = {
           active?: boolean
           created_at?: string
           embed_url: string
+          episode_number?: string | null
           id?: string
           orientation?: string
           section: string
@@ -299,6 +301,7 @@ export type Database = {
           active?: boolean
           created_at?: string
           embed_url?: string
+          episode_number?: string | null
           id?: string
           orientation?: string
           section?: string
