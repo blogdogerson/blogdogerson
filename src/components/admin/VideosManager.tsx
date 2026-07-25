@@ -99,9 +99,26 @@ export function VideosManager() {
         <input
           value={editing.title}
           onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-          placeholder="Título do vídeo"
+          placeholder={editing.section === "gramado-visao-de-futuro" ? "Nome do episódio" : "Título do vídeo"}
           className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
         />
+        {editing.section === "gramado-visao-de-futuro" && (
+          <div>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              Número do episódio
+            </label>
+            <input
+              value={editing.episode_number}
+              onChange={(e) => setEditing({ ...editing, episode_number: e.target.value })}
+              placeholder="Ex.: 01, 02, 15"
+              className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
+            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Deixe em branco para numerar automaticamente pela ordem.
+            </p>
+          </div>
+        )}
+
         <input
           required
           value={editing.embed_url}
