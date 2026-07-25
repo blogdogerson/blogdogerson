@@ -93,3 +93,22 @@ export const adminDeleteColumnist = createServerFn({ method: "POST" })
     const { error } = await anyDb(context.supabase).from("columnists").delete().eq("id", data.id);
     return { ok: !error, error: error?.message };
   });
+
+export const adminReorderColumnists = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ ids: z.array(z.string().uuid()).min(1) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const db = anyDb(context.supabase);
+    const now = new Date().toISOString();
+    for (let i = 0; i < data.ids.length; i++) {
+      const { error } = await db
+        .from("columnists")
+        .update({ sort_order: i, updated_at: now })
+        .eq("id", data.ids[i]);
+      if (error) return { ok: false, error: error.message };
+    }
+    return { ok: true };
+  });

@@ -1,11 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { KeyRound, Plus, Trash2, UserX } from "lucide-react";
+import { ArrowDown, ArrowUp, KeyRound, Plus, Trash2, UserX } from "lucide-react";
 import {
   adminListColumnists,
   adminSaveColumnist,
   adminDeleteColumnist,
+  adminReorderColumnists,
   type Columnist,
 } from "@/lib/columnists.functions";
 import { adminCreateColumnistLogin, adminUnlinkColumnistUser } from "@/lib/admin.functions";
@@ -54,6 +55,7 @@ export function ColumnistsManager() {
   const list = useServerFn(adminListColumnists);
   const save = useServerFn(adminSaveColumnist);
   const remove = useServerFn(adminDeleteColumnist);
+  const reorder = useServerFn(adminReorderColumnists);
   const createLogin = useServerFn(adminCreateColumnistLogin);
   const unlinkLogin = useServerFn(adminUnlinkColumnistUser);
   const [editing, setEditing] = useState<Editing | null>(null);
@@ -67,6 +69,21 @@ export function ColumnistsManager() {
     queryClient.invalidateQueries({ queryKey: ["admin-columnists"] });
     queryClient.invalidateQueries({ queryKey: ["columnists"] });
     queryClient.invalidateQueries({ queryKey: ["home"] });
+  };
+
+  const move = async (index: number, direction: -1 | 1) => {
+    const items = data?.columnists ?? [];
+    const target = index + direction;
+    if (target < 0 || target >= items.length) return;
+    const ids = items.map((c) => c.id);
+    [ids[index], ids[target]] = [ids[target], ids[index]];
+    // optimistic
+    queryClient.setQueryData(["admin-columnists"], {
+      columnists: ids.map((id, i) => ({ ...items.find((c) => c.id === id)!, sort_order: i })),
+    });
+    const res = await reorder({ data: { ids } });
+    if (!res.ok) setMessage(res.error ?? "Erro ao reordenar");
+    refresh();
   };
 
   const handleCreateLogin = async (c: Columnist) => {
@@ -286,7 +303,9 @@ export function ColumnistsManager() {
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {(data?.columnists ?? []).map((c: Columnist) => (
+          {(data?.columnists ?? []).map((c: Columnist, idx: number) => {
+            const total = (data?.columnists ?? []).length;
+            return (
             <div
               key={c.id}
               className="overflow-hidden rounded-2xl border bg-card"
@@ -314,7 +333,7 @@ export function ColumnistsManager() {
                   </p>
                   <p className="truncate font-display font-black">{c.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {c.active ? "Ativo" : "Inativo"} · ordem {c.sort_order}
+                    {c.active ? "Ativo" : "Inativo"} · ordem {idx + 1}
                   </p>
                   {(c as any).user_id ? (
                     <p className="mt-1 inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700">
@@ -326,6 +345,24 @@ export function ColumnistsManager() {
                     </p>
                   )}
                   <div className="mt-2 flex flex-wrap gap-2">
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => move(idx, -1)}
+                        disabled={idx === 0}
+                        className="grid h-8 w-8 place-items-center rounded-lg border hover:bg-secondary disabled:opacity-40"
+                        title="Mover para cima"
+                      >
+                        <ArrowUp className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        onClick={() => move(idx, 1)}
+                        disabled={idx === total - 1}
+                        className="grid h-8 w-8 place-items-center rounded-lg border hover:bg-secondary disabled:opacity-40"
+                        title="Mover para baixo"
+                      >
+                        <ArrowDown className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                     <button
                       onClick={() =>
                         setEditing({
@@ -368,7 +405,8 @@ export function ColumnistsManager() {
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
