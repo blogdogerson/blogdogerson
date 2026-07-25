@@ -185,8 +185,10 @@ export function VideosManager() {
                     orientation: v.orientation,
                     active: v.active,
                     sort_order: v.sort_order,
+                    episode_number: v.episode_number ?? "",
                   })
                 }
+
                 className="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-secondary"
               >
                 Editar
