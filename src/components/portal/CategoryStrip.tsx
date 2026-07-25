@@ -11,7 +11,11 @@ export function CategoryStrip({
   category: string;
   articles: Article[];
 }) {
-  const pool = articles.filter((a) => a.category === category);
+  const pool = articles.filter((a) =>
+    a.categories && a.categories.length > 0
+      ? a.categories.includes(category)
+      : a.category === category,
+  );
 
   if (pool.length === 0) return null;
 
