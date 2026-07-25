@@ -25,11 +25,6 @@ const bannerSchema = z.object({
   sort_order: z.number().int().default(0),
 });
 
-const categorySchema = z.object({
-  id: z.string().uuid().optional(),
-  name: z.string().trim().min(1).max(60),
-  sort_order: z.number().int().default(0),
-});
 
 const videoSchema = z.object({
   id: z.string().uuid().optional(),
@@ -187,66 +182,8 @@ export const adminDeleteVideo = createServerFn({ method: "POST" })
     return { ok: !error, error: error?.message };
   });
 
-// ---------------------------------------------------------------------------
-// Tópicos/categorias (gerenciados dinamicamente pelo painel administrativo)
-// ---------------------------------------------------------------------------
+// Tópicos/editorias agora vivem em `src/lib/topics.functions.ts` com a tabela `topics`.
 
-export const adminListCategories = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    await assertAdmin(context);
-    const { data: rows } = await context.supabase
-      .from("categories")
-      .select("*")
-      .order("sort_order");
-    return { categories: rows ?? [] };
-  });
-
-export const adminSaveCategory = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => categorySchema.parse(d))
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { id, ...fields } = data;
-
-    if (id) {
-      // Ao editar, se o nome mudou, atualiza também as notícias já publicadas
-      // com a categoria antiga para que continuem "pertencendo" ao tópico.
-      const { data: current } = await context.supabase
-        .from("categories")
-        .select("name")
-        .eq("id", id)
-        .maybeSingle();
-      const res = await context.supabase
-        .from("categories")
-        .update({ ...fields, updated_at: new Date().toISOString() })
-        .eq("id", id);
-      if (res.error) return { ok: false, error: res.error.message };
-      if (current && current.name !== fields.name) {
-        await context.supabase
-          .from("articles")
-          .update({ category: fields.name })
-          .eq("category", current.name);
-      }
-      return { ok: true };
-    }
-
-    const res = await context.supabase.from("categories").insert(fields);
-    if (res.error) return { ok: false, error: res.error.message };
-    return { ok: true };
-  });
-
-export const adminDeleteCategory = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    // Remove o tópico da lista de navegação, mas NÃO apaga nem altera as
-    // notícias que estavam com essa categoria — elas continuam existindo,
-    // só deixam de aparecer no menu/home como um tópico próprio.
-    const { error } = await context.supabase.from("categories").delete().eq("id", data.id);
-    return { ok: !error, error: error?.message };
-  });
 
 // ---------------------------------------------------------------------------
 // Vincular login de colunista (conta criada em /auth) a um colunista
@@ -284,7 +221,7 @@ export const adminLinkColumnistUser = createServerFn({ method: "POST" })
       };
     }
 
-    const { error } = await supabaseAdmin.from("columnists").update({ user_id: userId }).eq("id", data.columnistId);
+    const { error } = await (supabaseAdmin.from("columnists") as any).update({ user_id: userId }).eq("id", data.columnistId);
     if (error) return { ok: false, error: error.message };
     return { ok: true };
   });
@@ -295,7 +232,7 @@ export const adminUnlinkColumnistUser = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.from("columnists").update({ user_id: null }).eq("id", data.columnistId);
+    const { error } = await (supabaseAdmin.from("columnists") as any).update({ user_id: null }).eq("id", data.columnistId);
     return { ok: !error, error: error?.message };
   });
 
