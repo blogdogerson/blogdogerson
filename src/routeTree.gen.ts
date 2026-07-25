@@ -14,6 +14,7 @@ import { Route as PortalRouteImport } from './routes/_portal'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedMinhasColunasRouteImport } from './routes/_authenticated/minhas-colunas'
 import { Route as PortalIndexRouteImport } from './routes/_portal.index'
 import { Route as PortalAnuncieRouteImport } from './routes/_portal.anuncie'
 import { Route as PortalBuscaRouteImport } from './routes/_portal.busca'
@@ -46,6 +47,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMinhasColunasRoute =
+  AuthenticatedMinhasColunasRouteImport.update({
+    id: '/minhas-colunas',
+    path: '/minhas-colunas',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const PortalIndexRoute = PortalIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/minhas-colunas': typeof AuthenticatedMinhasColunasRoute
   '/anuncie': typeof PortalAnuncieRoute
   '/busca': typeof PortalBuscaRoute
   '/colunistas': typeof PortalColunistasRoute
@@ -105,6 +113,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/minhas-colunas': typeof AuthenticatedMinhasColunasRoute
   '/anuncie': typeof PortalAnuncieRoute
   '/busca': typeof PortalBuscaRoute
   '/colunistas': typeof PortalColunistasRoute
@@ -120,6 +129,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/minhas-colunas': typeof AuthenticatedMinhasColunasRoute
   '/_portal/anuncie': typeof PortalAnuncieRoute
   '/_portal/busca': typeof PortalBuscaRoute
   '/_portal/colunistas': typeof PortalColunistasRoute
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/admin'
+    | '/minhas-colunas'
     | '/anuncie'
     | '/busca'
     | '/colunistas'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/admin'
+    | '/minhas-colunas'
     | '/anuncie'
     | '/busca'
     | '/colunistas'
@@ -163,6 +175,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/_authenticated/admin'
+    | '/_authenticated/minhas-colunas'
     | '/_portal/anuncie'
     | '/_portal/busca'
     | '/_portal/colunistas'
@@ -215,6 +228,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/minhas-colunas': {
+      id: '/_authenticated/minhas-colunas'
+      path: '/minhas-colunas'
+      fullPath: '/minhas-colunas'
+      preLoaderRoute: typeof AuthenticatedMinhasColunasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_portal/': {
@@ -278,10 +298,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedMinhasColunasRoute: typeof AuthenticatedMinhasColunasRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedMinhasColunasRoute: AuthenticatedMinhasColunasRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
