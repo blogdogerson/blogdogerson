@@ -1,13 +1,14 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { KeyRound, Plus, Trash2, UserX } from "lucide-react";
 import {
   adminListColumnists,
   adminSaveColumnist,
   adminDeleteColumnist,
   type Columnist,
 } from "@/lib/columnists.functions";
+import { adminCreateColumnistLogin, adminUnlinkColumnistUser } from "@/lib/admin.functions";
 import { ImageUpload } from "./ImageUpload";
 
 interface Editing {
