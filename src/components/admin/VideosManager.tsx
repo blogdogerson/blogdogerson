@@ -13,6 +13,7 @@ interface Editing {
   orientation: "horizontal" | "vertical";
   active: boolean;
   sort_order: number;
+  episode_number: string;
 }
 
 const EMPTY: Editing = {
@@ -22,7 +23,9 @@ const EMPTY: Editing = {
   orientation: "horizontal",
   active: true,
   sort_order: 0,
+  episode_number: "",
 };
+
 
 /** Convert common YouTube/Instagram URLs to embeddable URLs. */
 function toEmbed(url: string): string {
