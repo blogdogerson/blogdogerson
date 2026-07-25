@@ -71,6 +71,21 @@ export function ColumnistsManager() {
     queryClient.invalidateQueries({ queryKey: ["home"] });
   };
 
+  const move = async (index: number, direction: -1 | 1) => {
+    const items = data?.columnists ?? [];
+    const target = index + direction;
+    if (target < 0 || target >= items.length) return;
+    const ids = items.map((c) => c.id);
+    [ids[index], ids[target]] = [ids[target], ids[index]];
+    // optimistic
+    queryClient.setQueryData(["admin-columnists"], {
+      columnists: ids.map((id, i) => ({ ...items.find((c) => c.id === id)!, sort_order: i })),
+    });
+    const res = await reorder({ data: { ids } });
+    if (!res.ok) setMessage(res.error ?? "Erro ao reordenar");
+    refresh();
+  };
+
   const handleCreateLogin = async (c: Columnist) => {
     const email = window.prompt(
       `E-mail de acesso para ${c.name}\n(o colunista usará este e-mail para logar em /auth)`,
