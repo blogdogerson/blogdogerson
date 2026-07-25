@@ -12,7 +12,7 @@ function publicClient() {
   );
 }
 
-const LIST_FIELDS = "id, slug, title, excerpt, category, image_url, published_at, featured, published";
+const LIST_FIELDS = "id, slug, title, excerpt, category, categories, image_url, published_at, featured, published";
 
 export const getHomeData = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = publicClient();
