@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 // 10 years in seconds — signed URLs act as effectively permanent public links.
 const SIGNED_URL_TTL = 60 * 60 * 24 * 365 * 10;
+const MAX_MB = 15;
+
 
 interface Props {
   value: string;
