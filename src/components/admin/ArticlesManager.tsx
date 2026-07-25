@@ -8,7 +8,7 @@ import {
   adminSaveArticle,
   adminDeleteArticle,
 } from "@/lib/admin.functions";
-import { CATEGORIES } from "@/lib/categories";
+import { topicsQuery } from "@/lib/topics.functions";
 import { ImageUpload } from "./ImageUpload";
 import { RichTextArea } from "./RichTextArea";
 
