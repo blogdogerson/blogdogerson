@@ -44,12 +44,13 @@ export const getArticleBySlug = createServerFn({ method: "GET" })
       .eq("published", true)
       .maybeSingle();
     if (!article) return { article: null, related: [] as Article[], banners: [] as Banner[] };
+    const cats = (article as any).categories?.length ? (article as any).categories : [article.category];
     const [relatedRes, bannersRes] = await Promise.all([
       supabase
         .from("articles")
         .select(LIST_FIELDS)
         .eq("published", true)
-        .eq("category", article.category)
+        .overlaps("categories", cats)
         .neq("id", article.id)
         .order("published_at", { ascending: false })
         .limit(4),
