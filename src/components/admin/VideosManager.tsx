@@ -13,6 +13,7 @@ interface Editing {
   orientation: "horizontal" | "vertical";
   active: boolean;
   sort_order: number;
+  episode_number: string;
 }
 
 const EMPTY: Editing = {
@@ -22,7 +23,9 @@ const EMPTY: Editing = {
   orientation: "horizontal",
   active: true,
   sort_order: 0,
+  episode_number: "",
 };
+
 
 /** Convert common YouTube/Instagram URLs to embeddable URLs. */
 function toEmbed(url: string): string {
@@ -53,7 +56,7 @@ export function VideosManager() {
     setSaving(true);
     setMessage("");
     try {
-      const res = await save({ data: { ...editing, embed_url: toEmbed(editing.embed_url) } });
+      const res = await save({ data: { ...editing, embed_url: toEmbed(editing.embed_url), episode_number: editing.episode_number.trim() || null } });
       if (res.ok) {
         setEditing(null);
         refresh();
@@ -96,9 +99,26 @@ export function VideosManager() {
         <input
           value={editing.title}
           onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-          placeholder="Título do vídeo"
+          placeholder={editing.section === "gramado-visao-de-futuro" ? "Nome do episódio" : "Título do vídeo"}
           className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
         />
+        {editing.section === "gramado-visao-de-futuro" && (
+          <div>
+            <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              Número do episódio
+            </label>
+            <input
+              value={editing.episode_number}
+              onChange={(e) => setEditing({ ...editing, episode_number: e.target.value })}
+              placeholder="Ex.: 01, 02, 15"
+              className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
+            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Deixe em branco para numerar automaticamente pela ordem.
+            </p>
+          </div>
+        )}
+
         <input
           required
           value={editing.embed_url}
@@ -182,8 +202,10 @@ export function VideosManager() {
                     orientation: v.orientation,
                     active: v.active,
                     sort_order: v.sort_order,
+                    episode_number: v.episode_number ?? "",
                   })
                 }
+
                 className="rounded-lg border px-3 py-1.5 text-xs font-semibold hover:bg-secondary"
               >
                 Editar

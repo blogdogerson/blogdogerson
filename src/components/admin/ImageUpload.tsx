@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 // 10 years in seconds — signed URLs act as effectively permanent public links.
 const SIGNED_URL_TTL = 60 * 60 * 24 * 365 * 10;
+const MAX_MB = 15;
+
 
 interface Props {
   value: string;
@@ -26,14 +28,16 @@ export function ImageUpload({
 
   const handleFile = async (file: File) => {
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Imagem muito grande (máximo 5 MB).");
+    if (file.size > MAX_MB * 1024 * 1024) {
+      setError(`Arquivo muito grande (máximo ${MAX_MB} MB).`);
       return;
     }
-    if (!file.type.startsWith("image/")) {
-      setError("Envie um arquivo de imagem.");
+    const isImage = file.type.startsWith("image/") || /\.(gif|png|jpe?g|webp|avif)$/i.test(file.name);
+    if (!isImage) {
+      setError("Envie um arquivo de imagem (JPG, PNG, GIF ou WebP).");
       return;
     }
+
     setError("");
     setUploading(true);
     try {
@@ -92,10 +96,11 @@ export function ImageUpload({
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept="image/*,image/gif,.gif"
         className="hidden"
         onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
       />
+
 
       {value ? (
         <div className={`overflow-hidden rounded-xl bg-muted ${aspect}`}>
@@ -109,7 +114,7 @@ export function ImageUpload({
         >
           <Upload className="h-6 w-6 text-primary/70" />
           <span>Clique para enviar do computador</span>
-          <span className="text-xs">JPG, PNG ou WebP · até 5 MB</span>
+          <span className="text-xs">JPG, PNG, GIF ou WebP · até {MAX_MB} MB</span>
         </button>
       )}
 
