@@ -35,12 +35,12 @@ export function Footer() {
               <Mail className="h-4 w-4" /> gerson@blogdogerson.com.br
             </a>
             <a
-              href="https://instagram.com/blogdogerson"
+              href="https://www.instagram.com/gersonsorgetz"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 text-navy-foreground/80 transition-colors hover:text-navy-foreground"
             >
-              <Instagram className="h-4 w-4" /> @blogdogerson
+              <Instagram className="h-4 w-4" /> @gersonsorgetz
             </a>
             <a
               href={RADIO_STREAM_URL}

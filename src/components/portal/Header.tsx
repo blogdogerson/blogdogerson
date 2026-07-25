@@ -157,10 +157,10 @@ export function Header() {
           <div className="flex items-center gap-2">
             <RadioButton />
             <a
-              href="https://instagram.com/blogdogerson"
+              href="https://www.instagram.com/gersonsorgetz"
               target="_blank"
               rel="noreferrer"
-              aria-label="Instagram do Blog do Gerson"
+              aria-label="Instagram de Gerson Sorgetz"
               className="grid h-7 w-7 place-items-center rounded-full border border-primary/30 text-primary transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground"
             >
               <Instagram className="h-3.5 w-3.5" />
