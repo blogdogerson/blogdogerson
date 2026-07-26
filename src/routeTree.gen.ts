@@ -23,6 +23,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
 import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
 import { Route as PortalColunaSlugRouteImport } from './routes/_portal.coluna.$slug'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -93,6 +94,11 @@ const PortalColunaSlugRoute = PortalColunaSlugRouteImport.update({
   path: '/coluna/$slug',
   getParentRoute: () => PortalRoute,
 } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PortalIndexRoute
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/busca': typeof PortalBuscaRoute
   '/colunistas': typeof PortalColunistasRoute
   '/quem-escreve': typeof PortalQuemEscreveRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/coluna/$slug': typeof PortalColunaSlugRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/busca': typeof PortalBuscaRoute
   '/colunistas': typeof PortalColunistasRoute
   '/quem-escreve': typeof PortalQuemEscreveRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/coluna/$slug': typeof PortalColunaSlugRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/_portal/colunistas': typeof PortalColunistasRoute
   '/_portal/quem-escreve': typeof PortalQuemEscreveRoute
   '/_portal/': typeof PortalIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_portal/coluna/$slug': typeof PortalColunaSlugRoute
   '/_portal/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/_portal/noticia/$slug': typeof PortalNoticiaSlugRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/busca'
     | '/colunistas'
     | '/quem-escreve'
+    | '/.lovable/oauth/consent'
     | '/coluna/$slug'
     | '/editoria/$slug'
     | '/noticia/$slug'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/busca'
     | '/colunistas'
     | '/quem-escreve'
+    | '/.lovable/oauth/consent'
     | '/coluna/$slug'
     | '/editoria/$slug'
     | '/noticia/$slug'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/_portal/colunistas'
     | '/_portal/quem-escreve'
     | '/_portal/'
+    | '/.lovable/oauth/consent'
     | '/_portal/coluna/$slug'
     | '/_portal/editoria/$slug'
     | '/_portal/noticia/$slug'
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   PortalRoute: typeof PortalRouteWithChildren
   AuthRoute: typeof AuthRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -293,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalColunaSlugRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -339,6 +359,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortalRoute: PortalRouteWithChildren,
   AuthRoute: AuthRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
