@@ -20,15 +20,17 @@ export default defineTool({
   annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: false },
   handler: async ({ slug, ...fields }, ctx) => {
     if (!ctx.isAuthenticated()) return errorResult("Não autenticado.");
-    const patch = Object.fromEntries(
-      Object.entries(fields).filter(([, value]) => value !== undefined),
-    ) as Record<string, unknown> as Parameters<
-      ReturnType<typeof supabaseForUser>["from"] extends never ? never : never
-    > extends never
-      ? never
-      : never;
+    const patch: Database["public"]["Tables"]["articles"]["Update"] = {};
+    if (fields.title !== undefined) patch.title = fields.title;
+    if (fields.content !== undefined) patch.content = fields.content;
+    if (fields.excerpt !== undefined) patch.excerpt = fields.excerpt;
+    if (fields.category !== undefined) patch.category = fields.category;
+    if (fields.categories !== undefined) patch.categories = fields.categories;
+    if (fields.image_url !== undefined) patch.image_url = fields.image_url;
+    if (fields.published !== undefined) patch.published = fields.published;
 
     if (Object.keys(patch).length === 0) return errorResult("Nenhum campo para atualizar.");
+
     const { data, error } = await supabaseForUser(ctx)
       .from("articles")
       .update(patch)
