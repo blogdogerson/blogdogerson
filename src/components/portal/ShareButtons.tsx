@@ -1,5 +1,7 @@
-import { Check, Facebook, Instagram, Link2, Send } from "lucide-react";
+import { Check, Facebook, Link2, Send, Share2 } from "lucide-react";
 import { useState } from "react";
+import { absoluteUrl } from "@/lib/site";
+
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
