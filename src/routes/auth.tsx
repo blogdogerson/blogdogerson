@@ -2,7 +2,15 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+/** Só aceitamos caminhos relativos de mesma origem (evita open redirect). */
+function safeNext(value: unknown) {
+  return typeof value === "string" && value.startsWith("/") && !value.startsWith("//")
+    ? value
+    : undefined;
+}
+
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>) => ({ next: safeNext(s.next) }),
   head: () => ({
     meta: [
       { title: "Acesso administrativo — Blog do Gerson" },
@@ -14,6 +22,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,12 +41,19 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin },
+          options: {
+            emailRedirectTo: next ? window.location.origin + next : window.location.origin,
+          },
         });
         if (error) throw error;
       }
+      if (next) {
+        window.location.href = next;
+        return;
+      }
       navigate({ to: "/admin" });
     } catch (err) {
+
       const msg = err instanceof Error ? err.message : "Erro ao entrar";
       setError(
         msg.includes("Invalid login")
