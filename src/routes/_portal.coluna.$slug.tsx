@@ -3,6 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getColumnBySlug } from "@/lib/columns.functions";
 import { toDisplayHtml } from "@/lib/richtext";
 import { ShareButtons } from "@/components/portal/ShareButtons";
+import { absoluteUrl, summarize } from "@/lib/site";
 
 const columnQuery = (slug: string) =>
   queryOptions({
@@ -27,8 +28,9 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
       };
     }
     const c = loaderData.column;
-    const desc = (c.excerpt || c.title).slice(0, 158);
+    const desc = summarize(c.excerpt, c.content, c.title);
     const author = c.columnist?.name ?? "Colunista";
+    const canonical = absoluteUrl(`/coluna/${c.slug}`);
     return {
       meta: [
         { title: `${c.title} — ${author} | Blog do Gerson` },
@@ -36,7 +38,10 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
         { property: "og:title", content: `${c.title} — ${author}` },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
-        { property: "og:url", content: `/coluna/${c.slug}` },
+        { property: "og:site_name", content: "Blog do Gerson" },
+        { property: "og:url", content: canonical },
+        { name: "twitter:title", content: `${c.title} — ${author}` },
+        { name: "twitter:description", content: desc },
         ...(c.image_url
           ? [
               { property: "og:image", content: c.image_url },
@@ -45,8 +50,9 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
           : []),
         { name: "twitter:card", content: "summary_large_image" },
       ],
-      links: [{ rel: "canonical", href: `/coluna/${c.slug}` }],
+      links: [{ rel: "canonical", href: canonical }],
     };
+
   },
   component: ColumnPage,
   errorComponent: ({ error }) => (
@@ -106,7 +112,7 @@ function ColumnPage() {
             year: "numeric",
           })}
         </p>
-        <ShareButtons title={column.title} slug={`coluna/${column.slug}`} />
+        <ShareButtons title={column.title} path={`/coluna/${column.slug}`} summary={column.excerpt} />
       </div>
 
       {column.image_url && (
@@ -121,6 +127,13 @@ function ColumnPage() {
         className="article-body mt-6"
         dangerouslySetInnerHTML={{ __html: toDisplayHtml(column.content) }}
       />
+
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
+        <p className="text-sm font-semibold">Compartilhe esta coluna:</p>
+        <ShareButtons title={column.title} path={`/coluna/${column.slug}`} summary={column.excerpt} />
+      </div>
+
+
 
       {related.length > 0 && (
         <section className="mt-14">

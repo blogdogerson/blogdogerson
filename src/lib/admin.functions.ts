@@ -36,6 +36,7 @@ const videoSchema = z.object({
   active: z.boolean().default(true),
   sort_order: z.number().int().default(0),
   episode_number: z.string().trim().max(20).optional().nullable(),
+  description: z.string().trim().max(2000).optional().nullable(),
 });
 
 

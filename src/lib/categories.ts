@@ -67,5 +67,6 @@ export interface Video {
   active: boolean;
   sort_order: number;
   episode_number?: string | null;
+  description?: string | null;
 }
 

@@ -8,6 +8,7 @@ import { CategoryTag, formatExactDate, ArticleCard } from "@/components/portal/A
 import { SidebarBanners, InlineBanner } from "@/components/portal/BannerSlot";
 import { NewsletterForm } from "@/components/portal/NewsletterForm";
 import { ShareButtons } from "@/components/portal/ShareButtons";
+import { absoluteUrl, summarize } from "@/lib/site";
 
 const articleQuery = (slug: string) =>
   queryOptions({
@@ -27,7 +28,8 @@ export const Route = createFileRoute("/_portal/noticia/$slug")({
       return { meta: [{ title: "Notícia não encontrada — Blog do Gerson" }, { name: "robots", content: "noindex" }] };
     }
     const a = loaderData.article;
-    const desc = (a.excerpt || a.title).slice(0, 158);
+    const desc = summarize(a.excerpt, a.content, a.title);
+    const canonical = absoluteUrl(`/noticia/${a.slug}`);
     return {
       meta: [
         { title: `${a.title} — Blog do Gerson` },
@@ -35,11 +37,15 @@ export const Route = createFileRoute("/_portal/noticia/$slug")({
         { property: "og:title", content: a.title },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
-        { property: "og:url", content: `/noticia/${a.slug}` },
+        { property: "og:site_name", content: "Blog do Gerson" },
+        { property: "og:url", content: canonical },
+        { name: "twitter:title", content: a.title },
+        { name: "twitter:description", content: desc },
         ...(a.image_url ? [{ property: "og:image", content: a.image_url }, { name: "twitter:image", content: a.image_url }] : []),
         { name: "twitter:card", content: "summary_large_image" },
       ],
-      links: [{ rel: "canonical", href: `/noticia/${a.slug}` }],
+      links: [{ rel: "canonical", href: canonical }],
+
       scripts: [
         {
           type: "application/ld+json",
@@ -120,7 +126,8 @@ function ArticlePage() {
                   <Clock className="h-3.5 w-3.5" /> {readingTime(article.content)} min de leitura
                 </span>
               </p>
-              <ShareButtons title={article.title} slug={article.slug} />
+              <ShareButtons title={article.title} path={`/noticia/${article.slug}`} summary={article.excerpt} />
+
             </div>
           </div>
 
@@ -143,7 +150,7 @@ function ArticlePage() {
 
           <div className="mt-8 flex max-w-3xl items-center justify-between border-t pt-5">
             <p className="text-sm font-semibold">Compartilhe esta notícia:</p>
-            <ShareButtons title={article.title} slug={article.slug} />
+            <ShareButtons title={article.title} path={`/noticia/${article.slug}`} summary={article.excerpt} />
           </div>
 
           {related.length > 0 && (
