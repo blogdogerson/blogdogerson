@@ -106,7 +106,7 @@ function ColumnPage() {
             year: "numeric",
           })}
         </p>
-        <ShareButtons title={column.title} slug={`coluna/${column.slug}`} />
+        <ShareButtons title={column.title} path={`/coluna/${column.slug}`} summary={column.excerpt} />
       </div>
 
       {column.image_url && (
