@@ -27,8 +27,9 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
       };
     }
     const c = loaderData.column;
-    const desc = (c.excerpt || c.title).slice(0, 158);
+    const desc = summarize(c.excerpt, c.content, c.title);
     const author = c.columnist?.name ?? "Colunista";
+    const canonical = absoluteUrl(`/coluna/${c.slug}`);
     return {
       meta: [
         { title: `${c.title} — ${author} | Blog do Gerson` },
@@ -36,7 +37,10 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
         { property: "og:title", content: `${c.title} — ${author}` },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
-        { property: "og:url", content: `/coluna/${c.slug}` },
+        { property: "og:site_name", content: "Blog do Gerson" },
+        { property: "og:url", content: canonical },
+        { name: "twitter:title", content: `${c.title} — ${author}` },
+        { name: "twitter:description", content: desc },
         ...(c.image_url
           ? [
               { property: "og:image", content: c.image_url },
@@ -45,8 +49,9 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
           : []),
         { name: "twitter:card", content: "summary_large_image" },
       ],
-      links: [{ rel: "canonical", href: `/coluna/${c.slug}` }],
+      links: [{ rel: "canonical", href: canonical }],
     };
+
   },
   component: ColumnPage,
   errorComponent: ({ error }) => (
