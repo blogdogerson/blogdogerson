@@ -28,7 +28,8 @@ export const Route = createFileRoute("/_portal/noticia/$slug")({
       return { meta: [{ title: "Notícia não encontrada — Blog do Gerson" }, { name: "robots", content: "noindex" }] };
     }
     const a = loaderData.article;
-    const desc = (a.excerpt || a.title).slice(0, 158);
+    const desc = summarize(a.excerpt, a.content, a.title);
+    const canonical = absoluteUrl(`/noticia/${a.slug}`);
     return {
       meta: [
         { title: `${a.title} — Blog do Gerson` },
@@ -36,11 +37,15 @@ export const Route = createFileRoute("/_portal/noticia/$slug")({
         { property: "og:title", content: a.title },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
-        { property: "og:url", content: `/noticia/${a.slug}` },
+        { property: "og:site_name", content: "Blog do Gerson" },
+        { property: "og:url", content: canonical },
+        { name: "twitter:title", content: a.title },
+        { name: "twitter:description", content: desc },
         ...(a.image_url ? [{ property: "og:image", content: a.image_url }, { name: "twitter:image", content: a.image_url }] : []),
         { name: "twitter:card", content: "summary_large_image" },
       ],
-      links: [{ rel: "canonical", href: `/noticia/${a.slug}` }],
+      links: [{ rel: "canonical", href: canonical }],
+
       scripts: [
         {
           type: "application/ld+json",
