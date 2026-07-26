@@ -8,3 +8,16 @@ export function absoluteUrl(path: string) {
   if (typeof window !== "undefined") return `${window.location.origin}${clean}`;
   return `${SITE_URL}${clean}`;
 }
+
+/** Resumo curto para meta tags e compartilhamento (usa o excerpt ou o início do texto). */
+export function summarize(excerpt?: string | null, content?: string | null, fallback = "") {
+  const base =
+    (excerpt ?? "").trim() ||
+    (content ?? "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&nbsp;/g, " ")
+      .replace(/\s+/g, " ")
+      .trim() ||
+    fallback;
+  return base.length > 200 ? `${base.slice(0, 197).trimEnd()}...` : base;
+}

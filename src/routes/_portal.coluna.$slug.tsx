@@ -3,6 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getColumnBySlug } from "@/lib/columns.functions";
 import { toDisplayHtml } from "@/lib/richtext";
 import { ShareButtons } from "@/components/portal/ShareButtons";
+import { absoluteUrl, summarize } from "@/lib/site";
 
 const columnQuery = (slug: string) =>
   queryOptions({

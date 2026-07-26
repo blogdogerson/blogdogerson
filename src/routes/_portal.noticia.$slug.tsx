@@ -8,6 +8,7 @@ import { CategoryTag, formatExactDate, ArticleCard } from "@/components/portal/A
 import { SidebarBanners, InlineBanner } from "@/components/portal/BannerSlot";
 import { NewsletterForm } from "@/components/portal/NewsletterForm";
 import { ShareButtons } from "@/components/portal/ShareButtons";
+import { absoluteUrl, summarize } from "@/lib/site";
 
 const articleQuery = (slug: string) =>
   queryOptions({
