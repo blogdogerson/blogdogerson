@@ -11,19 +11,40 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export function ShareButtons({ title, slug }: { title: string; slug: string }) {
+interface ShareButtonsProps {
+  title: string;
+  /** Caminho relativo da página, ex.: "/noticia/slug" ou "/coluna/slug". */
+  path: string;
+  /** Resumo/chamada exibido junto ao link nas redes. */
+  summary?: string | null;
+}
+
+export function ShareButtons({ title, path, summary }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
-  const url = typeof window !== "undefined" ? `${window.location.origin}/noticia/${slug}` : `/noticia/${slug}`;
-  const encoded = encodeURIComponent(url);
-  const text = encodeURIComponent(title);
+  const url = absoluteUrl(path);
+  const resumo = (summary ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 200);
+  const message = resumo ? `${title}\n\n${resumo}\n\n` : `${title}\n\n`;
+
+  const encodedUrl = encodeURIComponent(url);
+  const encodedMessage = encodeURIComponent(message);
+  const encodedTitle = encodeURIComponent(title);
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(`${message}${url}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
       /* noop */
+    }
+  };
+
+  const nativeShare = async () => {
+    if (typeof navigator === "undefined" || !navigator.share) return copy();
+    try {
+      await navigator.share({ title, text: resumo || title, url });
+    } catch {
+      /* usuário cancelou */
     }
   };
 
@@ -33,7 +54,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
   return (
     <div className="flex items-center gap-1.5">
       <a
-        href={`https://api.whatsapp.com/send?text=${text}%20${encoded}`}
+        href={`https://api.whatsapp.com/send?text=${encodedMessage}${encodedUrl}`}
         target="_blank"
         rel="noreferrer"
         aria-label="Compartilhar no WhatsApp"
@@ -42,7 +63,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
         <WhatsAppIcon className="h-4.5 w-4.5" />
       </a>
       <a
-        href={`https://www.facebook.com/sharer/sharer.php?u=${encoded}`}
+        href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
         target="_blank"
         rel="noreferrer"
         aria-label="Compartilhar no Facebook"
@@ -51,7 +72,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
         <Facebook className="h-4 w-4" />
       </a>
       <a
-        href={`https://t.me/share/url?url=${encoded}&text=${text}`}
+        href={`https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`}
         target="_blank"
         rel="noreferrer"
         aria-label="Compartilhar no Telegram"
@@ -59,18 +80,18 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
       >
         <Send className="h-4 w-4" />
       </a>
-      <a
-        href="https://www.instagram.com/blogdogerson"
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Instagram do Blog do Gerson"
+      <button
+        onClick={nativeShare}
+        aria-label="Compartilhar (Instagram, Stories e outros apps)"
+        title="Compartilhar em outros apps (Instagram, Stories...)"
         className={`${btn} bg-gradient-brand text-primary-foreground`}
       >
-        <Instagram className="h-4 w-4" />
-      </a>
-      <button onClick={copy} aria-label="Copiar link" className={`${btn} bg-secondary text-foreground`}>
+        <Share2 className="h-4 w-4" />
+      </button>
+      <button onClick={copy} aria-label="Copiar link com resumo" className={`${btn} bg-secondary text-foreground`}>
         {copied ? <Check className="h-4 w-4 text-primary" /> : <Link2 className="h-4 w-4" />}
       </button>
     </div>
   );
 }
+
