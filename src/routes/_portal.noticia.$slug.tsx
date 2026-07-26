@@ -120,7 +120,8 @@ function ArticlePage() {
                   <Clock className="h-3.5 w-3.5" /> {readingTime(article.content)} min de leitura
                 </span>
               </p>
-              <ShareButtons title={article.title} slug={article.slug} />
+              <ShareButtons title={article.title} path={`/noticia/${article.slug}`} summary={article.excerpt} />
+
             </div>
           </div>
 
