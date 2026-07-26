@@ -144,7 +144,7 @@ function ArticlePage() {
 
           <div className="mt-8 flex max-w-3xl items-center justify-between border-t pt-5">
             <p className="text-sm font-semibold">Compartilhe esta notícia:</p>
-            <ShareButtons title={article.title} slug={article.slug} />
+            <ShareButtons title={article.title} path={`/noticia/${article.slug}`} summary={article.excerpt} />
           </div>
 
           {related.length > 0 && (
