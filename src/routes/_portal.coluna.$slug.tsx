@@ -128,6 +128,13 @@ function ColumnPage() {
         dangerouslySetInnerHTML={{ __html: toDisplayHtml(column.content) }}
       />
 
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
+        <p className="text-sm font-semibold">Compartilhe esta coluna:</p>
+        <ShareButtons title={column.title} path={`/coluna/${column.slug}`} summary={column.excerpt} />
+      </div>
+
+
+
       {related.length > 0 && (
         <section className="mt-14">
           <h2 className="mb-5 font-display text-2xl font-black">Outras colunas</h2>
