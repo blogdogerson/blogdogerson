@@ -14,6 +14,7 @@ interface Editing {
   active: boolean;
   sort_order: number;
   episode_number: string;
+  description: string;
 }
 
 const EMPTY: Editing = {
@@ -24,7 +25,9 @@ const EMPTY: Editing = {
   active: true,
   sort_order: 0,
   episode_number: "",
+  description: "",
 };
+
 
 
 /** Convert common YouTube/Instagram URLs to embeddable URLs. */
