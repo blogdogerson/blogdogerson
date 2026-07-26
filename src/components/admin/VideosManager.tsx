@@ -59,7 +59,7 @@ export function VideosManager() {
     setSaving(true);
     setMessage("");
     try {
-      const res = await save({ data: { ...editing, embed_url: toEmbed(editing.embed_url), episode_number: editing.episode_number.trim() || null } });
+      const res = await save({ data: { ...editing, embed_url: toEmbed(editing.embed_url), episode_number: editing.episode_number.trim() || null, description: editing.description.trim() || null } });
       if (res.ok) {
         setEditing(null);
         refresh();
@@ -105,8 +105,7 @@ export function VideosManager() {
           placeholder={editing.section === "gramado-visao-de-futuro" ? "Nome do episódio" : "Título do vídeo"}
           className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
         />
-        {editing.section === "gramado-visao-de-futuro" && (
-          <div>
+        <div>
             <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
               Número do episódio
             </label>
@@ -117,16 +116,28 @@ export function VideosManager() {
               className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
             />
             <p className="mt-1 text-xs text-muted-foreground">
-              Deixe em branco para numerar automaticamente pela ordem.
+              Opcional. Em Gramado Visão de Futuro, se ficar em branco, numera automaticamente pela ordem.
             </p>
           </div>
-        )}
+
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+            Texto / descrição
+          </label>
+          <textarea
+            value={editing.description}
+            onChange={(e) => setEditing({ ...editing, description: e.target.value })}
+            rows={4}
+            placeholder="Escreva um resumo do vídeo (aparece abaixo do título no site)."
+            className="w-full rounded-xl border bg-card px-4 py-3 text-sm outline-none ring-ring focus:ring-2"
+          />
+        </div>
 
         <input
           required
           value={editing.embed_url}
           onChange={(e) => setEditing({ ...editing, embed_url: e.target.value })}
-          placeholder="Link do YouTube (vídeo ou Shorts)"
+          placeholder="Link do YouTube (vídeo/Shorts) ou do Instagram (reel/post)"
           className="h-11 w-full rounded-xl border bg-card px-4 text-sm outline-none ring-ring focus:ring-2"
         />
         <div className="flex flex-wrap items-center gap-5">
@@ -206,6 +217,7 @@ export function VideosManager() {
                     active: v.active,
                     sort_order: v.sort_order,
                     episode_number: v.episode_number ?? "",
+                    description: v.description ?? "",
                   })
                 }
 
