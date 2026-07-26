@@ -22,7 +22,12 @@ export default defineTool({
     if (!ctx.isAuthenticated()) return errorResult("Não autenticado.");
     const patch = Object.fromEntries(
       Object.entries(fields).filter(([, value]) => value !== undefined),
-    );
+    ) as Record<string, unknown> as Parameters<
+      ReturnType<typeof supabaseForUser>["from"] extends never ? never : never
+    > extends never
+      ? never
+      : never;
+
     if (Object.keys(patch).length === 0) return errorResult("Nenhum campo para atualizar.");
     const { data, error } = await supabaseForUser(ctx)
       .from("articles")
