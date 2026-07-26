@@ -1,0 +1,268 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://kbuyizkxactgvoxjsesc.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "blog-do-gerson-mcp",
+      "version": "0.1.0",
+      "title": "Blog do Gerson"
+    },
+    "tools": [
+      {
+        "name": "list_topics",
+        "title": "Listar editorias",
+        "description": "Lista as editorias (segmentos) ativas do Blog do Gerson.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_articles",
+        "title": "Listar notícias",
+        "description": "Lista notícias do Blog do Gerson, com busca por texto e filtro por editoria. Retorna título, slug, editoria, data e resumo.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "search": {
+              "description": "Texto a procurar no título.",
+              "type": "string"
+            },
+            "category": {
+              "description": "Nome da editoria, ex.: Gramado, Política.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Quantidade de resultados (padrão 20, máx 50).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_article",
+        "title": "Ler notícia",
+        "description": "Retorna o conteúdo completo de uma notícia do Blog do Gerson pelo slug.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Slug da notícia."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_article",
+        "title": "Criar notícia",
+        "description": "Cria uma nova notícia no Blog do Gerson (requer permissão de administrador). O conteúdo aceita HTML simples.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Título da notícia."
+            },
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Conteúdo em HTML."
+            },
+            "category": {
+              "type": "string",
+              "description": "Editoria principal, ex.: Gramado."
+            },
+            "categories": {
+              "description": "Editorias adicionais.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "excerpt": {
+              "description": "Resumo curto.",
+              "type": "string"
+            },
+            "image_url": {
+              "description": "URL da imagem de destaque.",
+              "type": "string"
+            },
+            "published": {
+              "description": "Publicar imediatamente (padrão true).",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "title",
+            "content",
+            "category"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_article",
+        "title": "Atualizar notícia",
+        "description": "Atualiza campos de uma notícia existente pelo slug (requer permissão de administrador).",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Slug da notícia a atualizar."
+            },
+            "title": {
+              "type": "string"
+            },
+            "content": {
+              "description": "Novo conteúdo em HTML.",
+              "type": "string"
+            },
+            "excerpt": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "published": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_columns",
+        "title": "Listar colunas",
+        "description": "Lista as colunas dos colunistas do Blog do Gerson, com o nome do autor e a data de publicação.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "search": {
+              "description": "Texto a procurar no título da coluna.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Quantidade de resultados (padrão 20, máx 50).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_column",
+        "title": "Publicar coluna",
+        "description": "Cria uma coluna assinada pelo colunista vinculado à conta autenticada. O conteúdo aceita HTML simples.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Título da coluna."
+            },
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Conteúdo em HTML."
+            },
+            "excerpt": {
+              "description": "Resumo curto.",
+              "type": "string"
+            },
+            "image_url": {
+              "description": "URL da imagem de destaque.",
+              "type": "string"
+            },
+            "published": {
+              "description": "Publicar imediatamente (padrão true).",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "title",
+            "content"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
