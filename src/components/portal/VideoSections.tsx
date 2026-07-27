@@ -28,7 +28,7 @@ function toEmbedUrl(url: string): string {
   }
 }
 
-function VideoEmbed({ video, orientation }: { video: Video; orientation: string }) {
+export function VideoEmbed({ video, orientation }: { video: Video; orientation: string }) {
   return (
     <div
       className={`overflow-hidden rounded-2xl bg-navy shadow-card ${
