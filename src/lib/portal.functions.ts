@@ -117,3 +117,18 @@ export const subscribeNewsletter = createServerFn({ method: "POST" })
     }
     return { ok: true, duplicate: false };
   });
+
+export const getVideosBySection = createServerFn({ method: "GET" })
+  .inputValidator((d: { section: string }) =>
+    z.object({ section: z.string().min(1).max(80) }).parse(d),
+  )
+  .handler(async ({ data }) => {
+    const supabase = publicClient();
+    const { data: rows } = await supabase
+      .from("videos")
+      .select("*")
+      .eq("active", true)
+      .eq("section", data.section)
+      .order("sort_order");
+    return { videos: (rows ?? []) as unknown as Video[] };
+  });

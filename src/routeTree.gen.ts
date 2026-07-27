@@ -23,6 +23,7 @@ import { Route as AuthenticatedMinhasColunasRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as PortalVideosSectionRouteImport } from './routes/_portal.videos.$section'
 import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
 import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
 import { Route as PortalColunaSlugRouteImport } from './routes/_portal.coluna.$slug'
@@ -100,6 +101,11 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const PortalVideosSectionRoute = PortalVideosSectionRouteImport.update({
+  id: '/videos/$section',
+  path: '/videos/$section',
+  getParentRoute: () => PortalRoute,
+} as any)
 const PortalNoticiaSlugRoute = PortalNoticiaSlugRouteImport.update({
   id: '/noticia/$slug',
   path: '/noticia/$slug',
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/coluna/$slug': typeof PortalColunaSlugRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
+  '/videos/$section': typeof PortalVideosSectionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PortalIndexRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/coluna/$slug': typeof PortalColunaSlugRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
+  '/videos/$section': typeof PortalVideosSectionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/_portal/coluna/$slug': typeof PortalColunaSlugRoute
   '/_portal/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/_portal/noticia/$slug': typeof PortalNoticiaSlugRoute
+  '/_portal/videos/$section': typeof PortalVideosSectionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/coluna/$slug'
     | '/editoria/$slug'
     | '/noticia/$slug'
+    | '/videos/$section'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/coluna/$slug'
     | '/editoria/$slug'
     | '/noticia/$slug'
+    | '/videos/$section'
   id:
     | '__root__'
     | '/_authenticated'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/_portal/coluna/$slug'
     | '/_portal/editoria/$slug'
     | '/_portal/noticia/$slug'
+    | '/_portal/videos/$section'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -361,6 +373,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_portal/videos/$section': {
+      id: '/_portal/videos/$section'
+      path: '/videos/$section'
+      fullPath: '/videos/$section'
+      preLoaderRoute: typeof PortalVideosSectionRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/_portal/noticia/$slug': {
       id: '/_portal/noticia/$slug'
       path: '/noticia/$slug'
@@ -421,6 +440,7 @@ interface PortalRouteChildren {
   PortalColunaSlugRoute: typeof PortalColunaSlugRoute
   PortalEditoriaSlugRoute: typeof PortalEditoriaSlugRoute
   PortalNoticiaSlugRoute: typeof PortalNoticiaSlugRoute
+  PortalVideosSectionRoute: typeof PortalVideosSectionRoute
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
@@ -432,6 +452,7 @@ const PortalRouteChildren: PortalRouteChildren = {
   PortalColunaSlugRoute: PortalColunaSlugRoute,
   PortalEditoriaSlugRoute: PortalEditoriaSlugRoute,
   PortalNoticiaSlugRoute: PortalNoticiaSlugRoute,
+  PortalVideosSectionRoute: PortalVideosSectionRoute,
 }
 
 const PortalRouteWithChildren =

@@ -1,6 +1,7 @@
+import { Link } from "@tanstack/react-router";
 import type { Video } from "@/lib/categories";
 import { VIDEO_SECTIONS } from "@/lib/categories";
-import { PlayCircle } from "lucide-react";
+import { ArrowRight, PlayCircle } from "lucide-react";
 
 /**
  * Converte links comuns (Instagram, YouTube) para o formato aceito em iframes.
@@ -28,7 +29,7 @@ function toEmbedUrl(url: string): string {
   }
 }
 
-function VideoEmbed({ video, orientation }: { video: Video; orientation: string }) {
+export function VideoEmbed({ video, orientation }: { video: Video; orientation: string }) {
   return (
     <div
       className={`overflow-hidden rounded-2xl bg-navy shadow-card ${
@@ -64,12 +65,24 @@ export function VideoSections({ videos }: { videos: Video[] }) {
 
       <div className="space-y-10">
         {VIDEO_SECTIONS.map((section) => {
-          const items = active.filter((v) => v.section === section.key).slice(0, 4);
+          const all = active.filter((v) => v.section === section.key);
+          const items = all.slice(0, 4);
           return (
             <div key={section.key}>
-              <h3 className="mb-4 font-display text-lg font-black uppercase tracking-wide text-primary">
-                {section.label}
-              </h3>
+              <div className="mb-4 flex items-end justify-between gap-4">
+                <h3 className="font-display text-lg font-black uppercase tracking-wide text-primary">
+                  {section.label}
+                </h3>
+                {all.length > items.length && (
+                  <Link
+                    to="/videos/$section"
+                    params={{ section: section.key }}
+                    className="inline-flex shrink-0 items-center gap-1 text-xs font-bold uppercase tracking-wider text-primary hover:underline"
+                  >
+                    Ver tudo ({all.length}) <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                )}
+              </div>
               {items.length === 0 ? (
                 <p className="rounded-xl border border-dashed border-navy-foreground/20 p-6 text-center text-sm text-navy-foreground/50">
                   Em breve novos vídeos de {section.label}.
