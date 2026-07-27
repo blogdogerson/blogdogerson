@@ -1,6 +1,7 @@
+import { Link } from "@tanstack/react-router";
 import type { Video } from "@/lib/categories";
 import { VIDEO_SECTIONS } from "@/lib/categories";
-import { PlayCircle } from "lucide-react";
+import { ArrowRight, PlayCircle } from "lucide-react";
 
 /**
  * Converte links comuns (Instagram, YouTube) para o formato aceito em iframes.
