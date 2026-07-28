@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { topicsQuery } from "@/lib/topics.functions";
 import { RadioButton } from "./RadioPlayer";
 // Dark theme: use the white version of the wordmark
-import logoAsset from "@/assets/logo-blog-do-gerson-branco.png.asset.json";
-import gersonAsset from "@/assets/gerson-sorgetz.png.asset.json";
+const logoAsset = { url: "/img/logo-blog-do-gerson-branco.png" };
+const gersonAsset = { url: "/img/gerson-sorgetz.png" };
 
 // Reveal the wordmark in 4 horizontal bands (top rule, subtitle,
 // main "Blog do Gerson", bottom rule + tagline), each fading in with stagger.

@@ -4,7 +4,7 @@ import { Instagram, Mail, Radio } from "lucide-react";
 import { RADIO_STREAM_URL } from "@/lib/categories";
 import { topicsQuery } from "@/lib/topics.functions";
 import { NewsletterForm } from "./NewsletterForm";
-import logoBrancoAsset from "@/assets/logo-blog-do-gerson-branco.png.asset.json";
+const logoBrancoAsset = { url: "/img/logo-blog-do-gerson-branco.png" };
 
 
 
