@@ -9,8 +9,7 @@ import { TopBannerCarousel, InlineBanner, SquareBannerStack } from "@/components
 import { CategoryStrip } from "@/components/portal/CategoryStrip";
 import { VideoSections } from "@/components/portal/VideoSections";
 import { ColumnistsSection } from "@/components/portal/ColumnistsSection";
-import { IntroSplash } from "@/components/portal/IntroSplash";
-import type { Article } from "@/lib/categories";
+import type { Article, Banner } from "@/lib/categories";
 
 function LatestList({ pool }: { pool: Article[] }) {
   const items = pool.slice(0, 4);
@@ -69,9 +68,6 @@ function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-3 sm:px-4">
-      {/* Vinheta de abertura (uma vez por visita) */}
-      <IntroSplash />
-
       {/* Top rotating banner */}
       <div className="py-4 sm:py-5">
         <TopBannerCarousel banners={banners} />
@@ -121,7 +117,7 @@ function HomePage() {
   );
 }
 
-function SquareBannerStackMobile({ banners }: { banners: any[] }) {
+function SquareBannerStackMobile({ banners }: { banners: Banner[] }) {
   const items = banners
     .filter((b) => b.active && b.position === "sidebar")
     .sort((a, b) => a.sort_order - b.sort_order);
@@ -136,7 +132,12 @@ function SquareBannerStackMobile({ banners }: { banners: any[] }) {
           rel="noreferrer sponsored"
           className="block aspect-square w-[70vw] shrink-0 snap-start overflow-hidden rounded-2xl bg-navy shadow-card sm:w-[240px]"
         >
-          <img src={b.image_url} alt={b.title || "Anúncio"} className="h-full w-full object-cover" loading="lazy" />
+          <img
+            src={b.image_url}
+            alt={b.title || "Anúncio"}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
         </a>
       ))}
     </>
