@@ -1,9 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import type { Article } from "@/lib/categories";
 import { categoryToSlug } from "@/lib/categories";
+import { ArticleImage } from "./ArticleImage";
 
 export function formatExactDate(iso: string) {
-  return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 /** Relative time for recent news ("há 2 horas"), exact date otherwise. */
@@ -48,13 +53,12 @@ export function HeroCard({ article }: { article: Article }) {
       className="group relative block overflow-hidden rounded-3xl shadow-card hover-lift"
     >
       <div className="aspect-[16/10] w-full overflow-hidden bg-muted sm:aspect-[16/9]">
-        {article.image_url && (
-          <img
-            src={article.image_url}
-            alt={article.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        )}
+        <ArticleImage
+          src={article.image_url}
+          alt={article.title}
+          loading="eager"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/30 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8">
@@ -80,15 +84,14 @@ export function ArticleCard({ article, compact }: { article: Article; compact?: 
       params={{ slug: article.slug }}
       className="group block overflow-hidden rounded-2xl bg-card shadow-card hover-lift"
     >
-      <div className={`${compact ? "aspect-[16/9]" : "aspect-[16/10]"} w-full overflow-hidden bg-muted`}>
-        {article.image_url && (
-          <img
-            src={article.image_url}
-            alt={article.title}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        )}
+      <div
+        className={`${compact ? "aspect-[16/9]" : "aspect-[16/10]"} w-full overflow-hidden bg-muted`}
+      >
+        <ArticleImage
+          src={article.image_url}
+          alt={article.title}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
       </div>
       <div className="p-4">
         <div className="flex items-center gap-2">
@@ -120,9 +123,11 @@ export function ListRow({ article }: { article: Article }) {
       className="group flex gap-4 rounded-xl p-2 transition-colors hover:bg-secondary"
     >
       <div className="h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-muted">
-        {article.image_url && (
-          <img src={article.image_url} alt="" loading="lazy" className="h-full w-full object-cover" />
-        )}
+        <ArticleImage
+          src={article.image_url}
+          alt={article.title}
+          className="h-full w-full object-cover"
+        />
       </div>
       <div className="min-w-0">
         <span className="text-[11px] font-bold uppercase tracking-widest text-primary">
