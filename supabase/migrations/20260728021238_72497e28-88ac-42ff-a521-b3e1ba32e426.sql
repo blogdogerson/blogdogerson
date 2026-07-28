@@ -1,0 +1,1 @@
+UPDATE public.banners SET image_url = '/img/sicredi-inline.jpg' WHERE id = '3bdc72b9-5314-47a0-894d-e98697380b76';
