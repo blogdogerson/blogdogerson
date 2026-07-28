@@ -9,6 +9,7 @@ import { TopBannerCarousel, InlineBanner, SquareBannerStack } from "@/components
 import { CategoryStrip } from "@/components/portal/CategoryStrip";
 import { VideoSections } from "@/components/portal/VideoSections";
 import { ColumnistsSection } from "@/components/portal/ColumnistsSection";
+import { IntroSplash } from "@/components/portal/IntroSplash";
 import type { Article } from "@/lib/categories";
 
 function LatestList({ pool }: { pool: Article[] }) {
@@ -68,6 +69,9 @@ function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-3 sm:px-4">
+      {/* Vinheta de abertura (uma vez por visita) */}
+      <IntroSplash />
+
       {/* Top rotating banner */}
       <div className="py-4 sm:py-5">
         <TopBannerCarousel banners={banners} />
