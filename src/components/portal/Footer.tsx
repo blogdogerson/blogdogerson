@@ -100,7 +100,7 @@ export function Footer() {
       <div className="border-t border-navy-foreground/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-center text-xs text-navy-foreground/70 sm:flex-row">
           <p>© {new Date().getFullYear()} Blog do Gerson — blogdogerson.com.br</p>
-          <p>Todos os direitos reservados: Abimael Rodrigues @euabimael</p>
+          <p>Desenvolvido por: Abimael Rodrigues @euabimael</p>
         </div>
       </div>
     </footer>
