@@ -24,7 +24,12 @@ export const getHomeData = createServerFn({ method: "GET" }).handler(async () =>
       .order("published_at", { ascending: false })
       .limit(300),
     supabase.from("banners").select("*").eq("active", true).order("sort_order"),
-    supabase.from("videos").select("*").eq("active", true).order("sort_order"),
+    supabase
+      .from("videos")
+      .select("*")
+      .eq("active", true)
+      .order("sort_order")
+      .order("created_at", { ascending: false }),
   ]);
   return {
     articles: (articlesRes.data ?? []) as unknown as Article[],
@@ -129,6 +134,7 @@ export const getVideosBySection = createServerFn({ method: "GET" })
       .select("*")
       .eq("active", true)
       .eq("section", data.section)
-      .order("sort_order");
+      .order("sort_order")
+      .order("created_at", { ascending: false });
     return { videos: (rows ?? []) as unknown as Video[] };
   });
