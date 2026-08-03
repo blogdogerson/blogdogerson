@@ -6,8 +6,6 @@ import { topicsQuery } from "@/lib/topics.functions";
 import { NewsletterForm } from "./NewsletterForm";
 const logoBrancoAsset = { url: "/img/logo-blog-do-gerson-branco.png" };
 
-
-
 export function Footer() {
   const { data: topicsData } = useQuery(topicsQuery);
   const topics = topicsData?.topics ?? [];
@@ -19,8 +17,11 @@ export function Footer() {
             <img
               src={logoBrancoAsset.url}
               alt="Blog do Gerson"
+              width="1920"
+              height="673"
               className="h-20 w-auto object-contain mix-blend-screen sm:h-24"
               loading="lazy"
+              decoding="async"
             />
           </Link>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-navy-foreground/70">
@@ -70,18 +71,16 @@ export function Footer() {
               </li>
             ))}
             <li>
-              <Link to="/quem-escreve" className="text-navy-foreground/80 hover:text-navy-foreground">
+              <Link
+                to="/quem-escreve"
+                className="text-navy-foreground/80 hover:text-navy-foreground"
+              >
                 Perfil do Colunista
               </Link>
             </li>
             <li>
               <Link to="/anuncie" className="text-navy-foreground/80 hover:text-navy-foreground">
                 Anuncie
-              </Link>
-            </li>
-            <li>
-              <Link to="/auth" className="text-navy-foreground/50 hover:text-navy-foreground">
-                Painel administrativo
               </Link>
             </li>
           </ul>

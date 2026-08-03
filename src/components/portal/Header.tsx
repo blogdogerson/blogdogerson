@@ -6,15 +6,15 @@ import { topicsQuery } from "@/lib/topics.functions";
 import { RadioButton } from "./RadioPlayer";
 // Dark theme: use the white version of the wordmark
 const logoAsset = { url: "/img/logo-blog-do-gerson-branco.png" };
-const gersonAsset = { url: "/img/gerson-sorgetz.png" };
+const gersonAsset = { url: "/img/gerson-sorgetz-192.webp" };
 
 // Reveal the wordmark in 4 horizontal bands (top rule, subtitle,
 // main "Blog do Gerson", bottom rule + tagline), each fading in with stagger.
 const LOGO_BANDS: Array<{ clip: string; delay: string }> = [
-  { clip: "inset(0 0 88% 0)", delay: "0.05s" },      // top rule
-  { clip: "inset(6% 0 66% 0)", delay: "0.3s" },      // "PORTAL DE NOTÍCIAS"
-  { clip: "inset(28% 0 22% 0)", delay: "0.55s" },    // "Blog do Gerson"
-  { clip: "inset(74% 0 0 0)", delay: "0.85s" },      // bottom rule + tagline
+  { clip: "inset(0 0 88% 0)", delay: "0.05s" }, // top rule
+  { clip: "inset(6% 0 66% 0)", delay: "0.3s" }, // "PORTAL DE NOTÍCIAS"
+  { clip: "inset(28% 0 22% 0)", delay: "0.55s" }, // "Blog do Gerson"
+  { clip: "inset(74% 0 0 0)", delay: "0.85s" }, // bottom rule + tagline
 ];
 
 function AnimatedLogo({ compact }: { compact?: boolean }) {
@@ -29,6 +29,8 @@ function AnimatedLogo({ compact }: { compact?: boolean }) {
       <img
         src={logoAsset.url}
         alt="Blog do Gerson — Portal de Notícias · Opinião e informação com credibilidade"
+        width="1920"
+        height="673"
         className="block h-full w-auto object-contain opacity-0"
         loading="eager"
         aria-hidden={false}
@@ -38,6 +40,8 @@ function AnimatedLogo({ compact }: { compact?: boolean }) {
           key={i}
           src={logoAsset.url}
           aria-hidden="true"
+          width="1920"
+          height="673"
           className="pointer-events-none absolute inset-0 h-full w-auto object-contain mix-blend-screen animate-logo-band"
           style={{ clipPath: b.clip, animationDelay: b.delay }}
         />
@@ -81,6 +85,9 @@ function Logo({ compact }: { compact?: boolean }) {
           <img
             src={gersonAsset.url}
             alt="Gerson Sorgetz"
+            width="192"
+            height="192"
+            decoding="async"
             className="h-full w-full object-cover"
             loading="eager"
           />
@@ -129,7 +136,10 @@ export function Header() {
           : "border-transparent bg-card/70 backdrop-blur-md"
       }`}
     >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+      >
         <div className="absolute inset-0 bg-[linear-gradient(180deg,oklch(0.97_0.02_240/0.6),transparent)]" />
         <svg
           className="absolute inset-x-0 bottom-0 h-10 w-full"

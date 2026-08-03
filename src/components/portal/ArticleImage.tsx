@@ -5,13 +5,20 @@ type ArticleImageProps = {
   alt: string;
   className?: string;
   loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
 };
 
 /**
  * Keeps news cards visually complete when a migrated article has no local
  * image or when a remote image is no longer available.
  */
-export function ArticleImage({ src, alt, className = "", loading = "lazy" }: ArticleImageProps) {
+export function ArticleImage({
+  src,
+  alt,
+  className = "",
+  loading = "lazy",
+  fetchPriority = "auto",
+}: ArticleImageProps) {
   const [failed, setFailed] = useState(false);
 
   if (!src || failed) {
@@ -26,6 +33,8 @@ export function ArticleImage({ src, alt, className = "", loading = "lazy" }: Art
           <img
             src="/img/logo-blog-do-gerson-branco.png"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="h-auto w-[62%] max-w-sm object-contain opacity-95 drop-shadow-lg"
           />
           <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-navy-foreground/65">
@@ -41,6 +50,8 @@ export function ArticleImage({ src, alt, className = "", loading = "lazy" }: Art
       src={src}
       alt={alt}
       loading={loading}
+      decoding="async"
+      fetchPriority={fetchPriority}
       onError={() => setFailed(true)}
       className={className}
     />
