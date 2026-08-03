@@ -5,16 +5,14 @@ import type { Database } from "@/integrations/supabase/types";
 import type { Article, Banner, Video } from "./categories";
 import { CATEGORIES, categoryToSlug } from "./categories";
 
-
 function publicClient() {
-  return createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_PUBLISHABLE_KEY!,
-    { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
-  );
+  return createClient<Database>(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+  });
 }
 
-const LIST_FIELDS = "id, slug, title, excerpt, category, categories, image_url, published_at, featured, published";
+const LIST_FIELDS =
+  "id, slug, title, excerpt, category, categories, image_url, published_at, featured, published";
 
 export const getHomeData = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = publicClient();
@@ -24,7 +22,7 @@ export const getHomeData = createServerFn({ method: "GET" }).handler(async () =>
       .select(LIST_FIELDS)
       .eq("published", true)
       .order("published_at", { ascending: false })
-      .limit(300),
+      .limit(120),
     supabase.from("banners").select("*").eq("active", true).order("sort_order"),
     supabase
       .from("videos")
@@ -51,7 +49,7 @@ export const getArticleBySlug = createServerFn({ method: "GET" })
       .eq("published", true)
       .maybeSingle();
     if (!article) return { article: null, related: [] as Article[], banners: [] as Banner[] };
-    const cats = (article as any).categories?.length ? (article as any).categories : [article.category];
+    const cats = article.categories?.length ? article.categories : [article.category];
     const [relatedRes, bannersRes] = await Promise.all([
       supabase
         .from("articles")
@@ -80,15 +78,10 @@ export const getEditoria = createServerFn({ method: "GET" })
     const per = 18;
     const from = (page - 1) * per;
 
-    const { data: topics } = await (supabase as any)
-      .from("topics")
-      .select("name, slug")
-      .eq("active", true);
+    const { data: topics } = await supabase.from("topics").select("name, slug").eq("active", true);
 
     const list = (topics ?? []) as { name: string; slug: string }[];
-    const topic = list.find(
-      (t) => t.slug === data.slug || categoryToSlug(t.name) === data.slug,
-    );
+    const topic = list.find((t) => t.slug === data.slug || categoryToSlug(t.name) === data.slug);
 
     const aliasSlugs = new Set<string>([data.slug]);
     if (topic) {
@@ -126,7 +119,6 @@ export const getEditoria = createServerFn({ method: "GET" })
       per,
     };
   });
-
 
 export const searchArticles = createServerFn({ method: "GET" })
   .inputValidator((d: { q: string }) => z.object({ q: z.string().min(1).max(120) }).parse(d))
@@ -178,4 +170,48 @@ export const getVideosBySection = createServerFn({ method: "GET" })
       .order("sort_order")
       .order("created_at", { ascending: false });
     return { videos: (rows ?? []) as unknown as Video[] };
+  });
+
+export const resolveLegacyArticle = createServerFn({ method: "GET" })
+  .inputValidator((d: { year: string; month: string; day: string; slug: string }) =>
+    z
+      .object({
+        year: z.string().regex(/^(19|20)\d{2}$/),
+        month: z.string().regex(/^(0[1-9]|1[0-2])$/),
+        day: z.string().regex(/^(0[1-9]|[12]\d|3[01])$/),
+        slug: z
+          .string()
+          .min(1)
+          .max(250)
+          .regex(/^[a-z0-9-]+$/),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data }) => {
+    const targetDate = `${data.year}-${data.month}-${data.day}`;
+    const center = Date.parse(`${targetDate}T12:00:00.000Z`);
+    if (!Number.isFinite(center)) return { slug: null as string | null };
+
+    const supabase = publicClient();
+    const { data: candidates } = await supabase
+      .from("articles")
+      .select("slug, published_at")
+      .eq("published", true)
+      .ilike("slug", `${data.slug}%`)
+      .gte("published_at", new Date(center - 36 * 60 * 60 * 1000).toISOString())
+      .lte("published_at", new Date(center + 36 * 60 * 60 * 1000).toISOString())
+      .limit(20);
+
+    const localDate = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Sao_Paulo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    const sameDay = (candidates ?? []).filter(
+      (row) => localDate.format(new Date(row.published_at)) === targetDate,
+    );
+    const exact = sameDay.find((row) => row.slug === data.slug);
+    const suffixed = sameDay.find((row) => new RegExp(`^${data.slug}-\\d+$`).test(row.slug));
+    return { slug: exact?.slug ?? suffixed?.slug ?? null };
   });

@@ -44,6 +44,7 @@ export interface Article {
   categories?: string[] | null;
   image_url: string | null;
   published_at: string;
+  updated_at?: string;
   featured: boolean;
   published: boolean;
 }
@@ -69,4 +70,3 @@ export interface Video {
   episode_number?: string | null;
   description?: string | null;
 }
-
