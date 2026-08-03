@@ -6,16 +6,19 @@ import { ArticleCard } from "./ArticleCard";
 
 export function CategoryStrip({
   category,
+  slug,
   articles,
 }: {
   category: string;
+  slug?: string;
   articles: Article[];
 }) {
-  const pool = articles.filter((a) =>
-    a.categories && a.categories.length > 0
-      ? a.categories.includes(category)
-      : a.category === category,
-  );
+  const topicSlug = slug ?? categoryToSlug(category);
+  const aliases = new Set([topicSlug, categoryToSlug(category)]);
+  const pool = articles.filter((a) => {
+    const cats = a.categories && a.categories.length > 0 ? a.categories : [a.category];
+    return cats.some((c) => aliases.has(categoryToSlug(c)));
+  });
 
   if (pool.length === 0) return null;
 
@@ -30,7 +33,8 @@ export function CategoryStrip({
         </h2>
         <Link
           to="/editoria/$slug"
-          params={{ slug: categoryToSlug(category) }}
+          params={{ slug: topicSlug }}
+
           className="inline-flex shrink-0 items-center gap-1 text-xs font-bold uppercase tracking-wider text-primary hover:underline"
         >
           Ver tudo <ArrowRight className="h-3.5 w-3.5" />
