@@ -9,7 +9,14 @@ import { ArticleImage } from "@/components/portal/ArticleImage";
 import { SidebarBanners, InlineBanner } from "@/components/portal/BannerSlot";
 import { NewsletterForm } from "@/components/portal/NewsletterForm";
 import { ShareButtons } from "@/components/portal/ShareButtons";
-import { absoluteUrl, summarize } from "@/lib/site";
+import {
+  absoluteUrl,
+  DEFAULT_SOCIAL_IMAGE,
+  PUBLISHER_LOGO,
+  SITE_NAME,
+  SITE_URL,
+  summarize,
+} from "@/lib/site";
 
 const articleQuery = (slug: string) =>
   queryOptions({
@@ -36,7 +43,9 @@ export const Route = createFileRoute("/_portal/noticia/$slug")({
     const a = loaderData.article;
     const desc = summarize(a.excerpt, a.content, a.title);
     const canonical = absoluteUrl(`/noticia/${a.slug}`);
-    const socialImage = a.image_url || absoluteUrl("/img/logo-blog-do-gerson-branco.png");
+    const categoryUrl = absoluteUrl(`/editoria/${categoryToSlug(a.category)}`);
+    const socialImage = a.image_url || DEFAULT_SOCIAL_IMAGE;
+    const modified = a.updated_at || a.published_at;
     return {
       meta: [
         { title: `${a.title} — Blog do Gerson` },
@@ -45,11 +54,17 @@ export const Route = createFileRoute("/_portal/noticia/$slug")({
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
         { property: "og:site_name", content: "Blog do Gerson" },
+        { property: "og:locale", content: "pt_BR" },
         { property: "og:url", content: canonical },
         { property: "og:image", content: socialImage },
+        { property: "og:image:alt", content: a.title },
+        { property: "article:published_time", content: a.published_at },
+        { property: "article:modified_time", content: modified },
+        { property: "article:section", content: a.category },
         { name: "twitter:title", content: a.title },
         { name: "twitter:description", content: desc },
         { name: "twitter:image", content: socialImage },
+        { name: "twitter:image:alt", content: a.title },
         { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: canonical }],
@@ -59,13 +74,43 @@ export const Route = createFileRoute("/_portal/noticia/$slug")({
           type: "application/ld+json",
           children: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "NewsArticle",
-            headline: a.title,
-            datePublished: a.published_at,
-            image: [socialImage],
-            author: { "@type": "Person", name: "Gerson Sorgetz" },
-            publisher: { "@type": "Organization", name: "Blog do Gerson" },
-          }),
+            "@graph": [
+              {
+                "@type": "NewsArticle",
+                "@id": `${canonical}#article`,
+                url: canonical,
+                mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+                headline: a.title,
+                description: desc,
+                datePublished: a.published_at,
+                dateModified: modified,
+                image: [socialImage],
+                articleSection: a.category,
+                inLanguage: "pt-BR",
+                isAccessibleForFree: true,
+                author: {
+                  "@type": "Person",
+                  name: "Gerson Sorgetz",
+                  url: absoluteUrl("/quem-escreve"),
+                },
+                publisher: {
+                  "@type": "NewsMediaOrganization",
+                  "@id": `${SITE_URL}/#organization`,
+                  name: SITE_NAME,
+                  url: SITE_URL,
+                  logo: { "@type": "ImageObject", url: PUBLISHER_LOGO },
+                },
+              },
+              {
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "Início", item: SITE_URL },
+                  { "@type": "ListItem", position: 2, name: a.category, item: categoryUrl },
+                  { "@type": "ListItem", position: 3, name: a.title, item: canonical },
+                ],
+              },
+            ],
+          }).replace(/</g, "\\u003c"),
         },
       ],
     };
@@ -158,6 +203,7 @@ function ArticlePage() {
               src={article.image_url}
               alt={article.title}
               loading="eager"
+              fetchPriority="high"
               className="h-full w-full object-cover"
             />
           </div>

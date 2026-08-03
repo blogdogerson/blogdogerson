@@ -4,9 +4,10 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { getEditoria } from "@/lib/portal.functions";
 import { ArticleCard } from "@/components/portal/ArticleCard";
+import { absoluteUrl } from "@/lib/site";
 
 const searchSchema = z.object({
-  page: fallback(z.number().int(), 1).default(1),
+  page: fallback(z.number().int().min(1), 1).optional(),
 });
 
 const editoriaQuery = (slug: string, page: number) =>
@@ -18,24 +19,41 @@ const editoriaQuery = (slug: string, page: number) =>
 
 export const Route = createFileRoute("/_portal/editoria/$slug")({
   validateSearch: zodValidator(searchSchema),
-  loaderDeps: ({ search }) => ({ page: search.page }),
+  loaderDeps: ({ search }) => ({ page: search.page ?? 1 }),
   loader: async ({ context, params, deps }) => {
-    const res = await context.queryClient.ensureQueryData(
-      editoriaQuery(params.slug, deps.page),
-    );
-    if (!res.category) throw notFound();
-    return { category: res.category };
+    const data = await context.queryClient.ensureQueryData(editoriaQuery(params.slug, deps.page));
+    if (!data.category) throw notFound();
+    return {
+      category: data.category,
+      page: data.page,
+      totalPages: Math.max(1, Math.ceil(data.total / data.per)),
+    };
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData?.category ?? "Editoria"} — Blog do Gerson` },
-      {
-        name: "description",
-        content: `Notícias de ${loaderData?.category ?? "nossa região"} no Blog do Gerson.`,
-      },
-      { property: "og:title", content: `${loaderData?.category ?? "Editoria"} — Blog do Gerson` },
-    ],
-  }),
+  head: ({ loaderData, params }) => {
+    const category = loaderData?.category ?? "Editoria";
+    const page = loaderData?.page ?? 1;
+    const pageSuffix = page > 1 ? ` — Página ${page}` : "";
+    const canonical = absoluteUrl(`/editoria/${params.slug}${page > 1 ? `?page=${page}` : ""}`);
+    const links = [{ rel: "canonical", href: canonical }];
+    if (page > 1) {
+      links.push({
+        rel: "prev",
+        href: absoluteUrl(`/editoria/${params.slug}${page > 2 ? `?page=${page - 1}` : ""}`),
+      });
+    }
+    if (page < (loaderData?.totalPages ?? 1)) {
+      links.push({ rel: "next", href: absoluteUrl(`/editoria/${params.slug}?page=${page + 1}`) });
+    }
+    return {
+      meta: [
+        { title: `${category}${pageSuffix} — Blog do Gerson` },
+        { name: "description", content: `Notícias de ${category} no Blog do Gerson${pageSuffix}.` },
+        { property: "og:title", content: `${category}${pageSuffix} — Blog do Gerson` },
+        { property: "og:url", content: canonical },
+      ],
+      links,
+    };
+  },
   component: CategoryPage,
   errorComponent: ({ error }) => (
     <div role="alert" className="px-4 py-20 text-center text-muted-foreground">
@@ -45,7 +63,10 @@ export const Route = createFileRoute("/_portal/editoria/$slug")({
   notFoundComponent: () => (
     <div className="px-4 py-24 text-center">
       <h1 className="font-display text-3xl font-black">Editoria não encontrada</h1>
-      <Link to="/" className="mt-6 inline-block rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
+      <Link
+        to="/"
+        className="mt-6 inline-block rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+      >
         Voltar ao início
       </Link>
     </div>
@@ -54,12 +75,11 @@ export const Route = createFileRoute("/_portal/editoria/$slug")({
 
 function CategoryPage() {
   const { slug } = Route.useParams();
-  const { page } = Route.useSearch();
+  const { page = 1 } = Route.useSearch();
   const safePage = Math.max(1, Math.min(200, page));
   const { data } = useSuspenseQuery(editoriaQuery(slug, safePage));
   const category = data.category ?? slug;
   const totalPages = Math.max(1, Math.ceil(data.total / data.per));
-
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -89,7 +109,7 @@ function CategoryPage() {
             <Link
               to="/editoria/$slug"
               params={{ slug }}
-              search={{ page: safePage - 1 }}
+              search={{ page: safePage > 2 ? safePage - 1 : undefined }}
               className="rounded-xl border px-4 py-2 text-sm font-semibold hover:bg-secondary"
             >
               ← Anterior

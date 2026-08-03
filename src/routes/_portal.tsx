@@ -5,6 +5,14 @@ import { WaveBackground } from "@/components/portal/WaveBackground";
 import { PopupOverlay } from "@/components/portal/PopupOverlay";
 
 export const Route = createFileRoute("/_portal")({
+  head: () => ({
+    meta: [
+      {
+        name: "robots",
+        content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+      },
+    ],
+  }),
   component: PortalLayout,
 });
 

@@ -10,6 +10,7 @@ import { CategoryStrip } from "@/components/portal/CategoryStrip";
 import { VideoSections } from "@/components/portal/VideoSections";
 import { ColumnistsSection } from "@/components/portal/ColumnistsSection";
 import type { Article, Banner } from "@/lib/categories";
+import { absoluteUrl, DEFAULT_DESCRIPTION } from "@/lib/site";
 
 function LatestList({ pool }: { pool: Article[] }) {
   const items = pool.slice(0, 4);
@@ -47,6 +48,14 @@ export const Route = createFileRoute("/_portal/")({
       context.queryClient.ensureQueryData(columnistsQuery),
       context.queryClient.ensureQueryData(topicsQuery),
     ]),
+  head: () => ({
+    meta: [
+      { title: "Blog do Gerson — Notícias de Gramado, Canela e Região" },
+      { name: "description", content: DEFAULT_DESCRIPTION },
+      { property: "og:url", content: absoluteUrl("/") },
+    ],
+    links: [{ rel: "canonical", href: absoluteUrl("/") }],
+  }),
   component: HomePage,
   errorComponent: ({ error }) => (
     <div role="alert" className="mx-auto max-w-xl px-4 py-20 text-center text-muted-foreground">
@@ -68,6 +77,7 @@ function HomePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-3 sm:px-4">
+      <h1 className="sr-only">Notícias de Gramado, Canela e Região — Blog do Gerson</h1>
       {/* Top rotating banner */}
       <div className="py-4 sm:py-5">
         <TopBannerCarousel banners={banners} />
@@ -137,6 +147,7 @@ function SquareBannerStackMobile({ banners }: { banners: Banner[] }) {
             alt={b.title || "Anúncio"}
             className="h-full w-full object-cover"
             loading="lazy"
+            decoding="async"
           />
         </a>
       ))}

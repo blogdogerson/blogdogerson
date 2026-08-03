@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Instagram, Mail, Mic, Newspaper, Radio } from "lucide-react";
 import { NewsletterForm } from "@/components/portal/NewsletterForm";
 import { RADIO_STREAM_URL } from "@/lib/categories";
-const gersonAsset = { url: "/img/gerson-sorgetz.png" };
+import { absoluteUrl } from "@/lib/site";
+const gersonAsset = { url: "/img/gerson-sorgetz-512.webp" };
 
 export const Route = createFileRoute("/_portal/quem-escreve")({
   head: () => ({
@@ -18,8 +19,26 @@ export const Route = createFileRoute("/_portal/quem-escreve")({
         property: "og:description",
         content: "Jornalista, blogueiro, influencer e editor do Blog do Gerson.",
       },
+      { property: "og:url", content: absoluteUrl("/quem-escreve") },
+      { property: "og:image", content: absoluteUrl(gersonAsset.url) },
     ],
-    links: [{ rel: "canonical", href: "/quem-escreve" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/quem-escreve") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "@id": `${absoluteUrl("/quem-escreve")}#person`,
+          name: "Gerson Sorgetz",
+          url: absoluteUrl("/quem-escreve"),
+          image: absoluteUrl(gersonAsset.url),
+          jobTitle: "Jornalista e editor",
+          worksFor: { "@id": `${absoluteUrl("/")}#organization` },
+          sameAs: ["https://www.instagram.com/gersonsorgetz"],
+        }),
+      },
+    ],
   }),
   component: AboutPage,
 });
@@ -29,7 +48,14 @@ function AboutPage() {
     <div className="mx-auto max-w-5xl px-4 py-10">
       <header className="grid items-center gap-8 md:grid-cols-[auto_1fr]">
         <div className="mx-auto h-40 w-40 overflow-hidden rounded-full ring-4 ring-primary/20 shadow-float md:h-48 md:w-48">
-          <img src={gersonAsset.url} alt="Gerson Sorgetz" className="h-full w-full object-cover" />
+          <img
+            src={gersonAsset.url}
+            alt="Gerson Sorgetz"
+            width="512"
+            height="512"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
         </div>
         <div>
           <p className="font-display text-xs font-black uppercase tracking-[0.3em] text-primary">
@@ -69,10 +95,10 @@ function AboutPage() {
       <div className="prose-lg mt-12 space-y-5 text-lg leading-relaxed text-foreground/85">
         <p>
           Um dos jornalistas mais atuantes em Gramado. Foi colunista político do Jornal Integração
-          por sete anos e do Jornal de Gramado por mais um período. No rádio jornalismo foi âncora do
-          programa <strong>"Redação Sorriso"</strong> na Rádio Sorriso FM durante 3,5 anos e foi
-          âncora do programa <strong>"Studio Gramado News"</strong> na Rádio Gramado FM. Sempre com a
-          liderança no horário de rádio jornalismo.
+          por sete anos e do Jornal de Gramado por mais um período. No rádio jornalismo foi âncora
+          do programa <strong>"Redação Sorriso"</strong> na Rádio Sorriso FM durante 3,5 anos e foi
+          âncora do programa <strong>"Studio Gramado News"</strong> na Rádio Gramado FM. Sempre com
+          a liderança no horário de rádio jornalismo.
         </p>
         <p>
           Atualmente atuando na área do jornalismo com o <strong>Blog do Gerson desde 2005</strong>,
