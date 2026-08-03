@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { getVideosBySection } from "@/lib/portal.functions";
 import { VIDEO_SECTIONS } from "@/lib/categories";
 import { VideoEmbed } from "@/components/portal/VideoSections";
+import { absoluteUrl } from "@/lib/site";
 
 const sectionQuery = (section: string) =>
   queryOptions({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/_portal/videos/$section")({
   },
   head: ({ params }) => {
     const label = meta(params.section)?.label ?? "Vídeos";
+    const canonical = absoluteUrl(`/videos/${params.section}`);
     return {
       meta: [
         { title: `${label} — Vídeos | Blog do Gerson` },
@@ -36,13 +38,17 @@ export const Route = createFileRoute("/_portal/videos/$section")({
           content: `Assista a todos os episódios de ${label} no Blog do Gerson.`,
         },
         { property: "og:type", content: "website" },
+        { property: "og:url", content: canonical },
         { name: "twitter:card", content: "summary_large_image" },
       ],
+      links: [{ rel: "canonical", href: canonical }],
     };
   },
   component: VideosSectionPage,
   notFoundComponent: () => (
-    <div className="px-4 py-20 text-center text-muted-foreground">Seção de vídeos não encontrada.</div>
+    <div className="px-4 py-20 text-center text-muted-foreground">
+      Seção de vídeos não encontrada.
+    </div>
   ),
 });
 
