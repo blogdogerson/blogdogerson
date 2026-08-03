@@ -44,12 +44,39 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+function addPublicCacheHeaders(request: Request, response: Response) {
+  if (request.method !== "GET" || response.status !== 200) return response;
+  if (!(response.headers.get("content-type") ?? "").includes("text/html")) return response;
+  if (response.headers.has("set-cookie")) return response;
+
+  const path = new URL(request.url).pathname;
+  if (
+    path === "/auth" ||
+    path.startsWith("/admin") ||
+    path.startsWith("/minhas-colunas") ||
+    path.startsWith("/.mcp") ||
+    path.startsWith("/mcp") ||
+    path.startsWith("/.lovable")
+  ) {
+    return response;
+  }
+
+  const headers = new Headers(response.headers);
+  headers.set("Cache-Control", "public, max-age=0, s-maxage=60, stale-while-revalidate=300");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalized = await normalizeCatastrophicSsrResponse(response);
+      return addPublicCacheHeaders(request, normalized);
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {

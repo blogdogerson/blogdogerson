@@ -9,35 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as McpRouteImport } from './routes/mcp'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as PortalRouteImport } from './routes/_portal'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as PortalIndexRouteImport } from './routes/_portal.index'
-import { Route as PortalQuemEscreveRouteImport } from './routes/_portal.quem-escreve'
-import { Route as PortalColunistasRouteImport } from './routes/_portal.colunistas'
-import { Route as PortalBuscaRouteImport } from './routes/_portal.busca'
-import { Route as PortalAnuncieRouteImport } from './routes/_portal.anuncie'
-import { Route as AuthenticatedMinhasColunasRouteImport } from './routes/_authenticated/minhas-colunas'
-import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as PortalRouteImport } from './routes/_portal'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as FeedDotxmlRouteImport } from './routes/feed[.]xml'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as NewsSitemapDotxmlRouteImport } from './routes/news-sitemap[.]xml'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
-import { Route as PortalVideosSectionRouteImport } from './routes/_portal.videos.$section'
-import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
-import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
-import { Route as PortalColunaSlugRouteImport } from './routes/_portal.coluna.$slug'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedMinhasColunasRouteImport } from './routes/_authenticated/minhas-colunas'
+import { Route as PortalIndexRouteImport } from './routes/_portal.index'
+import { Route as PortalAnuncieRouteImport } from './routes/_portal.anuncie'
+import { Route as PortalBuscaRouteImport } from './routes/_portal.busca'
+import { Route as PortalColunistasRouteImport } from './routes/_portal.colunistas'
+import { Route as PortalQuemEscreveRouteImport } from './routes/_portal.quem-escreve'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as PortalColunaSlugRouteImport } from './routes/_portal.coluna.$slug'
+import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
+import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
+import { Route as PortalVideosSectionRouteImport } from './routes/_portal.videos.$section'
+import { Route as PortalYearMonthDaySlugRouteImport } from './routes/_portal.$year.$month.$day.$slug'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
+const PortalRoute = PortalRouteImport.update({
+  id: '/_portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -45,38 +46,42 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PortalRoute = PortalRouteImport.update({
-  id: '/_portal',
+const FeedDotxmlRoute = FeedDotxmlRouteImport.update({
+  id: '/feed.xml',
+  path: '/feed.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PortalIndexRoute = PortalIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PortalRoute,
+const NewsSitemapDotxmlRoute = NewsSitemapDotxmlRouteImport.update({
+  id: '/news-sitemap.xml',
+  path: '/news-sitemap.xml',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const PortalQuemEscreveRoute = PortalQuemEscreveRouteImport.update({
-  id: '/quem-escreve',
-  path: '/quem-escreve',
-  getParentRoute: () => PortalRoute,
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const PortalColunistasRoute = PortalColunistasRouteImport.update({
-  id: '/colunistas',
-  path: '/colunistas',
-  getParentRoute: () => PortalRoute,
-} as any)
-const PortalBuscaRoute = PortalBuscaRouteImport.update({
-  id: '/busca',
-  path: '/busca',
-  getParentRoute: () => PortalRoute,
-} as any)
-const PortalAnuncieRoute = PortalAnuncieRouteImport.update({
-  id: '/anuncie',
-  path: '/anuncie',
-  getParentRoute: () => PortalRoute,
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedMinhasColunasRoute =
   AuthenticatedMinhasColunasRouteImport.update({
@@ -84,42 +89,35 @@ const AuthenticatedMinhasColunasRoute =
     path: '/minhas-colunas',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PortalVideosSectionRoute = PortalVideosSectionRouteImport.update({
-  id: '/videos/$section',
-  path: '/videos/$section',
+const PortalIndexRoute = PortalIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => PortalRoute,
 } as any)
-const PortalNoticiaSlugRoute = PortalNoticiaSlugRouteImport.update({
-  id: '/noticia/$slug',
-  path: '/noticia/$slug',
+const PortalAnuncieRoute = PortalAnuncieRouteImport.update({
+  id: '/anuncie',
+  path: '/anuncie',
   getParentRoute: () => PortalRoute,
 } as any)
-const PortalEditoriaSlugRoute = PortalEditoriaSlugRouteImport.update({
-  id: '/editoria/$slug',
-  path: '/editoria/$slug',
+const PortalBuscaRoute = PortalBuscaRouteImport.update({
+  id: '/busca',
+  path: '/busca',
   getParentRoute: () => PortalRoute,
 } as any)
-const PortalColunaSlugRoute = PortalColunaSlugRouteImport.update({
-  id: '/coluna/$slug',
-  path: '/coluna/$slug',
+const PortalColunistasRoute = PortalColunistasRouteImport.update({
+  id: '/colunistas',
+  path: '/colunistas',
   getParentRoute: () => PortalRoute,
+} as any)
+const PortalQuemEscreveRoute = PortalQuemEscreveRouteImport.update({
+  id: '/quem-escreve',
+  path: '/quem-escreve',
+  getParentRoute: () => PortalRoute,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
@@ -127,16 +125,38 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
-  getParentRoute: () => rootRouteImport,
+const PortalColunaSlugRoute = PortalColunaSlugRouteImport.update({
+  id: '/coluna/$slug',
+  path: '/coluna/$slug',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalEditoriaSlugRoute = PortalEditoriaSlugRouteImport.update({
+  id: '/editoria/$slug',
+  path: '/editoria/$slug',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalNoticiaSlugRoute = PortalNoticiaSlugRouteImport.update({
+  id: '/noticia/$slug',
+  path: '/noticia/$slug',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalVideosSectionRoute = PortalVideosSectionRouteImport.update({
+  id: '/videos/$section',
+  path: '/videos/$section',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalYearMonthDaySlugRoute = PortalYearMonthDaySlugRouteImport.update({
+  id: '/$year/$month/$day/$slug',
+  path: '/$year/$month/$day/$slug',
+  getParentRoute: () => PortalRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PortalIndexRoute
   '/auth': typeof AuthRoute
+  '/feed.xml': typeof FeedDotxmlRoute
   '/mcp': typeof McpRoute
+  '/news-sitemap.xml': typeof NewsSitemapDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -152,11 +172,14 @@ export interface FileRoutesByFullPath {
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
   '/videos/$section': typeof PortalVideosSectionRoute
+  '/$year/$month/$day/$slug': typeof PortalYearMonthDaySlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PortalIndexRoute
   '/auth': typeof AuthRoute
+  '/feed.xml': typeof FeedDotxmlRoute
   '/mcp': typeof McpRoute
+  '/news-sitemap.xml': typeof NewsSitemapDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -172,13 +195,16 @@ export interface FileRoutesByTo {
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
   '/videos/$section': typeof PortalVideosSectionRoute
+  '/$year/$month/$day/$slug': typeof PortalYearMonthDaySlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_portal': typeof PortalRouteWithChildren
   '/auth': typeof AuthRoute
+  '/feed.xml': typeof FeedDotxmlRoute
   '/mcp': typeof McpRoute
+  '/news-sitemap.xml': typeof NewsSitemapDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -195,13 +221,16 @@ export interface FileRoutesById {
   '/_portal/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/_portal/noticia/$slug': typeof PortalNoticiaSlugRoute
   '/_portal/videos/$section': typeof PortalVideosSectionRoute
+  '/_portal/$year/$month/$day/$slug': typeof PortalYearMonthDaySlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
+    | '/feed.xml'
     | '/mcp'
+    | '/news-sitemap.xml'
     | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -217,11 +246,14 @@ export interface FileRouteTypes {
     | '/editoria/$slug'
     | '/noticia/$slug'
     | '/videos/$section'
+    | '/$year/$month/$day/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/feed.xml'
     | '/mcp'
+    | '/news-sitemap.xml'
     | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -237,12 +269,15 @@ export interface FileRouteTypes {
     | '/editoria/$slug'
     | '/noticia/$slug'
     | '/videos/$section'
+    | '/$year/$month/$day/$slug'
   id:
     | '__root__'
     | '/_authenticated'
     | '/_portal'
     | '/auth'
+    | '/feed.xml'
     | '/mcp'
+    | '/news-sitemap.xml'
     | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -259,13 +294,16 @@ export interface FileRouteTypes {
     | '/_portal/editoria/$slug'
     | '/_portal/noticia/$slug'
     | '/_portal/videos/$section'
+    | '/_portal/$year/$month/$day/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   PortalRoute: typeof PortalRouteWithChildren
   AuthRoute: typeof AuthRoute
+  FeedDotxmlRoute: typeof FeedDotxmlRoute
   McpRoute: typeof McpRoute
+  NewsSitemapDotxmlRoute: typeof NewsSitemapDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -275,25 +313,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_portal': {
@@ -303,67 +327,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_portal/': {
-      id: '/_portal/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof PortalIndexRouteImport
-      parentRoute: typeof PortalRoute
+    '/feed.xml': {
+      id: '/feed.xml'
+      path: '/feed.xml'
+      fullPath: '/feed.xml'
+      preLoaderRoute: typeof FeedDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_portal/quem-escreve': {
-      id: '/_portal/quem-escreve'
-      path: '/quem-escreve'
-      fullPath: '/quem-escreve'
-      preLoaderRoute: typeof PortalQuemEscreveRouteImport
-      parentRoute: typeof PortalRoute
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_portal/colunistas': {
-      id: '/_portal/colunistas'
-      path: '/colunistas'
-      fullPath: '/colunistas'
-      preLoaderRoute: typeof PortalColunistasRouteImport
-      parentRoute: typeof PortalRoute
+    '/news-sitemap.xml': {
+      id: '/news-sitemap.xml'
+      path: '/news-sitemap.xml'
+      fullPath: '/news-sitemap.xml'
+      preLoaderRoute: typeof NewsSitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_portal/busca': {
-      id: '/_portal/busca'
-      path: '/busca'
-      fullPath: '/busca'
-      preLoaderRoute: typeof PortalBuscaRouteImport
-      parentRoute: typeof PortalRoute
-    }
-    '/_portal/anuncie': {
-      id: '/_portal/anuncie'
-      path: '/anuncie'
-      fullPath: '/anuncie'
-      preLoaderRoute: typeof PortalAnuncieRouteImport
-      parentRoute: typeof PortalRoute
-    }
-    '/_authenticated/minhas-colunas': {
-      id: '/_authenticated/minhas-colunas'
-      path: '/minhas-colunas'
-      fullPath: '/minhas-colunas'
-      preLoaderRoute: typeof AuthenticatedMinhasColunasRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.mcp/list-tools': {
@@ -373,18 +369,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_portal/videos/$section': {
-      id: '/_portal/videos/$section'
-      path: '/videos/$section'
-      fullPath: '/videos/$section'
-      preLoaderRoute: typeof PortalVideosSectionRouteImport
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/minhas-colunas': {
+      id: '/_authenticated/minhas-colunas'
+      path: '/minhas-colunas'
+      fullPath: '/minhas-colunas'
+      preLoaderRoute: typeof AuthenticatedMinhasColunasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_portal/': {
+      id: '/_portal/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof PortalIndexRouteImport
       parentRoute: typeof PortalRoute
     }
-    '/_portal/noticia/$slug': {
-      id: '/_portal/noticia/$slug'
-      path: '/noticia/$slug'
-      fullPath: '/noticia/$slug'
-      preLoaderRoute: typeof PortalNoticiaSlugRouteImport
+    '/_portal/anuncie': {
+      id: '/_portal/anuncie'
+      path: '/anuncie'
+      fullPath: '/anuncie'
+      preLoaderRoute: typeof PortalAnuncieRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/busca': {
+      id: '/_portal/busca'
+      path: '/busca'
+      fullPath: '/busca'
+      preLoaderRoute: typeof PortalBuscaRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/colunistas': {
+      id: '/_portal/colunistas'
+      path: '/colunistas'
+      fullPath: '/colunistas'
+      preLoaderRoute: typeof PortalColunistasRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/_portal/quem-escreve': {
+      id: '/_portal/quem-escreve'
+      path: '/quem-escreve'
+      fullPath: '/quem-escreve'
+      preLoaderRoute: typeof PortalQuemEscreveRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_portal/coluna/$slug': {
+      id: '/_portal/coluna/$slug'
+      path: '/coluna/$slug'
+      fullPath: '/coluna/$slug'
+      preLoaderRoute: typeof PortalColunaSlugRouteImport
       parentRoute: typeof PortalRoute
     }
     '/_portal/editoria/$slug': {
@@ -394,26 +453,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalEditoriaSlugRouteImport
       parentRoute: typeof PortalRoute
     }
-    '/_portal/coluna/$slug': {
-      id: '/_portal/coluna/$slug'
-      path: '/coluna/$slug'
-      fullPath: '/coluna/$slug'
-      preLoaderRoute: typeof PortalColunaSlugRouteImport
+    '/_portal/noticia/$slug': {
+      id: '/_portal/noticia/$slug'
+      path: '/noticia/$slug'
+      fullPath: '/noticia/$slug'
+      preLoaderRoute: typeof PortalNoticiaSlugRouteImport
       parentRoute: typeof PortalRoute
     }
-    '/.mcp/invoke-tool/$tool': {
-      id: '/.mcp/invoke-tool/$tool'
-      path: '/.mcp/invoke-tool/$tool'
-      fullPath: '/.mcp/invoke-tool/$tool'
-      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_portal/videos/$section': {
+      id: '/_portal/videos/$section'
+      path: '/videos/$section'
+      fullPath: '/videos/$section'
+      preLoaderRoute: typeof PortalVideosSectionRouteImport
+      parentRoute: typeof PortalRoute
     }
-    '/.lovable/oauth/consent': {
-      id: '/.lovable/oauth/consent'
-      path: '/.lovable/oauth/consent'
-      fullPath: '/.lovable/oauth/consent'
-      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_portal/$year/$month/$day/$slug': {
+      id: '/_portal/$year/$month/$day/$slug'
+      path: '/$year/$month/$day/$slug'
+      fullPath: '/$year/$month/$day/$slug'
+      preLoaderRoute: typeof PortalYearMonthDaySlugRouteImport
+      parentRoute: typeof PortalRoute
     }
   }
 }
@@ -441,6 +500,7 @@ interface PortalRouteChildren {
   PortalEditoriaSlugRoute: typeof PortalEditoriaSlugRoute
   PortalNoticiaSlugRoute: typeof PortalNoticiaSlugRoute
   PortalVideosSectionRoute: typeof PortalVideosSectionRoute
+  PortalYearMonthDaySlugRoute: typeof PortalYearMonthDaySlugRoute
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
@@ -453,6 +513,7 @@ const PortalRouteChildren: PortalRouteChildren = {
   PortalEditoriaSlugRoute: PortalEditoriaSlugRoute,
   PortalNoticiaSlugRoute: PortalNoticiaSlugRoute,
   PortalVideosSectionRoute: PortalVideosSectionRoute,
+  PortalYearMonthDaySlugRoute: PortalYearMonthDaySlugRoute,
 }
 
 const PortalRouteWithChildren =
@@ -462,7 +523,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   PortalRoute: PortalRouteWithChildren,
   AuthRoute: AuthRoute,
+  FeedDotxmlRoute: FeedDotxmlRoute,
   McpRoute: McpRoute,
+  NewsSitemapDotxmlRoute: NewsSitemapDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
