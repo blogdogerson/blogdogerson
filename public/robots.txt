@@ -2,3 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /auth
+
+Sitemap: https://blogdogerson.com.br/sitemap.xml
+Sitemap: https://blogdogerson.com.br/news-sitemap.xml
