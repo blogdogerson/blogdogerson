@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BarChart3, Eye, Mail, Megaphone } from "lucide-react";
+import { absoluteUrl } from "@/lib/site";
 
 export const Route = createFileRoute("/_portal/anuncie")({
   head: () => ({
@@ -11,8 +12,9 @@ export const Route = createFileRoute("/_portal/anuncie")({
           "Anuncie no Blog do Gerson e alcance milhares de leitores em Gramado, Canela e Região da Serra Gaúcha.",
       },
       { property: "og:title", content: "Anuncie no Blog do Gerson" },
+      { property: "og:url", content: absoluteUrl("/anuncie") },
     ],
-    links: [{ rel: "canonical", href: "/anuncie" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/anuncie") }],
   }),
   component: AdvertisePage,
 });
@@ -35,9 +37,21 @@ function AdvertisePage() {
 
       <div className="mt-12 grid gap-4 sm:grid-cols-3">
         {[
-          { icon: Eye, title: "Grande audiência", desc: "Milhares de leitores por dia na Serra Gaúcha" },
-          { icon: BarChart3, title: "Público qualificado", desc: "Moradores, empresários e turistas da região" },
-          { icon: Megaphone, title: "Formatos variados", desc: "Banner topo, lateral e entre notícias" },
+          {
+            icon: Eye,
+            title: "Grande audiência",
+            desc: "Milhares de leitores por dia na Serra Gaúcha",
+          },
+          {
+            icon: BarChart3,
+            title: "Público qualificado",
+            desc: "Moradores, empresários e turistas da região",
+          },
+          {
+            icon: Megaphone,
+            title: "Formatos variados",
+            desc: "Banner topo, lateral e entre notícias",
+          },
         ].map((f) => (
           <div key={f.title} className="rounded-2xl bg-card p-6 text-center shadow-card hover-lift">
             <f.icon className="mx-auto h-8 w-8 text-primary" />

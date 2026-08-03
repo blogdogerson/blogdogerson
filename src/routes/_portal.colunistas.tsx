@@ -4,6 +4,7 @@ import { getColumnists } from "@/lib/columnists.functions";
 import { getLatestColumns } from "@/lib/columns.functions";
 import { ColumnistsSection } from "@/components/portal/ColumnistsSection";
 import { LatestColumns } from "@/components/portal/LatestColumns";
+import { absoluteUrl } from "@/lib/site";
 
 const columnistsQuery = queryOptions({
   queryKey: ["columnists"],
@@ -33,9 +34,9 @@ export const Route = createFileRoute("/_portal/colunistas")({
       },
       { property: "og:title", content: "Colunistas — Blog do Gerson" },
       { property: "og:description", content: "Vozes que assinam a Serra Gaúcha." },
-      { property: "og:url", content: "/colunistas" },
+      { property: "og:url", content: absoluteUrl("/colunistas") },
     ],
-    links: [{ rel: "canonical", href: "/colunistas" }],
+    links: [{ rel: "canonical", href: absoluteUrl("/colunistas") }],
   }),
   component: ColumnistsPage,
 });

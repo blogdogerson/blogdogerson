@@ -11,6 +11,14 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import {
+  absoluteUrl,
+  DEFAULT_DESCRIPTION,
+  DEFAULT_SOCIAL_IMAGE,
+  PUBLISHER_LOGO,
+  SITE_NAME,
+  SITE_URL,
+} from "../lib/site";
 
 function NotFoundComponent() {
   return (
@@ -76,34 +84,72 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Blog do Gerson — Notícias de Gramado, Canela e Região" },
-      {
-        name: "description",
-        content:
-          "Portal de notícias de Gramado, Canela, Nova Petrópolis e Região da Serra Gaúcha. Jornalismo sério desde 2005, por Gerson Sorgetz.",
-      },
+      { name: "description", content: DEFAULT_DESCRIPTION },
       { name: "author", content: "Gerson Sorgetz" },
       { property: "og:title", content: "Blog do Gerson — Notícias de Gramado, Canela e Região" },
-      {
-        property: "og:description",
-        content: "Portal de notícias de Gramado, Canela, Nova Petrópolis e Região da Serra Gaúcha. Jornalismo sério desde 2005, por Gerson Sorgetz.",
-      },
+      { property: "og:description", content: DEFAULT_DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Blog do Gerson" },
+      { property: "og:site_name", content: SITE_NAME },
+      { property: "og:locale", content: "pt_BR" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Blog do Gerson — Notícias de Gramado, Canela e Região" },
-      { name: "twitter:description", content: "Portal de notícias de Gramado, Canela, Nova Petrópolis e Região da Serra Gaúcha. Jornalismo sério desde 2005, por Gerson Sorgetz." },
-      // TODO: substituir por uma arte própria 1200×630 quando disponível
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a/v1/03ec78c6-9047-4751-940b-6b524da80bc7/de2424f7-26da-4f33-bb62-bfe75288dfb7/logo-blog-do-gerson-v2.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a/v1/03ec78c6-9047-4751-940b-6b524da80bc7/de2424f7-26da-4f33-bb62-bfe75288dfb7/logo-blog-do-gerson-v2.png" },
+      { name: "twitter:description", content: DEFAULT_DESCRIPTION },
+      { property: "og:image", content: DEFAULT_SOCIAL_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content: "Blog do Gerson — Notícias de Gramado, Canela e Região",
+      },
+      { name: "twitter:image", content: DEFAULT_SOCIAL_IMAGE },
+      {
+        name: "twitter:image:alt",
+        content: "Blog do Gerson — Notícias de Gramado, Canela e Região",
+      },
       { name: "theme-color", content: "#101a33" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
+      {
+        rel: "alternate",
+        type: "application/rss+xml",
+        title: "Blog do Gerson — RSS",
+        href: absoluteUrl("/feed.xml"),
+      },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Instrument+Sans:wght@400;500;600;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "NewsMediaOrganization",
+              "@id": `${SITE_URL}/#organization`,
+              name: SITE_NAME,
+              url: SITE_URL,
+              logo: { "@type": "ImageObject", url: PUBLISHER_LOGO },
+              sameAs: ["https://www.instagram.com/gersonsorgetz"],
+            },
+            {
+              "@type": "WebSite",
+              "@id": `${SITE_URL}/#website`,
+              url: SITE_URL,
+              name: SITE_NAME,
+              inLanguage: "pt-BR",
+              publisher: { "@id": `${SITE_URL}/#organization` },
+            },
+          ],
+        }),
       },
     ],
   }),

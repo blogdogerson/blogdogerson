@@ -3,7 +3,14 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getColumnBySlug } from "@/lib/columns.functions";
 import { toDisplayHtml } from "@/lib/richtext";
 import { ShareButtons } from "@/components/portal/ShareButtons";
-import { absoluteUrl, summarize } from "@/lib/site";
+import {
+  absoluteUrl,
+  DEFAULT_SOCIAL_IMAGE,
+  PUBLISHER_LOGO,
+  SITE_NAME,
+  SITE_URL,
+  summarize,
+} from "@/lib/site";
 
 const columnQuery = (slug: string) =>
   queryOptions({
@@ -31,6 +38,7 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
     const desc = summarize(c.excerpt, c.content, c.title);
     const author = c.columnist?.name ?? "Colunista";
     const canonical = absoluteUrl(`/coluna/${c.slug}`);
+    const socialImage = c.image_url || DEFAULT_SOCIAL_IMAGE;
     return {
       meta: [
         { title: `${c.title} — ${author} | Blog do Gerson` },
@@ -39,20 +47,47 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
         { property: "og:site_name", content: "Blog do Gerson" },
+        { property: "og:locale", content: "pt_BR" },
         { property: "og:url", content: canonical },
+        { property: "og:image", content: socialImage },
+        { property: "og:image:alt", content: c.title },
+        { property: "article:published_time", content: c.published_at },
+        { property: "article:modified_time", content: c.updated_at },
         { name: "twitter:title", content: `${c.title} — ${author}` },
         { name: "twitter:description", content: desc },
-        ...(c.image_url
-          ? [
-              { property: "og:image", content: c.image_url },
-              { name: "twitter:image", content: c.image_url },
-            ]
-          : []),
+        { name: "twitter:image", content: socialImage },
+        { name: "twitter:image:alt", content: c.title },
         { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: canonical }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "@id": `${canonical}#article`,
+            url: canonical,
+            mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+            headline: c.title,
+            description: desc,
+            image: [socialImage],
+            datePublished: c.published_at,
+            dateModified: c.updated_at,
+            inLanguage: "pt-BR",
+            isAccessibleForFree: true,
+            author: { "@type": "Person", name: author, url: absoluteUrl("/colunistas") },
+            publisher: {
+              "@type": "NewsMediaOrganization",
+              "@id": `${SITE_URL}/#organization`,
+              name: SITE_NAME,
+              url: SITE_URL,
+              logo: { "@type": "ImageObject", url: PUBLISHER_LOGO },
+            },
+          }).replace(/</g, "\\u003c"),
+        },
+      ],
     };
-
   },
   component: ColumnPage,
   errorComponent: ({ error }) => (
@@ -91,8 +126,7 @@ function ColumnPage() {
         </span>
         {column.columnist && (
           <span className="text-sm font-semibold text-muted-foreground">
-            por{" "}
-            <span className="font-bold text-foreground">{column.columnist.name}</span>
+            por <span className="font-bold text-foreground">{column.columnist.name}</span>
           </span>
         )}
       </div>
@@ -112,13 +146,19 @@ function ColumnPage() {
             year: "numeric",
           })}
         </p>
-        <ShareButtons title={column.title} path={`/coluna/${column.slug}`} summary={column.excerpt} />
+        <ShareButtons
+          title={column.title}
+          path={`/coluna/${column.slug}`}
+          summary={column.excerpt}
+        />
       </div>
 
       {column.image_url && (
         <img
           src={column.image_url}
           alt={column.title}
+          decoding="async"
+          fetchPriority="high"
           className="mt-6 w-full rounded-2xl shadow-card"
         />
       )}
@@ -130,10 +170,12 @@ function ColumnPage() {
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
         <p className="text-sm font-semibold">Compartilhe esta coluna:</p>
-        <ShareButtons title={column.title} path={`/coluna/${column.slug}`} summary={column.excerpt} />
+        <ShareButtons
+          title={column.title}
+          path={`/coluna/${column.slug}`}
+          summary={column.excerpt}
+        />
       </div>
-
-
 
       {related.length > 0 && (
         <section className="mt-14">
@@ -151,6 +193,8 @@ function ColumnPage() {
                     <img
                       src={r.image_url}
                       alt=""
+                      loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
@@ -162,9 +206,7 @@ function ColumnPage() {
                   >
                     {r.columnist?.name ?? "Coluna"}
                   </p>
-                  <p className="mt-1 line-clamp-3 font-display text-base font-black">
-                    {r.title}
-                  </p>
+                  <p className="mt-1 line-clamp-3 font-display text-base font-black">{r.title}</p>
                 </div>
               </Link>
             ))}
