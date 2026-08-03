@@ -3,6 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
 import type { Article, Banner, Video } from "./categories";
+import { CATEGORIES, categoryToSlug } from "./categories";
+
 
 function publicClient() {
   return createClient<Database>(
