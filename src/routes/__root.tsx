@@ -86,6 +86,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Blog do Gerson — Notícias de Gramado, Canela e Região" },
       { name: "description", content: DEFAULT_DESCRIPTION },
       { name: "author", content: "Gerson Sorgetz" },
+      {
+        name: "google-site-verification",
+        content: "g2MghyNFKEfzxpeERsPLgJf6ZZFZuK-LC6cYkuPQ2zY",
+      },
       { property: "og:title", content: "Blog do Gerson — Notícias de Gramado, Canela e Região" },
       { property: "og:description", content: DEFAULT_DESCRIPTION },
       { property: "og:type", content: "website" },
