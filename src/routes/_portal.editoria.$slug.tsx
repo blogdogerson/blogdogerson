@@ -2,18 +2,17 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { getCategoryArticles } from "@/lib/portal.functions";
+import { getEditoria } from "@/lib/portal.functions";
 import { ArticleCard } from "@/components/portal/ArticleCard";
-import { slugToCategory } from "@/lib/categories";
 
 const searchSchema = z.object({
   page: fallback(z.number().int(), 1).default(1),
 });
 
-const categoryQuery = (category: string, page: number) =>
+const editoriaQuery = (slug: string, page: number) =>
   queryOptions({
-    queryKey: ["category", category, page],
-    queryFn: () => getCategoryArticles({ data: { category, page } }),
+    queryKey: ["editoria", slug, page],
+    queryFn: () => getEditoria({ data: { slug, page } }),
     staleTime: 60_000,
   });
 
@@ -21,10 +20,11 @@ export const Route = createFileRoute("/_portal/editoria/$slug")({
   validateSearch: zodValidator(searchSchema),
   loaderDeps: ({ search }) => ({ page: search.page }),
   loader: async ({ context, params, deps }) => {
-    const category = slugToCategory(params.slug);
-    if (!category) throw notFound();
-    await context.queryClient.ensureQueryData(categoryQuery(category, deps.page));
-    return { category };
+    const res = await context.queryClient.ensureQueryData(
+      editoriaQuery(params.slug, deps.page),
+    );
+    if (!res.category) throw notFound();
+    return { category: res.category };
   },
   head: ({ loaderData }) => ({
     meta: [
@@ -55,10 +55,11 @@ export const Route = createFileRoute("/_portal/editoria/$slug")({
 function CategoryPage() {
   const { slug } = Route.useParams();
   const { page } = Route.useSearch();
-  const category = slugToCategory(slug)!;
   const safePage = Math.max(1, Math.min(200, page));
-  const { data } = useSuspenseQuery(categoryQuery(category, safePage));
+  const { data } = useSuspenseQuery(editoriaQuery(slug, safePage));
+  const category = data.category ?? slug;
   const totalPages = Math.max(1, Math.ceil(data.total / data.per));
+
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">

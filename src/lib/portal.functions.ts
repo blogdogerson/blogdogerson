@@ -3,6 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
 import type { Article, Banner, Video } from "./categories";
+import { CATEGORIES, categoryToSlug } from "./categories";
+
 
 function publicClient() {
   return createClient<Database>(
@@ -68,24 +70,63 @@ export const getArticleBySlug = createServerFn({ method: "GET" })
     };
   });
 
-export const getCategoryArticles = createServerFn({ method: "GET" })
-  .inputValidator((d: { category: string; page?: number }) =>
-    z.object({ category: z.string().min(1).max(60), page: z.number().int().optional() }).parse(d),
+export const getEditoria = createServerFn({ method: "GET" })
+  .inputValidator((d: { slug: string; page?: number }) =>
+    z.object({ slug: z.string().min(1).max(80), page: z.number().int().optional() }).parse(d),
   )
   .handler(async ({ data }) => {
     const supabase = publicClient();
     const page = Math.max(1, Math.min(200, data.page ?? 1));
     const per = 18;
     const from = (page - 1) * per;
+
+    const { data: topics } = await (supabase as any)
+      .from("topics")
+      .select("name, slug")
+      .eq("active", true);
+
+    const list = (topics ?? []) as { name: string; slug: string }[];
+    const topic = list.find(
+      (t) => t.slug === data.slug || categoryToSlug(t.name) === data.slug,
+    );
+
+    const aliasSlugs = new Set<string>([data.slug]);
+    if (topic) {
+      aliasSlugs.add(topic.slug);
+      aliasSlugs.add(categoryToSlug(topic.name));
+    }
+
+    const names = Array.from(
+      new Set(
+        [...CATEGORIES, ...list.map((t) => t.name)].filter((n) =>
+          aliasSlugs.has(categoryToSlug(n)),
+        ),
+      ),
+    );
+    if (topic) names.push(topic.name);
+    const uniqueNames = Array.from(new Set(names));
+
+    if (uniqueNames.length === 0) {
+      return { category: null as string | null, articles: [] as Article[], total: 0, page, per };
+    }
+
     const { data: rows, count } = await supabase
       .from("articles")
       .select(LIST_FIELDS, { count: "exact" })
       .eq("published", true)
-      .contains("categories", [data.category])
+      .overlaps("categories", uniqueNames)
       .order("published_at", { ascending: false })
       .range(from, from + per - 1);
-    return { articles: (rows ?? []) as unknown as Article[], total: count ?? 0, page, per };
+
+    return {
+      category: topic?.name ?? uniqueNames[0],
+      articles: (rows ?? []) as unknown as Article[],
+      total: count ?? 0,
+      page,
+      per,
+    };
   });
+
 
 export const searchArticles = createServerFn({ method: "GET" })
   .inputValidator((d: { q: string }) => z.object({ q: z.string().min(1).max(120) }).parse(d))

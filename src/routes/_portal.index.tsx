@@ -88,7 +88,7 @@ function HomePage() {
         </aside>
         <div className="min-w-0">
           {topics.map((t) => (
-            <CategoryStrip key={t.id} category={t.name} articles={articles} />
+            <CategoryStrip key={t.id} category={t.name} slug={t.slug} articles={articles} />
           ))}
         </div>
       </div>
