@@ -28,6 +28,7 @@ import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]
 import { Route as PortalVideosSectionRouteImport } from './routes/_portal.videos.$section'
 import { Route as PortalNoticiaSlugRouteImport } from './routes/_portal.noticia.$slug'
 import { Route as PortalEditoriaSlugRouteImport } from './routes/_portal.editoria.$slug'
+import { Route as PortalColunistaSlugRouteImport } from './routes/_portal.colunista.$slug'
 import { Route as PortalColunaSlugRouteImport } from './routes/_portal.coluna.$slug'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -129,6 +130,11 @@ const PortalEditoriaSlugRoute = PortalEditoriaSlugRouteImport.update({
   path: '/editoria/$slug',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalColunistaSlugRoute = PortalColunistaSlugRouteImport.update({
+  id: '/colunista/$slug',
+  path: '/colunista/$slug',
+  getParentRoute: () => PortalRoute,
+} as any)
 const PortalColunaSlugRoute = PortalColunaSlugRouteImport.update({
   id: '/coluna/$slug',
   path: '/coluna/$slug',
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/coluna/$slug': typeof PortalColunaSlugRoute
+  '/colunista/$slug': typeof PortalColunistaSlugRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
   '/videos/$section': typeof PortalVideosSectionRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/coluna/$slug': typeof PortalColunaSlugRoute
+  '/colunista/$slug': typeof PortalColunistaSlugRoute
   '/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/noticia/$slug': typeof PortalNoticiaSlugRoute
   '/videos/$section': typeof PortalVideosSectionRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_portal/coluna/$slug': typeof PortalColunaSlugRoute
+  '/_portal/colunista/$slug': typeof PortalColunistaSlugRoute
   '/_portal/editoria/$slug': typeof PortalEditoriaSlugRoute
   '/_portal/noticia/$slug': typeof PortalNoticiaSlugRoute
   '/_portal/videos/$section': typeof PortalVideosSectionRoute
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/coluna/$slug'
+    | '/colunista/$slug'
     | '/editoria/$slug'
     | '/noticia/$slug'
     | '/videos/$section'
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/coluna/$slug'
+    | '/colunista/$slug'
     | '/editoria/$slug'
     | '/noticia/$slug'
     | '/videos/$section'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_portal/coluna/$slug'
+    | '/_portal/colunista/$slug'
     | '/_portal/editoria/$slug'
     | '/_portal/noticia/$slug'
     | '/_portal/videos/$section'
@@ -446,6 +458,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalEditoriaSlugRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/_portal/colunista/$slug': {
+      id: '/_portal/colunista/$slug'
+      path: '/colunista/$slug'
+      fullPath: '/colunista/$slug'
+      preLoaderRoute: typeof PortalColunistaSlugRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/_portal/coluna/$slug': {
       id: '/_portal/coluna/$slug'
       path: '/coluna/$slug'
@@ -497,6 +516,7 @@ interface PortalRouteChildren {
   PortalQuemEscreveRoute: typeof PortalQuemEscreveRoute
   PortalIndexRoute: typeof PortalIndexRoute
   PortalColunaSlugRoute: typeof PortalColunaSlugRoute
+  PortalColunistaSlugRoute: typeof PortalColunistaSlugRoute
   PortalEditoriaSlugRoute: typeof PortalEditoriaSlugRoute
   PortalNoticiaSlugRoute: typeof PortalNoticiaSlugRoute
   PortalVideosSectionRoute: typeof PortalVideosSectionRoute
@@ -510,6 +530,7 @@ const PortalRouteChildren: PortalRouteChildren = {
   PortalQuemEscreveRoute: PortalQuemEscreveRoute,
   PortalIndexRoute: PortalIndexRoute,
   PortalColunaSlugRoute: PortalColunaSlugRoute,
+  PortalColunistaSlugRoute: PortalColunistaSlugRoute,
   PortalEditoriaSlugRoute: PortalEditoriaSlugRoute,
   PortalNoticiaSlugRoute: PortalNoticiaSlugRoute,
   PortalVideosSectionRoute: PortalVideosSectionRoute,

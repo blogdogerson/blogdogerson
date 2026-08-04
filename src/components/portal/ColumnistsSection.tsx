@@ -123,15 +123,8 @@ function ColumnistCard({ columnist, featured }: { columnist: Columnist; featured
     </article>
   );
 
-  if (columnist.link_url) {
-    return (
-      <a href={columnist.link_url} target="_blank" rel="noreferrer" className="block h-full">
-        {inner}
-      </a>
-    );
-  }
   return (
-    <Link to="/colunistas" className="block h-full">
+    <Link to="/colunista/$slug" params={{ slug: columnist.slug }} className="block h-full">
       {inner}
     </Link>
   );
