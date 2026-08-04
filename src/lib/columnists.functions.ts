@@ -36,6 +36,38 @@ export const getColumnists = createServerFn({ method: "GET" }).handler(async () 
   return { columnists: (data ?? []) as unknown as Columnist[] };
 });
 
+/** Público: perfil de um colunista + suas colunas publicadas. */
+export const getColumnistBySlug = createServerFn({ method: "GET" })
+  .inputValidator((d: { slug: string }) => z.object({ slug: z.string().min(1).max(200) }).parse(d))
+  .handler(async ({ data }) => {
+    const supabase = publicClient() as any;
+    const { data: columnist } = await supabase
+      .from("columnists")
+      .select("*")
+      .eq("slug", data.slug)
+      .eq("active", true)
+      .maybeSingle();
+    if (!columnist) return { columnist: null, columns: [] as any[] };
+    const { data: columns } = await supabase
+      .from("columns")
+      .select("id, title, slug, excerpt, image_url, published_at")
+      .eq("columnist_id", columnist.id)
+      .eq("published", true)
+      .order("published_at", { ascending: false })
+      .limit(50);
+    return {
+      columnist: columnist as Columnist,
+      columns: (columns ?? []) as {
+        id: string;
+        title: string;
+        slug: string;
+        excerpt: string | null;
+        image_url: string | null;
+        published_at: string;
+      }[],
+    };
+  });
+
 const columnistSchema = z.object({
   id: z.string().uuid().optional(),
   name: z.string().trim().min(1).max(120),
