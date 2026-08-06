@@ -3,8 +3,13 @@ import { Header } from "@/components/portal/Header";
 import { Footer } from "@/components/portal/Footer";
 import { WaveBackground } from "@/components/portal/WaveBackground";
 import { PopupOverlay } from "@/components/portal/PopupOverlay";
+import { topicsQuery } from "@/lib/topics.functions";
 
 export const Route = createFileRoute("/_portal")({
+  // Garante que as editorias já venham no HTML do servidor (evita diferença na hidratação).
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(topicsQuery);
+  },
   head: () => ({
     meta: [
       {
@@ -15,6 +20,7 @@ export const Route = createFileRoute("/_portal")({
   }),
   component: PortalLayout,
 });
+
 
 function PortalLayout() {
   return (

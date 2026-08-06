@@ -5,6 +5,38 @@ import { supabase } from "@/integrations/supabase/client";
 // 10 years in seconds — signed URLs act as effectively permanent public links.
 const SIGNED_URL_TTL = 60 * 60 * 24 * 365 * 10;
 const MAX_MB = 15;
+// WhatsApp/Facebook só geram a prévia do link com imagens leves.
+const SHARE_MAX_BYTES = 450_000;
+const SHARE_MAX_WIDTH = 1600;
+
+/** Redimensiona/comprime a imagem para que a prévia de compartilhamento funcione. */
+async function compressForSharing(file: File): Promise<File> {
+  if (file.type === "image/gif") return file;
+  if (file.size <= SHARE_MAX_BYTES) return file;
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, SHARE_MAX_WIDTH / bitmap.width);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return file;
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close?.();
+
+    let blob: Blob | null = null;
+    for (const quality of [0.85, 0.75, 0.65, 0.55]) {
+      blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", quality));
+      if (blob && blob.size <= SHARE_MAX_BYTES) break;
+    }
+    if (!blob || blob.size >= file.size) return file;
+    const name = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+    return new File([blob], name, { type: "image/jpeg" });
+  } catch {
+    return file;
+  }
+}
+
 
 
 interface Props {
