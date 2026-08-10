@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { GoogleAnalytics } from "../components/GoogleAnalytics";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import {
   absoluteUrl,
@@ -182,6 +183,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <GoogleAnalytics />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
