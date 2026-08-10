@@ -38,7 +38,7 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
     const desc = summarize(c.excerpt, c.content, c.title);
     const author = c.columnist?.name ?? "Colunista";
     const canonical = absoluteUrl(`/coluna/${c.slug}`);
-    const socialImage = c.image_url || DEFAULT_SOCIAL_IMAGE;
+    const socialImage = absoluteUrl(c.image_url || DEFAULT_SOCIAL_IMAGE);
     return {
       meta: [
         { title: `${c.title} — ${author} | Blog do Gerson` },

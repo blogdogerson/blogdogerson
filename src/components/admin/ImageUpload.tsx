@@ -73,11 +73,16 @@ export function ImageUpload({
     setError("");
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const uploadFile = await compressForSharing(file);
+      const ext = uploadFile.name.split(".").pop()?.toLowerCase() || "jpg";
       const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
       const { error: upErr } = await supabase.storage
         .from("uploads")
-        .upload(path, file, { cacheControl: "31536000", upsert: false });
+        .upload(path, uploadFile, {
+          cacheControl: "31536000",
+          contentType: uploadFile.type,
+          upsert: false,
+        });
       if (upErr) throw upErr;
       const { data: signed, error: signErr } = await supabase.storage
         .from("uploads")
