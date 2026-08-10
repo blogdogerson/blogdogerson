@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Instagram, Menu, PenLine, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { topicsQuery } from "@/lib/topics.functions";
@@ -106,8 +106,8 @@ export function Header() {
   const [q, setQ] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
-  const { data: topicsData } = useQuery(topicsQuery);
-  const topics = topicsData?.topics ?? [];
+  const { data: topicsData } = useSuspenseQuery(topicsQuery);
+  const topics = topicsData.topics;
 
   useEffect(() => {
     // Dois limites diferentes (histerese) para o header não ficar "piscando":

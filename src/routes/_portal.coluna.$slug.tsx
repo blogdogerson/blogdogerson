@@ -19,6 +19,12 @@ const columnQuery = (slug: string) =>
     staleTime: 60_000,
   });
 
+const optimizedColumnImages: Record<string, string> = {
+  "entre-a-politica-e-as-historias-da-serra": "/img/colunas/entre-a-politica-e-as-historias-da-serra.jpg",
+  "e-voce-ja-usou-o-seu-hoje": "/img/colunas/e-voce-ja-usou-o-seu-hoje.jpg",
+  "tecnologia-que-aproxima": "/img/colunas/tecnologia-que-aproxima.jpg",
+};
+
 export const Route = createFileRoute("/_portal/coluna/$slug")({
   loader: async ({ context, params }) => {
     const data = await context.queryClient.ensureQueryData(columnQuery(params.slug));
@@ -38,7 +44,9 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
     const desc = summarize(c.excerpt, c.content, c.title);
     const author = c.columnist?.name ?? "Colunista";
     const canonical = absoluteUrl(`/coluna/${c.slug}`);
-    const socialImage = absoluteUrl(c.image_url || DEFAULT_SOCIAL_IMAGE);
+    const socialImage = absoluteUrl(
+      optimizedColumnImages[c.slug] || c.image_url || DEFAULT_SOCIAL_IMAGE,
+    );
     return {
       meta: [
         { title: `${c.title} — ${author} | Blog do Gerson` },
@@ -50,6 +58,10 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
         { property: "og:locale", content: "pt_BR" },
         { property: "og:url", content: canonical },
         { property: "og:image", content: socialImage },
+        { property: "og:image:secure_url", content: socialImage },
+        { property: "og:image:type", content: "image/jpeg" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
         { property: "og:image:alt", content: c.title },
         { property: "article:published_time", content: c.published_at },
         { property: "article:modified_time", content: c.updated_at },
