@@ -229,6 +229,33 @@ export type Database = {
         }
         Relationships: []
       }
+      page_views: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          path: string
+          referrer: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind?: string
+          path: string
+          referrer?: string | null
+          title?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          path?: string
+          referrer?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       popups: {
         Row: {
           active: boolean

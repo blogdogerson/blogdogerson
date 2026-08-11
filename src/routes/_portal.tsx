@@ -3,6 +3,7 @@ import { Header } from "@/components/portal/Header";
 import { Footer } from "@/components/portal/Footer";
 import { WaveBackground } from "@/components/portal/WaveBackground";
 import { PopupOverlay } from "@/components/portal/PopupOverlay";
+import { PageViewTracker } from "@/components/portal/PageViewTracker";
 import { topicsQuery } from "@/lib/topics.functions";
 
 export const Route = createFileRoute("/_portal")({
@@ -32,6 +33,7 @@ function PortalLayout() {
       </main>
       <Footer />
       <PopupOverlay />
+      <PageViewTracker />
     </div>
   );
 }
