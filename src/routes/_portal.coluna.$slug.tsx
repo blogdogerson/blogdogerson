@@ -123,12 +123,15 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
 function ColumnPage() {
   const { slug } = Route.useParams();
   const { data } = useSuspenseQuery(columnQuery(slug));
+  const { data: bannersData } = useSuspenseQuery(bannersQuery);
+  const banners = bannersData.banners;
   const { column, related } = data;
   if (!column) return null;
   const accent = column.columnist?.accent_color ?? "#3b82f6";
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10">
+    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+      <article className="min-w-0">
       <div className="flex flex-wrap items-center gap-3">
         <span
           className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-[0.24em]"
