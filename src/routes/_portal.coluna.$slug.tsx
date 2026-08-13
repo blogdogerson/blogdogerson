@@ -21,12 +21,6 @@ const columnQuery = (slug: string) =>
     staleTime: 60_000,
   });
 
-export const bannersQuery = queryOptions({
-  queryKey: ["banners"],
-  queryFn: () => getBanners(),
-  staleTime: 60_000,
-});
-
 const optimizedColumnImages: Record<string, string> = {
   "entre-a-politica-e-as-historias-da-serra": "/img/colunas/entre-a-politica-e-as-historias-da-serra.jpg",
   "e-voce-ja-usou-o-seu-hoje": "/img/colunas/e-voce-ja-usou-o-seu-hoje.jpg",
