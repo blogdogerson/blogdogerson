@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getColumnBySlug } from "@/lib/columns.functions";
-import { getBanners } from "@/lib/portal.functions";
+import { bannersQuery } from "@/lib/banners.query";
 import { toDisplayHtml } from "@/lib/richtext";
 import { ShareButtons } from "@/components/portal/ShareButtons";
 import { InlineBanner, SidebarBanners } from "@/components/portal/BannerSlot";
