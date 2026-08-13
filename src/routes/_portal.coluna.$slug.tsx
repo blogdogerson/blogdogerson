@@ -226,11 +226,16 @@ function ColumnPage() {
         </section>
       )}
 
-      <div className="mt-10">
-        <Link to="/colunistas" className="text-sm font-semibold text-primary hover:underline">
-          ← Todos os colunistas
-        </Link>
-      </div>
+        <div className="mt-10">
+          <Link to="/colunistas" className="text-sm font-semibold text-primary hover:underline">
+            ← Todos os colunistas
+          </Link>
+        </div>
+      </article>
+
+      <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+        <SidebarBanners banners={banners} />
+      </aside>
     </div>
   );
 }
