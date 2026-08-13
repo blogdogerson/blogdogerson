@@ -188,6 +188,12 @@ function ColumnPage() {
         dangerouslySetInnerHTML={{ __html: toDisplayHtml(column.content) }}
       />
 
+      <div className="mt-8">
+        <InlineBanner banners={banners} />
+      </div>
+
+
+
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
         <p className="text-sm font-semibold">Compartilhe esta coluna:</p>
         <ShareButtons
