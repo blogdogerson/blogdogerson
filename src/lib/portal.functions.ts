@@ -68,6 +68,17 @@ export const getArticleBySlug = createServerFn({ method: "GET" })
     };
   });
 
+/** Público: banners ativos (usado nas páginas de colunas/colunistas). */
+export const getBanners = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = publicClient();
+  const { data } = await supabase
+    .from("banners")
+    .select("*")
+    .eq("active", true)
+    .order("sort_order");
+  return { banners: (data ?? []) as unknown as Banner[] };
+});
+
 export const getEditoria = createServerFn({ method: "GET" })
   .inputValidator((d: { slug: string; page?: number }) =>
     z.object({ slug: z.string().min(1).max(80), page: z.number().int().optional() }).parse(d),

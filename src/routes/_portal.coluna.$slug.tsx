@@ -1,8 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { getColumnBySlug } from "@/lib/columns.functions";
+import { bannersQuery } from "@/lib/banners.query";
 import { toDisplayHtml } from "@/lib/richtext";
 import { ShareButtons } from "@/components/portal/ShareButtons";
+import { InlineBanner, SidebarBanners } from "@/components/portal/BannerSlot";
 import {
   absoluteUrl,
   DEFAULT_SOCIAL_IMAGE,
@@ -27,7 +29,10 @@ const optimizedColumnImages: Record<string, string> = {
 
 export const Route = createFileRoute("/_portal/coluna/$slug")({
   loader: async ({ context, params }) => {
-    const data = await context.queryClient.ensureQueryData(columnQuery(params.slug));
+    const [data] = await Promise.all([
+      context.queryClient.ensureQueryData(columnQuery(params.slug)),
+      context.queryClient.ensureQueryData(bannersQuery),
+    ]);
     if (!data.column) throw notFound();
     return data;
   },
@@ -123,12 +128,15 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
 function ColumnPage() {
   const { slug } = Route.useParams();
   const { data } = useSuspenseQuery(columnQuery(slug));
+  const { data: bannersData } = useSuspenseQuery(bannersQuery);
+  const banners = bannersData.banners;
   const { column, related } = data;
   if (!column) return null;
   const accent = column.columnist?.accent_color ?? "#3b82f6";
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10">
+    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+      <article className="min-w-0">
       <div className="flex flex-wrap items-center gap-3">
         <span
           className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-[0.24em]"
@@ -180,6 +188,12 @@ function ColumnPage() {
         dangerouslySetInnerHTML={{ __html: toDisplayHtml(column.content) }}
       />
 
+      <div className="mt-8">
+        <InlineBanner banners={banners} />
+      </div>
+
+
+
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t pt-5">
         <p className="text-sm font-semibold">Compartilhe esta coluna:</p>
         <ShareButtons
@@ -226,11 +240,16 @@ function ColumnPage() {
         </section>
       )}
 
-      <div className="mt-10">
-        <Link to="/colunistas" className="text-sm font-semibold text-primary hover:underline">
-          ← Todos os colunistas
-        </Link>
-      </div>
+        <div className="mt-10">
+          <Link to="/colunistas" className="text-sm font-semibold text-primary hover:underline">
+            ← Todos os colunistas
+          </Link>
+        </div>
+      </article>
+
+      <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+        <SidebarBanners banners={banners} />
+      </aside>
     </div>
   );
 }

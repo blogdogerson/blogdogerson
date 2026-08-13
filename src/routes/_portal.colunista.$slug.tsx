@@ -2,6 +2,8 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight, PenLine } from "lucide-react";
 import { getColumnistBySlug } from "@/lib/columnists.functions";
+import { bannersQuery } from "@/lib/banners.query";
+import { InlineBanner, SidebarBanners } from "@/components/portal/BannerSlot";
 import { absoluteUrl } from "@/lib/site";
 
 const columnistQuery = (slug: string) =>
@@ -13,7 +15,10 @@ const columnistQuery = (slug: string) =>
 
 export const Route = createFileRoute("/_portal/colunista/$slug")({
   loader: async ({ context, params }) => {
-    const data = await context.queryClient.ensureQueryData(columnistQuery(params.slug));
+    const [data] = await Promise.all([
+      context.queryClient.ensureQueryData(columnistQuery(params.slug)),
+      context.queryClient.ensureQueryData(bannersQuery),
+    ]);
     if (!data.columnist) throw notFound();
     return data;
   },
@@ -73,12 +78,15 @@ export const Route = createFileRoute("/_portal/colunista/$slug")({
 function ColumnistPage() {
   const { slug } = Route.useParams();
   const { data } = useSuspenseQuery(columnistQuery(slug));
+  const { data: bannersData } = useSuspenseQuery(bannersQuery);
+  const banners = bannersData.banners;
   const c = data.columnist;
   if (!c) return null;
   const accent = c.accent_color || "#3b82f6";
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
+    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+      <div className="min-w-0">
       <header
         className="relative overflow-hidden rounded-3xl bg-card p-8 shadow-card"
         style={{ borderTop: `4px solid ${accent}` }}
@@ -164,6 +172,15 @@ function ColumnistPage() {
           ))}
         </div>
       )}
+
+        <div className="mt-10">
+          <InlineBanner banners={banners} />
+        </div>
+      </div>
+
+      <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+        <SidebarBanners banners={banners} />
+      </aside>
     </div>
   );
 }
