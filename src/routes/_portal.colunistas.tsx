@@ -4,6 +4,8 @@ import { getColumnists } from "@/lib/columnists.functions";
 import { getLatestColumns } from "@/lib/columns.functions";
 import { ColumnistsSection } from "@/components/portal/ColumnistsSection";
 import { LatestColumns } from "@/components/portal/LatestColumns";
+import { TopBannerCarousel, InlineBanner, SquareBannerStack } from "@/components/portal/BannerSlot";
+import { bannersQuery } from "@/lib/banners.query";
 import { absoluteUrl } from "@/lib/site";
 
 const columnistsQuery = queryOptions({
@@ -23,6 +25,7 @@ export const Route = createFileRoute("/_portal/colunistas")({
     Promise.all([
       context.queryClient.ensureQueryData(columnistsQuery),
       context.queryClient.ensureQueryData(latestColumnsQuery),
+      context.queryClient.ensureQueryData(bannersQuery),
     ]),
   head: () => ({
     meta: [
@@ -44,10 +47,25 @@ export const Route = createFileRoute("/_portal/colunistas")({
 function ColumnistsPage() {
   const { data } = useSuspenseQuery(columnistsQuery);
   const { data: latest } = useSuspenseQuery(latestColumnsQuery);
+  const { data: bannersData } = useSuspenseQuery(bannersQuery);
+  const banners = bannersData.banners;
+
   return (
     <div className="mx-auto max-w-7xl px-4 pb-16 pt-4">
-      <LatestColumns columns={latest.columns} />
-      <ColumnistsSection columnists={data.columnists} />
+      <TopBannerCarousel banners={banners} />
+
+      <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="min-w-0">
+          <LatestColumns columns={latest.columns} />
+          <div className="mt-10">
+            <InlineBanner banners={banners} />
+          </div>
+          <ColumnistsSection columnists={data.columnists} />
+        </div>
+        <aside className="lg:sticky lg:top-24 lg:self-start">
+          <SquareBannerStack banners={banners} max={3} />
+        </aside>
+      </div>
     </div>
   );
 }
