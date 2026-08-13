@@ -78,12 +78,15 @@ export const Route = createFileRoute("/_portal/colunista/$slug")({
 function ColumnistPage() {
   const { slug } = Route.useParams();
   const { data } = useSuspenseQuery(columnistQuery(slug));
+  const { data: bannersData } = useSuspenseQuery(bannersQuery);
+  const banners = bannersData.banners;
   const c = data.columnist;
   if (!c) return null;
   const accent = c.accent_color || "#3b82f6";
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
+    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+      <div className="min-w-0">
       <header
         className="relative overflow-hidden rounded-3xl bg-card p-8 shadow-card"
         style={{ borderTop: `4px solid ${accent}` }}
