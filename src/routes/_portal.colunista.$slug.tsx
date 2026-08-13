@@ -2,6 +2,8 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowRight, PenLine } from "lucide-react";
 import { getColumnistBySlug } from "@/lib/columnists.functions";
+import { bannersQuery } from "@/lib/banners.query";
+import { InlineBanner, SidebarBanners } from "@/components/portal/BannerSlot";
 import { absoluteUrl } from "@/lib/site";
 
 const columnistQuery = (slug: string) =>
@@ -13,7 +15,10 @@ const columnistQuery = (slug: string) =>
 
 export const Route = createFileRoute("/_portal/colunista/$slug")({
   loader: async ({ context, params }) => {
-    const data = await context.queryClient.ensureQueryData(columnistQuery(params.slug));
+    const [data] = await Promise.all([
+      context.queryClient.ensureQueryData(columnistQuery(params.slug)),
+      context.queryClient.ensureQueryData(bannersQuery),
+    ]);
     if (!data.columnist) throw notFound();
     return data;
   },
