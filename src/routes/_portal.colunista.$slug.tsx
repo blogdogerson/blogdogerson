@@ -169,6 +169,15 @@ function ColumnistPage() {
           ))}
         </div>
       )}
+
+        <div className="mt-10">
+          <InlineBanner banners={banners} />
+        </div>
+      </div>
+
+      <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+        <SidebarBanners banners={banners} />
+      </aside>
     </div>
   );
 }
