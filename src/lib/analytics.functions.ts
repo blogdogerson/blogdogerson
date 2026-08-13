@@ -15,15 +15,23 @@ export const getSiteAnalytics = createServerFn({ method: "GET" })
     if (!isAdmin) throw new Error("Acesso restrito");
 
     const since = new Date(Date.now() - data.days * 86400000).toISOString();
-    const { data: rows, error } = await supabase
-      .from("page_views")
-      .select("path, kind, title, referrer, created_at")
-      .gte("created_at", since)
-      .order("created_at", { ascending: false })
-      .limit(50000);
-    if (error) throw error;
 
-    const list = (rows ?? []) as Row[];
+    // PostgREST limita cada resposta a 1000 linhas — paginar para contar tudo.
+    const PAGE = 1000;
+    const list: Row[] = [];
+    for (let from = 0; from < 200000; from += PAGE) {
+      const { data: rows, error } = await supabase
+        .from("page_views")
+        .select("path, kind, title, referrer, created_at")
+        .gte("created_at", since)
+        .order("created_at", { ascending: false })
+        .range(from, from + PAGE - 1);
+      if (error) throw error;
+      const chunk = (rows ?? []) as Row[];
+      list.push(...chunk);
+      if (chunk.length < PAGE) break;
+    }
+
     const byPath = new Map<string, AnalyticsBucket>();
     const byKind = new Map<string, number>();
     const byDay = new Map<string, number>();
