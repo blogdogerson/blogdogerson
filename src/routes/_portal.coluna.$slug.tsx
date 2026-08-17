@@ -4,7 +4,7 @@ import { getColumnBySlug } from "@/lib/columns.functions";
 import { bannersQuery } from "@/lib/banners.query";
 import { toDisplayHtml } from "@/lib/richtext";
 import { ShareButtons } from "@/components/portal/ShareButtons";
-import { InlineBanner, SidebarBanners } from "@/components/portal/BannerSlot";
+import { InlineBanner, SidebarBanners, TopBannerCarousel } from "@/components/portal/BannerSlot";
 import {
   absoluteUrl,
   DEFAULT_SOCIAL_IMAGE,
@@ -255,6 +255,10 @@ function ColumnPage() {
       <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
         <SidebarBanners banners={banners} />
       </aside>
-    </div>
+      </div>
+      <div className="mx-auto w-full max-w-7xl px-4 pb-12">
+        <TopBannerCarousel banners={banners} />
+      </div>
+    </>
   );
 }
