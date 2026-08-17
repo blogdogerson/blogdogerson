@@ -4,7 +4,7 @@ import { getColumnBySlug } from "@/lib/columns.functions";
 import { bannersQuery } from "@/lib/banners.query";
 import { toDisplayHtml } from "@/lib/richtext";
 import { ShareButtons } from "@/components/portal/ShareButtons";
-import { InlineBanner, SidebarBanners } from "@/components/portal/BannerSlot";
+import { InlineBanner, SidebarBanners, TopBannerCarousel } from "@/components/portal/BannerSlot";
 import {
   absoluteUrl,
   DEFAULT_SOCIAL_IMAGE,
@@ -135,8 +135,13 @@ function ColumnPage() {
   const accent = column.columnist?.accent_color ?? "#3b82f6";
 
   return (
-    <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+    <>
+      <div className="mx-auto w-full max-w-7xl px-4 pt-6">
+        <TopBannerCarousel banners={banners} />
+      </div>
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
       <article className="min-w-0">
+
       <div className="flex flex-wrap items-center gap-3">
         <span
           className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-[0.24em]"
@@ -250,6 +255,10 @@ function ColumnPage() {
       <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
         <SidebarBanners banners={banners} />
       </aside>
-    </div>
+      </div>
+      <div className="mx-auto w-full max-w-7xl px-4 pb-12">
+        <TopBannerCarousel banners={banners} />
+      </div>
+    </>
   );
 }

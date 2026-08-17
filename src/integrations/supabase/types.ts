@@ -401,6 +401,7 @@ export type Database = {
         Returns: boolean
       }
       is_columnist: { Args: { _user_id: string }; Returns: boolean }
+      page_view_stats: { Args: { _days?: number }; Returns: Json }
     }
     Enums: {
       app_role: "admin"
