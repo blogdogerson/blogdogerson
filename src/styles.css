@@ -265,3 +265,22 @@
   font-style: italic;
   color: var(--color-muted-foreground);
 }
+
+/* Proteção de conteúdo: impede seleção de texto e arrastar imagens no portal.
+   Campos de formulário seguem editáveis normalmente. */
+body.content-protected {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+body.content-protected input,
+body.content-protected textarea,
+body.content-protected select,
+body.content-protected [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+body.content-protected img {
+  -webkit-user-drag: none;
+  pointer-events: auto;
+}
