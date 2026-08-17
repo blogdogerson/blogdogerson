@@ -35,6 +35,7 @@ function PortalLayout() {
       <Footer />
       <PopupOverlay />
       <PageViewTracker />
+      <ContentProtection />
     </div>
   );
 }
