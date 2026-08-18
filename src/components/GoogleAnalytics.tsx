@@ -18,12 +18,13 @@ function initializeGoogleAnalytics() {
   if (window.gtag) return;
 
   window.dataLayer = window.dataLayer || [];
-  window.gtag = (...args: unknown[]) => {
-    window.dataLayer?.push(args);
-  };
+  function gtag(this: unknown, ..._args: unknown[]) {
+    window.dataLayer?.push(Array.prototype.slice.call(arguments));
+  }
+  window.gtag = gtag;
 
-  window.gtag("js", new Date());
-  window.gtag("config", GOOGLE_ANALYTICS_ID, {
+  gtag("js", new Date());
+  gtag("config", GOOGLE_ANALYTICS_ID, {
     send_page_view: false,
     allow_google_signals: false,
     allow_ad_personalization_signals: false,
