@@ -18,8 +18,8 @@ function initializeGoogleAnalytics() {
   if (window.gtag) return;
 
   window.dataLayer = window.dataLayer || [];
-  function gtag(this: unknown) {
-    window.dataLayer?.push(arguments);
+  function gtag(this: unknown, ..._args: unknown[]) {
+    window.dataLayer?.push(Array.prototype.slice.call(arguments));
   }
   window.gtag = gtag;
 
