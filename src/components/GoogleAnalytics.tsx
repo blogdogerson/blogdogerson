@@ -18,7 +18,7 @@ function initializeGoogleAnalytics() {
   if (window.gtag) return;
 
   window.dataLayer = window.dataLayer || [];
-  function gtag(this: unknown) {
+  function gtag(this: unknown, _command: unknown, _param1?: unknown, _param2?: unknown) {
     window.dataLayer?.push(arguments as unknown as unknown[]);
   }
   window.gtag = gtag;
