@@ -1,10 +1,18 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import type { Video } from "@/lib/categories";
 import { VIDEO_SECTIONS } from "@/lib/categories";
 import { ArrowRight, PlayCircle } from "lucide-react";
 
+function facebookVideoId(u: URL): string | null {
+  const m = u.pathname.match(/\/videos\/(?:[^/]+\/)?(\d+)/);
+  if (m) return m[1];
+  const v = u.searchParams.get("v");
+  return v && /^\d+$/.test(v) ? v : null;
+}
+
 /**
- * Converte links comuns (Instagram, YouTube) para o formato aceito em iframes.
+ * Converte links comuns (Instagram, YouTube, Facebook) para o formato aceito em iframes.
  * Colar o link normal do post/vídeo no admin passa a funcionar.
  */
 function toEmbedUrl(url: string): string {
@@ -31,8 +39,11 @@ function toEmbedUrl(url: string): string {
       host.endsWith(".facebook.com")
     ) {
       if (u.pathname.startsWith("/plugins/video.php")) return url;
+      // O player do Facebook só aceita a forma canônica video.php?v=<id>
+      const id = facebookVideoId(u);
+      const href = id ? `https://www.facebook.com/video.php?v=${id}` : url;
       return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
-        url,
+        href,
       )}&show_text=false&autoplay=false`;
     }
     return url;
@@ -58,40 +69,43 @@ function isFacebook(url: string): boolean {
 
 export function VideoEmbed({ video, orientation }: { video: Video; orientation: string }) {
   const ratio = orientation === "vertical" ? "aspect-[9/16]" : "aspect-video";
+  const facebook = isFacebook(video.embed_url);
+  const [playing, setPlaying] = useState(false);
 
-  // O Facebook bloqueia o player incorporado em muitos vídeos/perfis,
-  // então mostramos um cartão que abre o vídeo direto no Facebook.
-  if (isFacebook(video.embed_url)) {
+  // Facebook: mostramos uma capa com botão de play e carregamos o player
+  // dentro do site somente ao clicar (mais leve e evita bloqueios de autoplay).
+  if (facebook && !playing) {
     return (
-      <a
-        href={video.embed_url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`group relative flex ${ratio} items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-primary/25 via-navy to-navy shadow-card transition hover:brightness-110`}
+      <button
+        type="button"
+        onClick={() => setPlaying(true)}
+        aria-label={`Assistir: ${video.title}`}
+        className={`group relative flex w-full ${ratio} items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-primary/25 via-navy to-navy shadow-card transition hover:brightness-110`}
       >
         <div className="flex flex-col items-center gap-2 px-4 text-center">
           <PlayCircle className="h-12 w-12 text-primary transition group-hover:scale-110" />
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-navy-foreground/80">
-            Assistir no Facebook
+            Assistir vídeo
           </span>
         </div>
-      </a>
+      </button>
     );
   }
 
   return (
     <div className={`overflow-hidden rounded-2xl bg-navy shadow-card ${ratio}`}>
       <iframe
-        src={toEmbedUrl(video.embed_url)}
+        src={toEmbedUrl(video.embed_url) + (facebook ? "&autoplay=true" : "")}
         title={video.title}
         loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
         className="h-full w-full"
       />
     </div>
   );
 }
+
 
 export function VideoSections({ videos }: { videos: Video[] }) {
   const active = videos.filter((v) => v.active);
