@@ -33,8 +33,42 @@ export const getColumnists = createServerFn({ method: "GET" }).handler(async () 
     .select("*")
     .eq("active", true)
     .order("sort_order");
-  return { columnists: (data ?? []) as unknown as Columnist[] };
+  const columnists = (data ?? []) as unknown as Columnist[];
+  if (columnists.length === 0) return { columnists };
+
+  // Sobrescreve "Última coluna" com a coluna publicada mais recente de cada colunista.
+  const { data: cols } = await (supabase as any)
+    .from("columns")
+    .select("columnist_id, title, excerpt, published_at")
+    .eq("published", true)
+    .in(
+      "columnist_id",
+      columnists.map((c) => c.id),
+    )
+    .order("published_at", { ascending: false })
+    .limit(500);
+
+  const latest = new Map<string, { title: string; excerpt: string | null }>();
+  for (const row of (cols ?? []) as {
+    columnist_id: string;
+    title: string;
+    excerpt: string | null;
+  }[]) {
+    if (!latest.has(row.columnist_id)) {
+      latest.set(row.columnist_id, { title: row.title, excerpt: row.excerpt });
+    }
+  }
+
+  return {
+    columnists: columnists.map((c) => {
+      const l = latest.get(c.id);
+      return l
+        ? { ...c, latest_title: l.title, latest_excerpt: l.excerpt ?? "" }
+        : c;
+    }),
+  };
 });
+
 
 /** Público: perfil de um colunista + suas colunas publicadas. */
 export const getColumnistBySlug = createServerFn({ method: "GET" })
