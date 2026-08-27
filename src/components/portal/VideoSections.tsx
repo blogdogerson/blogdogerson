@@ -11,6 +11,18 @@ function facebookVideoId(u: URL): string | null {
   return v && /^\d+$/.test(v) ? v : null;
 }
 
+/** URL canônica pública do vídeo no Facebook (usada no player e no link de fallback). */
+function facebookWatchUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    const id = facebookVideoId(u);
+    if (id) return `https://www.facebook.com/watch/?v=${id}`;
+    return `https://www.facebook.com${u.pathname.replace(/\/+$/, "")}/`;
+  } catch {
+    return url;
+  }
+}
+
 /**
  * Converte links comuns (Instagram, YouTube, Facebook) para o formato aceito em iframes.
  * Colar o link normal do post/vídeo no admin passa a funcionar.
@@ -39,9 +51,7 @@ function toEmbedUrl(url: string, autoplay = false): string {
       host.endsWith(".facebook.com")
     ) {
       if (u.pathname.startsWith("/plugins/video.php")) return url;
-      // O player do Facebook só aceita a forma canônica video.php?v=<id>
-      const id = facebookVideoId(u);
-      const href = id ? `https://www.facebook.com/video.php?v=${id}` : url;
+      const href = facebookWatchUrl(url);
       return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
         href,
       )}&show_text=false&autoplay=${autoplay ? "true" : "false"}`;
@@ -93,15 +103,27 @@ export function VideoEmbed({ video, orientation }: { video: Video; orientation: 
   }
 
   return (
-    <div className={`overflow-hidden rounded-2xl bg-navy shadow-card ${ratio}`}>
-      <iframe
-        src={toEmbedUrl(video.embed_url, facebook)}
-        title={video.title}
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
-        className="h-full w-full"
-      />
+    <div>
+      <div className={`overflow-hidden rounded-2xl bg-navy shadow-card ${ratio}`}>
+        <iframe
+          src={toEmbedUrl(video.embed_url, facebook)}
+          title={video.title}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          className="h-full w-full"
+        />
+      </div>
+      {facebook && (
+        <a
+          href={facebookWatchUrl(video.embed_url)}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-1 inline-block text-[11px] font-semibold uppercase tracking-wider text-primary hover:underline"
+        >
+          Abrir no Facebook
+        </a>
+      )}
     </div>
   );
 }
