@@ -41,13 +41,46 @@ function toEmbedUrl(url: string): string {
   }
 }
 
+function isFacebook(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, "");
+    return (
+      host === "facebook.com" ||
+      host === "m.facebook.com" ||
+      host === "web.facebook.com" ||
+      host === "fb.watch" ||
+      host.endsWith(".facebook.com")
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function VideoEmbed({ video, orientation }: { video: Video; orientation: string }) {
+  const ratio = orientation === "vertical" ? "aspect-[9/16]" : "aspect-video";
+
+  // O Facebook bloqueia o player incorporado em muitos vídeos/perfis,
+  // então mostramos um cartão que abre o vídeo direto no Facebook.
+  if (isFacebook(video.embed_url)) {
+    return (
+      <a
+        href={video.embed_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`group relative flex ${ratio} items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-primary/25 via-navy to-navy shadow-card transition hover:brightness-110`}
+      >
+        <div className="flex flex-col items-center gap-2 px-4 text-center">
+          <PlayCircle className="h-12 w-12 text-primary transition group-hover:scale-110" />
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-navy-foreground/80">
+            Assistir no Facebook
+          </span>
+        </div>
+      </a>
+    );
+  }
+
   return (
-    <div
-      className={`overflow-hidden rounded-2xl bg-navy shadow-card ${
-        orientation === "vertical" ? "aspect-[9/16]" : "aspect-video"
-      }`}
-    >
+    <div className={`overflow-hidden rounded-2xl bg-navy shadow-card ${ratio}`}>
       <iframe
         src={toEmbedUrl(video.embed_url)}
         title={video.title}
