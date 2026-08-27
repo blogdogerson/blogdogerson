@@ -103,15 +103,27 @@ export function VideoEmbed({ video, orientation }: { video: Video; orientation: 
   }
 
   return (
-    <div className={`overflow-hidden rounded-2xl bg-navy shadow-card ${ratio}`}>
-      <iframe
-        src={toEmbedUrl(video.embed_url, facebook)}
-        title={video.title}
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
-        className="h-full w-full"
-      />
+    <div>
+      <div className={`overflow-hidden rounded-2xl bg-navy shadow-card ${ratio}`}>
+        <iframe
+          src={toEmbedUrl(video.embed_url, facebook)}
+          title={video.title}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          className="h-full w-full"
+        />
+      </div>
+      {facebook && (
+        <a
+          href={facebookWatchUrl(video.embed_url)}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-1 inline-block text-[11px] font-semibold uppercase tracking-wider text-primary hover:underline"
+        >
+          Abrir no Facebook
+        </a>
+      )}
     </div>
   );
 }
