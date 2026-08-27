@@ -15,7 +15,7 @@ function facebookVideoId(u: URL): string | null {
  * Converte links comuns (Instagram, YouTube, Facebook) para o formato aceito em iframes.
  * Colar o link normal do post/vídeo no admin passa a funcionar.
  */
-function toEmbedUrl(url: string): string {
+function toEmbedUrl(url: string, autoplay = false): string {
   try {
     const u = new URL(url);
     const host = u.hostname.replace(/^www\./, "");
@@ -44,7 +44,7 @@ function toEmbedUrl(url: string): string {
       const href = id ? `https://www.facebook.com/video.php?v=${id}` : url;
       return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
         href,
-      )}&show_text=false&autoplay=false`;
+      )}&show_text=false&autoplay=${autoplay ? "true" : "false"}`;
     }
     return url;
   } catch {
@@ -95,7 +95,7 @@ export function VideoEmbed({ video, orientation }: { video: Video; orientation: 
   return (
     <div className={`overflow-hidden rounded-2xl bg-navy shadow-card ${ratio}`}>
       <iframe
-        src={toEmbedUrl(video.embed_url) + (facebook ? "&autoplay=true" : "")}
+        src={toEmbedUrl(video.embed_url, facebook)}
         title={video.title}
         loading="lazy"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
