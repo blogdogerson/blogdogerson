@@ -39,9 +39,9 @@ function toEmbedUrl(url: string, autoplay = false): string {
       host.endsWith(".facebook.com")
     ) {
       if (u.pathname.startsWith("/plugins/video.php")) return url;
-      // O player do Facebook só aceita a forma canônica video.php?v=<id>
-      const id = facebookVideoId(u);
-      const href = id ? `https://www.facebook.com/video.php?v=${id}` : url;
+      // Usamos a própria URL do post (normalizada para www.facebook.com, sem query),
+      // que é o formato que o plugin resolve de forma mais confiável.
+      const href = `https://www.facebook.com${u.pathname.replace(/\/+$/, "")}/`;
       return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
         href,
       )}&show_text=false&autoplay=${autoplay ? "true" : "false"}`;
