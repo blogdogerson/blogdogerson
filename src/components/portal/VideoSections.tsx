@@ -23,6 +23,18 @@ function toEmbedUrl(url: string): string {
       return url;
     }
     if (host === "youtu.be") return `https://www.youtube.com/embed${u.pathname}`;
+    if (
+      host === "facebook.com" ||
+      host === "m.facebook.com" ||
+      host === "web.facebook.com" ||
+      host === "fb.watch" ||
+      host.endsWith(".facebook.com")
+    ) {
+      if (u.pathname.startsWith("/plugins/video.php")) return url;
+      return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
+        url,
+      )}&show_text=false&autoplay=false`;
+    }
     return url;
   } catch {
     return url;
