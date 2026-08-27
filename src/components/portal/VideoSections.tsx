@@ -11,6 +11,18 @@ function facebookVideoId(u: URL): string | null {
   return v && /^\d+$/.test(v) ? v : null;
 }
 
+/** URL canônica pública do vídeo no Facebook (usada no player e no link de fallback). */
+function facebookWatchUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    const id = facebookVideoId(u);
+    if (id) return `https://www.facebook.com/watch/?v=${id}`;
+    return `https://www.facebook.com${u.pathname.replace(/\/+$/, "")}/`;
+  } catch {
+    return url;
+  }
+}
+
 /**
  * Converte links comuns (Instagram, YouTube, Facebook) para o formato aceito em iframes.
  * Colar o link normal do post/vídeo no admin passa a funcionar.
