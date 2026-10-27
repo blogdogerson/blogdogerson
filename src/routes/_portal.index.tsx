@@ -59,7 +59,7 @@ export const Route = createFileRoute("/_portal/")({
   component: HomePage,
   errorComponent: ({ error }) => (
     <div role="alert" className="mx-auto max-w-xl px-4 py-20 text-center text-muted-foreground">
-      Não foi possível carregar as notícias. {error.message}
+      Não foi possível carregar as notícias. {error instanceof Error ? error.message : ""}
     </div>
   ),
   notFoundComponent: () => <div className="px-4 py-20 text-center">Nada por aqui.</div>,

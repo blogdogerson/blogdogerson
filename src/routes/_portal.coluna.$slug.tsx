@@ -109,7 +109,7 @@ export const Route = createFileRoute("/_portal/coluna/$slug")({
   component: ColumnPage,
   errorComponent: ({ error }) => (
     <div role="alert" className="mx-auto max-w-xl px-4 py-20 text-center text-muted-foreground">
-      Não foi possível carregar a coluna. {error.message}
+      Não foi possível carregar a coluna. {error instanceof Error ? error.message : ""}
     </div>
   ),
   notFoundComponent: () => (

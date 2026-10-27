@@ -57,7 +57,7 @@ export const Route = createFileRoute("/_portal/editoria/$slug")({
   component: CategoryPage,
   errorComponent: ({ error }) => (
     <div role="alert" className="px-4 py-20 text-center text-muted-foreground">
-      Erro ao carregar a editoria. {error.message}
+      Erro ao carregar a editoria. {error instanceof Error ? error.message : ""}
     </div>
   ),
   notFoundComponent: () => (
