@@ -53,18 +53,9 @@ export const getMyAdminStatus = createServerFn({ method: "GET" })
 // First signed-in user can claim admin if no admin exists yet.
 export const bootstrapAdmin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { count } = await supabaseAdmin
-      .from("user_roles")
-      .select("id", { count: "exact", head: true })
-      .eq("role", "admin");
-    if ((count ?? 0) > 0) return { ok: false, error: "Já existe um administrador." };
-    const { error } = await supabaseAdmin
-      .from("user_roles")
-      .insert({ user_id: context.userId, role: "admin" });
-    if (error) return { ok: false, error: error.message };
-    return { ok: true };
+  .handler(async () => {
+    // Desativado: papéis de admin só podem ser concedidos manualmente no backend.
+    return { ok: false, error: "Solicite acesso a um administrador." };
   });
 
 async function assertAdmin(context: { supabase: any; userId: string }) {

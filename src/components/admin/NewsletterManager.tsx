@@ -19,7 +19,7 @@ export function NewsletterManager() {
 
   const exportCsv = () => {
     const rows = [["email", "nome", "data"], ...subs.map((s: any) => [s.email, s.name ?? "", s.created_at])];
-    const csv = rows.map((r) => r.map((c: string) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const csv = rows.map((r) => r.map((c: string) => { let v = String(c); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return `"${v.replace(/"/g, '""')}"`; }).join(",")).join("\n");
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
